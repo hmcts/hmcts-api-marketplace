@@ -1,236 +1,344 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>My applications and teams — HMCTS API Marketplace</title>
 <meta name="description" content="Register your applications in our test and production environments.">
-<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/govuk-frontend.min.css">
+<style>
+@font-face {
+  font-family: "GDS Transport";
+  src: url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/light-94a07e06a1-v2.woff2") format("woff2"),
+       url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/light-f591880d6f-v2.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "GDS Transport";
+  src: url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/bold-b542beb274-v2.woff2") format("woff2"),
+       url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/bold-1d5e47bda2-v2.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+body, input, select, textarea, button {
+  font-family: "GDS Transport", arial, sans-serif !important;
+}
+:root { --red: #d4351c; --green: #00703c; --grey-dark: #505a5f; --border-light: #b1b4b6; }
+
+/* Wizard step / tab-panel visibility mechanics (behaviour, not skin — driven by docs/my-applications.html's own script) */
+.wizard-step { display: none; }
+.wizard-step.active { display: block; }
+.wizard-tab-panel { display: none; }
+.wizard-tab-panel.active { display: block; }
+.lang-tab-panel { display: none; }
+.lang-tab-panel.active { display: block; }
+
+/* GDS-styled tab buttons for the two custom tab groups on this page (My applications/My teams, and the code-sample language tabs) */
+.wizard-tabs { border-bottom: 1px solid #b1b4b6; margin-bottom: 24px; }
+.wizard-tabs button, .lang-tab {
+  background: none; border: none; border-bottom: 4px solid transparent; margin: 0 8px -1px 0;
+  padding: 10px 4px; font-family: inherit; font-size: 19px; cursor: pointer; color: #1d70b8;
+}
+.wizard-tabs button.active, .lang-tab.active { color: #0b0c0c; font-weight: 700; border-bottom-color: #1d70b8; }
+
+.api-checkbox-row { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid #b1b4b6; align-items: flex-start; }
+.api-checkbox-row input[type=checkbox] { margin-top: 3px; width: 20px; height: 20px; flex-shrink: 0; }
+
+.app-code-block { background: #0b0c0c; color: #fff; padding: 15px; overflow-x: auto; font-family: monospace; font-size: 0.9rem; white-space: pre-wrap; margin: 0 0 20px; }
+.secret-mask { letter-spacing: 2px; }
+</style>
 </head>
-<body>
-<a class="skip-link" href="#main-content">Skip to main content</a>
-<div class="top-bar">
-  <div class="wrap">
-    <a class="crest" href="index.html">
-      <img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img">
-    </a>
-    <div class="top-bar-actions">
-      <form class="site-search" action="resources-a-z.html" method="get" role="search">
-        <label class="visually-hidden" for="site-search-input">Search</label>
-        <input type="search" id="site-search-input" name="q" placeholder="Search">
-        <button type="submit" aria-label="Search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
-      </form>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+<body class="govuk-template__body">
+<script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled') + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+<a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+<header class="govuk-header" data-module="govuk-header">
+  <div class="govuk-header__container govuk-width-container">
+    <div class="govuk-header__logo">
+      <a href="https://www.gov.uk" class="govuk-header__link govuk-header__link--homepage">
+        <svg focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 324 60" height="30" width="162" fill="currentcolor" class="govuk-header__logotype" aria-label="GOV.UK">
+          <title>GOV.UK</title>
+          <g>
+            <circle cx="20" cy="17.6" r="3.7"></circle>
+            <circle cx="10.2" cy="23.5" r="3.7"></circle>
+            <circle cx="3.7" cy="33.2" r="3.7"></circle>
+            <circle cx="31.7" cy="30.6" r="3.7"></circle>
+            <circle cx="43.3" cy="17.6" r="3.7"></circle>
+            <circle cx="53.2" cy="23.5" r="3.7"></circle>
+            <circle cx="59.7" cy="33.2" r="3.7"></circle>
+            <circle cx="31.7" cy="30.6" r="3.7"></circle>
+            <path d="M33.1,9.8c.2-.1.3-.3.5-.5l4.6,2.4v-6.8l-4.6,1.5c-.1-.2-.3-.3-.5-.5l1.9-5.9h-6.7l1.9,5.9c-.2.1-.3.3-.5.5l-4.6-1.5v6.8l4.6-2.4c.1.2.3.3.5.5l-2.6,8c-.9,2.8,1.2,5.7,4.1,5.7h0c3,0,5.1-2.9,4.1-5.7l-2.6-8ZM37,37.9s-3.4,3.8-4.1,6.1c2.2,0,4.2-.5,6.4-2.8l-.7,8.5c-2-2.8-4.4-4.1-5.7-3.8.1,3.1.5,6.7,5.8,7.2,3.7.3,6.7-1.5,7-3.8.4-2.6-2-4.3-3.7-1.6-1.4-4.5,2.4-6.1,4.9-3.2-1.9-4.5-1.8-7.7,2.4-10.9,3,4,2.6,7.3-1.2,11.1,2.4-1.3,6.2,0,4,4.6-1.2-2.8-3.7-2.2-4.2.2-.3,1.7.7,3.7,3,4.2,1.9.3,4.7-.9,7-5.9-1.3,0-2.4.7-3.9,1.7l2.4-8c.6,2.3,1.4,3.7,2.2,4.5.6-1.6.5-2.8,0-5.3l5,1.8c-2.6,3.6-5.2,8.7-7.3,17.5-7.4-1.1-15.7-1.7-24.5-1.7h0c-8.8,0-17.1.6-24.5,1.7-2.1-8.9-4.7-13.9-7.3-17.5l5-1.8c-.5,2.5-.6,3.7,0,5.3.8-.8,1.6-2.3,2.2-4.5l2.4,8c-1.5-1-2.6-1.7-3.9-1.7,2.3,5,5.2,6.2,7,5.9,2.3-.4,3.3-2.4,3-4.2-.5-2.4-3-3.1-4.2-.2-2.2-4.6,1.6-6,4-4.6-3.7-3.7-4.2-7.1-1.2-11.1,4.2,3.2,4.3,6.4,2.4,10.9,2.5-2.8,6.3-1.3,4.9,3.2-1.8-2.7-4.1-1-3.7,1.6.3,2.3,3.3,4.1,7,3.8,5.4-.5,5.7-4.2,5.8-7.2-1.3-.2-3.7,1-5.7,3.8l-.7-8.5c2.2,2.3,4.2,2.7,6.4,2.8-.7-2.3-4.1-6.1-4.1-6.1h10.6,0Z"></path>
+          </g>
+          <circle class="govuk-logo-dot" cx="226" cy="36" r="7.3"></circle>
+        </svg>
+      </a>
     </div>
-  </div>
-</div>
-<header class="site-header">
-  <div class="wrap">
-    <a class="site-title" href="index.html">API Marketplace</a>
-    <nav class="primary-nav" id="primary-nav" aria-label="Primary">
-      <ul>
-        <li><a href="sign-in.html" id="nav-auth-link">Sign in</a></li>
-      </ul>
-    </nav>
   </div>
 </header>
 
+<section aria-label="Service information" class="govuk-service-navigation" data-module="govuk-service-navigation">
+  <div class="govuk-width-container">
+    <div class="govuk-service-navigation__container">
+      <span class="govuk-service-navigation__service-name">
+        <a href="index.html" class="govuk-service-navigation__link">HMCTS API Marketplace</a>
+      </span>
+      <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
+        <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
+          Menu
+        </button>
+        <ul class="govuk-service-navigation__list" id="navigation">
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="index.html">Home</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="api-catalogue.html">API catalogue</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="getting-started.html">Get started</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="documentation.html">Documentation</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="publish-api.html">Publish an API</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="help-and-support.html">Help and support</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="sign-in.html" id="nav-auth-link">Sign in</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</section>
 
-<main id="main-content">
+<div class="govuk-width-container">
+  <div class="govuk-phase-banner">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag">Beta</strong>
+      <span class="govuk-phase-banner__text">This is a new service. <a class="govuk-link" href="contact.html">Help us improve it by giving feedback</a>.</span>
+    </p>
+  </div>
 
-<section class="wizard-page">
-  <div class="wrap wizard-wrap">
+  <main class="govuk-main-wrapper" id="main-content">
 
     <!-- STEP: list -->
     <section id="step-list" class="wizard-step active">
-      <div class="breadcrumbs" style="padding:0 0 1.2em;"><ol><li><a href="account.html">Home</a></li><li>My applications and teams</li></ol></div>
-      <h1>My applications and teams</h1>
-      <div class="accent-bar" style="--chip:#0096d6;"></div>
+      <nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
+        <ol class="govuk-breadcrumbs__list">
+          <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="account.html">Home</a></li>
+          <li class="govuk-breadcrumbs__list-item">My applications and teams</li>
+        </ol>
+      </nav>
+      <h1 class="govuk-heading-xl">My applications and teams</h1>
 
-      <div class="wizard-tabs">
+      <div class="wizard-tabs" role="tablist">
         <button class="active" data-tab="apps">My applications</button>
         <button data-tab="teams">My teams</button>
       </div>
 
       <div id="tab-apps" class="wizard-tab-panel active">
-        <h2>My applications</h2>
-        <p>Register your applications in our test and production environments.</p>
-        <button type="button" class="btn btn-start" id="add-app-btn">Add new application</button>
+        <h2 class="govuk-heading-l">My applications</h2>
+        <p class="govuk-body">Register your applications in our test and production environments.</p>
+        <button type="button" class="govuk-button govuk-button--start" data-module="govuk-button" id="add-app-btn">
+          Add new application
+          <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false"><path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path></svg>
+        </button>
         <div id="apps-list" style="margin-top:2em;">
-          <p id="no-apps-message">No applications found</p>
-          <table id="apps-table" style="display:none;">
-            <thead><tr><th>Name</th><th>Environment</th><th>Owner</th></tr></thead>
-            <tbody id="apps-table-body"></tbody>
+          <p class="govuk-body" id="no-apps-message">No applications found</p>
+          <table class="govuk-table" id="apps-table" style="display:none;">
+            <thead class="govuk-table__head"><tr class="govuk-table__row"><th class="govuk-table__header">Name</th><th class="govuk-table__header">Environment</th><th class="govuk-table__header">Owner</th></tr></thead>
+            <tbody class="govuk-table__body" id="apps-table-body"></tbody>
           </table>
         </div>
       </div>
 
       <div id="tab-teams" class="wizard-tab-panel">
-        <h2>My teams</h2>
-        <p>Teams let you share application ownership with colleagues.</p>
-        <p>No teams found</p>
+        <h2 class="govuk-heading-l">My teams</h2>
+        <p class="govuk-body">Teams let you share application ownership with colleagues.</p>
+        <p class="govuk-body">No teams found</p>
       </div>
     </section>
 
     <!-- STEP: environment -->
     <section id="step-environment" class="wizard-step">
-      <p class="wizard-caption">Add new application</p>
-      <h1>Select your environment</h1>
-      <div class="accent-bar" style="--chip:#724695;"></div>
-      <p style="max-width:65ch;color:var(--grey-dark);font-size:1.05rem;">You must have a separate application for each environment. To learn more about our environments see: <a href="documentation.html">Path to Live environments</a> and <a href="consumer-guidance.html">Testing APIs</a>.</p>
+      <span class="govuk-caption-l">Add new application</span>
+      <h1 class="govuk-heading-l">Select your environment</h1>
+      <p class="govuk-body" style="max-width:65ch;">You must have a separate application for each environment. To learn more about our environments see: <a class="govuk-link" href="documentation.html">Path to Live environments</a> and <a class="govuk-link" href="consumer-guidance.html">Testing APIs</a>.</p>
 
-      <fieldset>
-        <legend class="visually-hidden">Select your environment</legend>
-        <div class="radio-list-large">
-          <label><input type="radio" name="environment" value="Sandbox" checked> Sandbox</label>
-          <label><input type="radio" name="environment" value="Development"> Development</label>
-          <label><input type="radio" name="environment" value="Integration test"> Integration test</label>
-          <label><input type="radio" name="environment" value="Production"> Production</label>
-        </div>
-      </fieldset>
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-visually-hidden">Select your environment</legend>
+          <div class="govuk-radios">
+            <div class="govuk-radios__item"><input class="govuk-radios__input" type="radio" name="environment" id="env-sandbox" value="Sandbox" checked><label class="govuk-label govuk-radios__label" for="env-sandbox">Sandbox</label></div>
+            <div class="govuk-radios__item"><input class="govuk-radios__input" type="radio" name="environment" id="env-dev" value="Development"><label class="govuk-label govuk-radios__label" for="env-dev">Development</label></div>
+            <div class="govuk-radios__item"><input class="govuk-radios__input" type="radio" name="environment" id="env-integration" value="Integration test"><label class="govuk-label govuk-radios__label" for="env-integration">Integration test</label></div>
+            <div class="govuk-radios__item"><input class="govuk-radios__input" type="radio" name="environment" id="env-production" value="Production"><label class="govuk-label govuk-radios__label" for="env-production">Production</label></div>
+          </div>
+        </fieldset>
+      </div>
 
-      <div class="wizard-btn-row">
-        <button type="button" class="btn btn-start" data-next="step-owner">Continue</button>
-        <button type="button" class="btn btn-dark" data-cancel>Cancel</button>
+      <div class="govuk-button-group">
+        <button type="button" class="govuk-button" data-module="govuk-button" data-next="step-owner">Continue</button>
+        <button type="button" class="govuk-button govuk-button--secondary" data-cancel>Cancel</button>
       </div>
     </section>
 
     <!-- STEP: owner -->
     <section id="step-owner" class="wizard-step">
-      <p class="wizard-caption">Add new application</p>
-      <h1>Select application owner</h1>
-      <div class="accent-bar" style="--chip:#f9ae00;"></div>
+      <span class="govuk-caption-l">Add new application</span>
+      <h1 class="govuk-heading-l">Select application owner</h1>
 
-      <fieldset>
-        <legend class="visually-hidden">Select application owner</legend>
-        <div class="radio-list-large">
-          <label><input type="radio" name="owner" value="Me"> Me</label>
-          <label><input type="radio" name="owner" value="Test" checked> Test</label>
-          <p style="margin:4px 0 4px 42px;color:var(--grey-dark);">or</p>
-          <label><input type="radio" name="owner" value="Add a new team"> Add a new team</label>
-        </div>
-      </fieldset>
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-visually-hidden">Select application owner</legend>
+          <div class="govuk-radios">
+            <div class="govuk-radios__item"><input class="govuk-radios__input" type="radio" name="owner" id="owner-me" value="Me"><label class="govuk-label govuk-radios__label" for="owner-me">Me</label></div>
+            <div class="govuk-radios__item"><input class="govuk-radios__input" type="radio" name="owner" id="owner-test" value="Test" checked><label class="govuk-label govuk-radios__label" for="owner-test">Test</label></div>
+            <div class="govuk-radios__divider">or</div>
+            <div class="govuk-radios__item"><input class="govuk-radios__input" type="radio" name="owner" id="owner-team" value="Add a new team"><label class="govuk-label govuk-radios__label" for="owner-team">Add a new team</label></div>
+          </div>
+        </fieldset>
+      </div>
 
-      <div class="wizard-btn-row">
-        <button type="button" class="btn btn-start" data-next="step-name">Continue</button>
-        <button type="button" class="btn btn-dark" data-cancel>Cancel</button>
+      <div class="govuk-button-group">
+        <button type="button" class="govuk-button" data-module="govuk-button" data-next="step-name">Continue</button>
+        <button type="button" class="govuk-button govuk-button--secondary" data-cancel>Cancel</button>
       </div>
     </section>
 
     <!-- STEP: name -->
     <section id="step-name" class="wizard-step">
-      <p><a href="#" data-back="step-owner">&lsaquo; Go back</a></p>
-      <p class="wizard-caption">Add new application</p>
-      <h1>What is your application name?</h1>
-      <div class="accent-bar" style="--chip:#11a63c;"></div>
-      <p style="max-width:65ch;color:var(--grey-dark);font-size:1.05rem;">The application name must be unique. This means you cannot have applications with the same name and owner.</p>
+      <p class="govuk-body"><a class="govuk-back-link" href="#" data-back="step-owner">Back</a></p>
+      <span class="govuk-caption-l">Add new application</span>
+      <h1 class="govuk-heading-l">What is your application name?</h1>
+      <p class="govuk-body" style="max-width:65ch;">The application name must be unique. This means you cannot have applications with the same name and owner.</p>
 
-      <div class="field" style="max-width:560px;">
-        <label class="visually-hidden" for="app-name">Application name</label>
-        <input type="text" id="app-name" required>
+      <div class="govuk-form-group" style="max-width:560px;">
+        <label class="govuk-label govuk-visually-hidden" for="app-name">Application name</label>
+        <input class="govuk-input" type="text" id="app-name" required>
       </div>
 
-      <div class="wizard-btn-row">
-        <button type="button" class="btn btn-start" data-next="step-check" id="name-continue">Continue</button>
-        <button type="button" class="btn btn-dark" data-cancel>Cancel</button>
+      <div class="govuk-button-group">
+        <button type="button" class="govuk-button" data-module="govuk-button" data-next="step-check" id="name-continue">Continue</button>
+        <button type="button" class="govuk-button govuk-button--secondary" data-cancel>Cancel</button>
       </div>
     </section>
 
     <!-- STEP: check answers -->
     <section id="step-check" class="wizard-step">
-      <p class="wizard-caption">Add new application</p>
-      <h1>Check your answers before creating your application</h1>
-      <div class="accent-bar" style="--chip:#0096d6;"></div>
+      <span class="govuk-caption-l">Add new application</span>
+      <h1 class="govuk-heading-l">Check your answers before creating your application</h1>
 
-      <table class="check-table">
-        <tbody>
-          <tr><td>Environment</td><td id="check-environment"></td><td><a href="#" class="change-link" data-back="step-environment">Change</a></td></tr>
-          <tr><td>Owner</td><td id="check-owner"></td><td><a href="#" class="change-link" data-back="step-owner">Change</a></td></tr>
-          <tr><td>Application name</td><td id="check-name"></td><td><a href="#" class="change-link" data-back="step-name">Change</a></td></tr>
-        </tbody>
-      </table>
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Environment</dt>
+          <dd class="govuk-summary-list__value" id="check-environment"></dd>
+          <dd class="govuk-summary-list__actions"><a class="govuk-link" href="#" data-back="step-environment">Change</a></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Owner</dt>
+          <dd class="govuk-summary-list__value" id="check-owner"></dd>
+          <dd class="govuk-summary-list__actions"><a class="govuk-link" href="#" data-back="step-owner">Change</a></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Application name</dt>
+          <dd class="govuk-summary-list__value" id="check-name"></dd>
+          <dd class="govuk-summary-list__actions"><a class="govuk-link" href="#" data-back="step-name">Change</a></dd>
+        </div>
+      </dl>
 
-      <div class="wizard-btn-row">
-        <button type="button" class="btn btn-start" id="create-app-btn">Create application</button>
-        <button type="button" class="btn btn-dark" data-cancel>Cancel</button>
+      <div class="govuk-button-group">
+        <button type="button" class="govuk-button" data-module="govuk-button" id="create-app-btn">Create application</button>
+        <button type="button" class="govuk-button govuk-button--secondary" data-cancel>Cancel</button>
       </div>
     </section>
 
     <!-- STEP: success -->
     <section id="step-success" class="wizard-step">
-      <h1>Application created successfully</h1>
-      <div class="accent-bar" style="--chip:#11a63c;"></div>
-      <p style="font-size:1.1rem;color:var(--grey-dark);">Remember to add your APIs, Public key and Callback URL if required.</p>
+      <div class="govuk-panel govuk-panel--confirmation">
+        <h1 class="govuk-panel__title">Application created successfully</h1>
+      </div>
+      <p class="govuk-body">Remember to add your APIs, Public key and Callback URL if required.</p>
 
-      <h2 style="margin-top:1.6em;">What happens next:</h2>
-      <p><a href="#" id="view-app-link">View your new application</a></p>
-      <p><a href="account.html">Go back to Home</a></p>
+      <h2 class="govuk-heading-m">What happens next:</h2>
+      <p class="govuk-body"><a class="govuk-link" href="#" id="view-app-link">View your new application</a></p>
+      <p class="govuk-body"><a class="govuk-link" href="account.html">Go back to Home</a></p>
     </section>
 
     <!-- STEP: application detail -->
     <section id="step-detail" class="wizard-step">
-      <div class="breadcrumbs" style="padding:0 0 1.2em;">
-        <ol>
-          <li><a href="account.html">Home</a></li>
-          <li><a href="#" data-goto="step-list">My applications and teams</a></li>
-          <li id="detail-breadcrumb-name"></li>
+      <nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
+        <ol class="govuk-breadcrumbs__list">
+          <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="account.html">Home</a></li>
+          <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="#" data-goto="step-list">My applications and teams</a></li>
+          <li class="govuk-breadcrumbs__list-item" id="detail-breadcrumb-name"></li>
         </ol>
-      </div>
+      </nav>
 
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
-        <div>
-          <h1 id="detail-name" style="margin-bottom:0;"></h1>
-          <div class="accent-bar" style="--chip:#0096d6;"></div>
-        </div>
-        <div style="display:flex;gap:10px;">
-          <button type="button" class="btn btn-dark">View audit log</button>
-          <button type="button" class="btn" style="background:var(--red);color:#fff;box-shadow:0 2px 0 #a02b16;">Delete</button>
+        <h1 class="govuk-heading-xl" id="detail-name" style="margin-bottom:0;"></h1>
+        <div class="govuk-button-group">
+          <button type="button" class="govuk-button govuk-button--secondary">View audit log</button>
+          <button type="button" class="govuk-button govuk-button--warning">Delete</button>
         </div>
       </div>
 
-      <h2 style="margin-top:1.6em;">Basic details</h2>
-      <table class="check-table">
-        <tbody>
-          <tr><td>Application name</td><td id="detail-app-name"></td><td><a href="#" class="change-link">Edit</a></td></tr>
-          <tr><td>Description</td><td id="detail-description"></td><td><a href="#" class="change-link">Edit</a></td></tr>
-          <tr><td>Owner</td><td id="detail-owner"></td><td></td></tr>
-          <tr><td>Date created</td><td id="detail-created"></td><td></td></tr>
-          <tr><td>Application ID</td><td id="detail-id" style="font-family:monospace;font-size:0.92rem;"></td><td><button type="button" class="btn btn-dark copy-btn" id="copy-id-btn" style="padding:6px 14px;font-size:0.85rem;">Copy</button></td></tr>
-          <tr><td>Environment</td><td><span class="status-badge status-badge-env" id="detail-environment"></span></td><td></td></tr>
-        </tbody>
-      </table>
+      <h2 class="govuk-heading-l">Basic details</h2>
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Application name</dt><dd class="govuk-summary-list__value" id="detail-app-name"></dd>
+          <dd class="govuk-summary-list__actions"><a class="govuk-link" href="#">Edit</a></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Description</dt><dd class="govuk-summary-list__value" id="detail-description"></dd>
+          <dd class="govuk-summary-list__actions"><a class="govuk-link" href="#">Edit</a></dd>
+        </div>
+        <div class="govuk-summary-list__row"><dt class="govuk-summary-list__key">Owner</dt><dd class="govuk-summary-list__value" id="detail-owner"></dd><dd class="govuk-summary-list__actions"></dd></div>
+        <div class="govuk-summary-list__row"><dt class="govuk-summary-list__key">Date created</dt><dd class="govuk-summary-list__value" id="detail-created"></dd><dd class="govuk-summary-list__actions"></dd></div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Application ID</dt>
+          <dd class="govuk-summary-list__value" id="detail-id" style="font-family:monospace;font-size:0.92rem;"></dd>
+          <dd class="govuk-summary-list__actions"><button type="button" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" id="copy-id-btn">Copy</button></dd>
+        </div>
+        <div class="govuk-summary-list__row"><dt class="govuk-summary-list__key">Environment</dt><dd class="govuk-summary-list__value"><strong class="govuk-tag govuk-tag--green" id="detail-environment"></strong></dd><dd class="govuk-summary-list__actions"></dd></div>
+      </dl>
 
-      <h2 style="margin-top:1.8em;">Credentials</h2>
-      <p style="max-width:70ch;color:var(--grey-dark);">Use these credentials to obtain a JWT access token from the Marketplace Entra token endpoint.</p>
-      <table class="check-table">
-        <tbody>
-          <tr>
-            <td>Token endpoint</td>
-            <td style="font-family:monospace;font-size:0.86rem;word-break:break-all;" id="detail-token-endpoint"></td>
-            <td><button type="button" class="btn btn-dark copy-btn" id="copy-endpoint-btn" style="padding:6px 14px;font-size:0.85rem;">Copy</button></td>
-          </tr>
-          <tr>
-            <td>Scope</td>
-            <td style="font-family:monospace;font-size:0.86rem;word-break:break-all;" id="detail-scope"></td>
-            <td><button type="button" class="btn btn-dark copy-btn" id="copy-scope-btn" style="padding:6px 14px;font-size:0.85rem;">Copy</button></td>
-          </tr>
-          <tr>
-            <td>Client secret</td>
-            <td><span class="secret-mask">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</span></td>
-            <td><a href="#" class="change-link" id="edit-api-keys-link">View and manage</a></td>
-          </tr>
-          <tr>
-            <td>Subscription key</td>
-            <td colspan="2">
-              <span class="status-badge status-badge-pending" id="detail-subscription-status">Pending subscription</span>
-              <p id="detail-subscription-hint" style="margin:8px 0 0;color:var(--grey-dark);">Subscribe to an API to receive your subscription key.</p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <h2 class="govuk-heading-l">Credentials</h2>
+      <p class="govuk-body" style="max-width:70ch;">Use these credentials to obtain a JWT access token from the Marketplace Entra token endpoint.</p>
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Token endpoint</dt>
+          <dd class="govuk-summary-list__value" style="font-family:monospace;font-size:0.86rem;word-break:break-all;" id="detail-token-endpoint"></dd>
+          <dd class="govuk-summary-list__actions"><button type="button" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" id="copy-endpoint-btn">Copy</button></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Scope</dt>
+          <dd class="govuk-summary-list__value" style="font-family:monospace;font-size:0.86rem;word-break:break-all;" id="detail-scope"></dd>
+          <dd class="govuk-summary-list__actions"><button type="button" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" id="copy-scope-btn">Copy</button></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Client secret</dt>
+          <dd class="govuk-summary-list__value"><span class="secret-mask">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</span></dd>
+          <dd class="govuk-summary-list__actions"><a class="govuk-link" href="#" id="edit-api-keys-link">View and manage</a></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Subscription key</dt>
+          <dd class="govuk-summary-list__value" colspan="2">
+            <strong class="govuk-tag govuk-tag--grey" id="detail-subscription-status">Pending subscription</strong>
+            <p class="govuk-body" id="detail-subscription-hint" style="margin:8px 0 0;">Subscribe to an API to receive your subscription key.</p>
+          </dd>
+          <dd class="govuk-summary-list__actions"></dd>
+        </div>
+      </dl>
 
-      <h2 style="margin-top:1.8em;">Get a token</h2>
-      <p style="max-width:70ch;color:var(--grey-dark);">Use your Application ID and client secret to get a JWT access token. Include this token as a Bearer token on every API call.</p>
+      <h2 class="govuk-heading-l">Get a token</h2>
+      <p class="govuk-body" style="max-width:70ch;">Use your Application ID and client secret to get a JWT access token. Include this token as a Bearer token on every API call.</p>
 
       <div class="wizard-tabs" role="tablist">
         <button type="button" class="lang-tab active" data-lang="curl">curl</button>
@@ -240,120 +348,124 @@
       </div>
 
       <div class="lang-tab-panel active" id="lang-curl">
-        <div class="code-block" id="code-curl"></div>
+        <pre class="app-code-block" id="code-curl"></pre>
       </div>
       <div class="lang-tab-panel" id="lang-python">
-        <div class="code-block" id="code-python"></div>
+        <pre class="app-code-block" id="code-python"></pre>
       </div>
       <div class="lang-tab-panel" id="lang-dotnet">
-        <div class="code-block" id="code-dotnet"></div>
+        <pre class="app-code-block" id="code-dotnet"></pre>
       </div>
       <div class="lang-tab-panel" id="lang-node">
-        <div class="code-block" id="code-node"></div>
+        <pre class="app-code-block" id="code-node"></pre>
       </div>
 
-      <p>For full integration instructions including Track B (signed JWT) for production, see the <a href="entra-jwt-auth.html">signed JWT authentication guide</a>.</p>
+      <p class="govuk-body">For full integration instructions including Track B (signed JWT) for production, see the <a class="govuk-link" href="entra-jwt-auth.html">signed JWT authentication guide</a>.</p>
 
-      <h2 style="margin-top:1.8em;">Try it</h2>
-      <p style="max-width:70ch;color:var(--grey-dark);">Get an access token using the curl command above, then paste it here to call the API live from this page. Your token and subscription key are used only for this request and are never stored or sent anywhere else — your client secret should never be pasted into a browser, including this one.</p>
+      <h2 class="govuk-heading-l">Try it</h2>
+      <p class="govuk-body" style="max-width:70ch;">Get an access token using the curl command above, then paste it here to call the API live from this page. Your token and subscription key are used only for this request and are never stored or sent anywhere else — your client secret should never be pasted into a browser, including this one.</p>
 
-      <div class="field" style="max-width:640px;">
-        <label for="try-it-token">Access token</label>
-        <input type="password" id="try-it-token" placeholder="Paste the access_token from your token response" autocomplete="off">
+      <div class="govuk-form-group" style="max-width:640px;">
+        <label class="govuk-label" for="try-it-token">Access token</label>
+        <input class="govuk-input" type="password" id="try-it-token" placeholder="Paste the access_token from your token response" autocomplete="off">
       </div>
-      <div class="field" style="max-width:640px;">
-        <label for="try-it-subscription-key">Subscription key</label>
-        <input type="password" id="try-it-subscription-key" placeholder="Paste your subscription key" autocomplete="off">
+      <div class="govuk-form-group" style="max-width:640px;">
+        <label class="govuk-label" for="try-it-subscription-key">Subscription key</label>
+        <input class="govuk-input" type="password" id="try-it-subscription-key" placeholder="Paste your subscription key" autocomplete="off">
       </div>
-      <div class="field" style="max-width:640px;">
-        <label for="try-it-case-urn">Case URN</label>
-        <input type="text" id="try-it-case-urn" value="TEST-123">
+      <div class="govuk-form-group" style="max-width:640px;">
+        <label class="govuk-label" for="try-it-case-urn">Case URN</label>
+        <input class="govuk-input" type="text" id="try-it-case-urn" value="TEST-123">
       </div>
 
-      <div class="wizard-btn-row">
-        <button type="button" class="btn btn-start" id="try-it-btn">Call the API</button>
+      <div class="govuk-button-group">
+        <button type="button" class="govuk-button" data-module="govuk-button" id="try-it-btn">Call the API</button>
       </div>
 
       <div id="try-it-result" style="display:none;margin-top:1.2em;">
-        <p id="try-it-status" style="font-weight:700;"></p>
-        <div class="code-block" id="try-it-response"></div>
+        <p class="govuk-body" id="try-it-status" style="font-weight:700;"></p>
+        <pre class="app-code-block" id="try-it-response"></pre>
       </div>
 
-      <h2 style="margin-top:1.6em;">Custom attributes</h2>
-      <p>No custom attributes.</p>
-      <button type="button" class="btn btn-start">Add custom attribute</button>
+      <h2 class="govuk-heading-l">Custom attributes</h2>
+      <p class="govuk-body">No custom attributes.</p>
+      <button type="button" class="govuk-button" data-module="govuk-button">Add custom attribute</button>
 
-      <h2 style="margin-top:1.8em;">Connected APIs</h2>
-      <p id="detail-no-apis">No connected APIs.</p>
-      <ul id="detail-apis-list" style="display:none;list-style:none;padding:0;margin:0 0 1.4em;"></ul>
-      <button type="button" class="btn btn-start" id="add-apis-btn">Add APIs</button>
+      <h2 class="govuk-heading-l">Connected APIs</h2>
+      <p class="govuk-body" id="detail-no-apis">No connected APIs.</p>
+      <ul class="govuk-list" id="detail-apis-list" style="display:none;"></ul>
+      <button type="button" class="govuk-button govuk-button--secondary" id="add-apis-btn">Add APIs</button>
     </section>
 
     <!-- STEP: edit API keys -->
     <section id="step-edit-api-keys" class="wizard-step">
-      <div class="breadcrumbs" style="padding:0 0 1.2em;">
-        <ol>
-          <li><a href="account.html">Home</a></li>
-          <li><a href="#" data-goto="step-list">My applications and teams</a></li>
-          <li><a href="#" data-goto="step-detail" id="edit-keys-breadcrumb-name"></a></li>
-          <li>Edit API keys</li>
+      <nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
+        <ol class="govuk-breadcrumbs__list">
+          <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="account.html">Home</a></li>
+          <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="#" data-goto="step-list">My applications and teams</a></li>
+          <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="#" data-goto="step-detail" id="edit-keys-breadcrumb-name"></a></li>
+          <li class="govuk-breadcrumbs__list-item">Edit API keys</li>
         </ol>
+      </nav>
+
+      <h1 class="govuk-heading-l">Edit API keys</h1>
+      <p class="govuk-body">View, edit and rotate your API keys.</p>
+      <p class="govuk-body">To rotate a key, add a new key and revoke the old key.</p>
+
+      <div class="govuk-inset-text" style="max-width:640px;">
+        <p class="govuk-body govuk-!-font-weight-bold">Adding new keys</p>
+        <p class="govuk-body">Before you can add a new key you will need to connect at least one API to your application.</p>
       </div>
 
-      <h1>Edit API keys</h1>
-      <div class="accent-bar" style="--chip:#0096d6;"></div>
-      <p>View, edit and rotate your API keys.</p>
-      <p>To rotate a key, add a new key and revoke the old key.</p>
-
-      <div class="auth-callout" style="max-width:640px;">
-        <div class="auth-callout-tab">Adding new keys</div>
-        <div class="auth-callout-body">
-          <p>Before you can add a new key you will need to connect at least one API to your application.</p>
+      <h2 class="govuk-heading-m">Active keys</h2>
+      <dl class="govuk-summary-list" style="max-width:640px;">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Key</dt>
+          <dd class="govuk-summary-list__value" style="font-family:monospace;font-size:0.9rem;" id="edit-keys-key"></dd>
+          <dd class="govuk-summary-list__actions"><button type="button" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" id="copy-key-btn">Copy</button></dd>
         </div>
-      </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Secret</dt>
+          <dd class="govuk-summary-list__value" colspan="2"><button type="button" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" id="show-secret-btn">Show secret</button> <span id="edit-keys-secret" style="font-family:monospace;font-size:0.9rem;display:none;margin-left:10px;"></span></dd>
+          <dd class="govuk-summary-list__actions"></dd>
+        </div>
+        <div class="govuk-summary-list__row"><dt class="govuk-summary-list__key">Status</dt><dd class="govuk-summary-list__value" colspan="2">Active</dd><dd class="govuk-summary-list__actions"></dd></div>
+        <div class="govuk-summary-list__row"><dt class="govuk-summary-list__key">Created</dt><dd class="govuk-summary-list__value" colspan="2" id="edit-keys-created"></dd><dd class="govuk-summary-list__actions"></dd></div>
+        <div class="govuk-summary-list__row"><dt class="govuk-summary-list__key">Expires</dt><dd class="govuk-summary-list__value" colspan="2">Never</dd><dd class="govuk-summary-list__actions"></dd></div>
+      </dl>
 
-      <h2 style="margin-top:1.6em;">Active keys</h2>
-      <table class="check-table" style="max-width:640px;">
-        <tbody>
-          <tr><td>Key</td><td id="edit-keys-key" style="font-family:monospace;font-size:0.9rem;"></td><td><button type="button" class="btn btn-dark" id="copy-key-btn" style="padding:6px 14px;font-size:0.85rem;">Copy</button></td></tr>
-          <tr><td>Secret</td><td colspan="2"><button type="button" class="btn btn-dark" id="show-secret-btn" style="padding:6px 14px;font-size:0.85rem;">Show secret</button> <span id="edit-keys-secret" style="font-family:monospace;font-size:0.9rem;display:none;margin-left:10px;"></span></td></tr>
-          <tr><td>Status</td><td colspan="2">Active</td></tr>
-          <tr><td>Created</td><td colspan="2" id="edit-keys-created"></td></tr>
-          <tr><td>Expires</td><td colspan="2">Never</td></tr>
-        </tbody>
-      </table>
-
-      <div class="wizard-btn-row">
-        <button type="button" class="btn" style="background:var(--red);color:#fff;box-shadow:0 2px 0 #a02b16;" id="revoke-key-btn">Revoke</button>
-        <button type="button" class="btn btn-dark" data-back="step-detail">Back to application</button>
+      <div class="govuk-button-group">
+        <button type="button" class="govuk-button govuk-button--warning" id="revoke-key-btn">Revoke</button>
+        <button type="button" class="govuk-button govuk-button--secondary" data-back="step-detail">Back to application</button>
       </div>
     </section>
 
     <!-- STEP: add APIs -->
     <section id="step-add-apis" class="wizard-step">
-      <div class="breadcrumbs" style="padding:0 0 1.2em;">
-        <ol>
-          <li><a href="account.html">Home</a></li>
-          <li><a href="#" data-goto="step-list">My applications and teams</a></li>
-          <li><a href="#" data-goto="step-detail" id="add-apis-breadcrumb-name"></a></li>
-          <li>Add APIs</li>
+      <nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
+        <ol class="govuk-breadcrumbs__list">
+          <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="account.html">Home</a></li>
+          <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="#" data-goto="step-list">My applications and teams</a></li>
+          <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="#" data-goto="step-detail" id="add-apis-breadcrumb-name"></a></li>
+          <li class="govuk-breadcrumbs__list-item">Add APIs</li>
         </ol>
+      </nav>
+
+      <h1 class="govuk-heading-l">Add APIs</h1>
+      <p class="govuk-body">Here are the APIs available for this application. Enable access to the APIs you want to use.</p>
+      <p class="govuk-body">For production environments you need to request access which will be approved after you complete the <a class="govuk-link" href="onboarding-guide.html">onboarding process</a>.</p>
+
+      <h2 class="govuk-heading-m">APIs available in this environment</h2>
+      <div class="govuk-form-group" style="max-width:480px;">
+        <label class="govuk-label govuk-!-font-weight-bold" for="api-search">Search</label>
+        <div style="display:flex;gap:8px;">
+          <input class="govuk-input" type="text" id="api-search" placeholder="Search&hellip;">
+          <button type="button" class="govuk-button govuk-!-margin-bottom-0" id="api-search-btn">Search</button>
+        </div>
       </div>
+      <p class="govuk-body govuk-!-font-weight-bold" id="api-results-count"></p>
 
-      <h1>Add APIs</h1>
-      <div class="accent-bar" style="--chip:#724695;"></div>
-      <p>Here are the APIs available for this application. Enable access to the APIs you want to use.</p>
-      <p>For production environments you need to request access which will be approved after you complete the <a href="onboarding-guide.html">onboarding process</a>.</p>
-
-      <h2 style="margin-top:1.6em;">APIs available in this environment</h2>
-      <label for="api-search" style="font-weight:700;display:block;margin-bottom:8px;">Search</label>
-      <div class="search-row" style="max-width:480px;">
-        <input type="text" id="api-search" placeholder="Search&hellip;">
-        <button type="button" id="api-search-btn">Search</button>
-      </div>
-      <p id="api-results-count" style="margin:0.8em 0 1.4em;font-weight:700;"></p>
-
-      <div id="api-checkbox-list">
+      <div id="api-checkbox-list" class="govuk-checkboxes">
         <label class="api-checkbox-row" data-search="crime prosecution case details api returns case details for prosecuted criminal cases, including defendant, hearing and outcome information.">
         <input type="checkbox" value="Crime Prosecution Case Details API">
         <span><strong>Crime Prosecution Case Details API (Sandbox)</strong><br><span class="api-checkbox-desc">Returns case details for prosecuted criminal cases, including defendant, hearing and outcome information.</span></span>
@@ -381,14 +493,14 @@
       </label>
       </div>
 
-      <div class="wizard-btn-row">
-        <button type="button" class="btn btn-start" id="save-apis-btn">Save changes</button>
-        <button type="button" class="btn btn-dark" id="cancel-add-apis-btn">Cancel</button>
+      <div class="govuk-button-group">
+        <button type="button" class="govuk-button" data-module="govuk-button" id="save-apis-btn">Save changes</button>
+        <button type="button" class="govuk-button govuk-button--secondary" id="cancel-add-apis-btn">Cancel</button>
       </div>
     </section>
 
-  </div>
-</section>
+  </main>
+</div>
 
 <script>
 (function () {
@@ -505,8 +617,9 @@
     tbody.innerHTML = '';
     apps.forEach(function (app) {
       var tr = document.createElement('tr');
+      tr.className = 'govuk-table__row';
       tr.style.cursor = 'pointer';
-      tr.innerHTML = '<td><a href="#">' + app.name + '</a></td><td>' + app.environment + '</td><td>' + app.owner + '</td>';
+      tr.innerHTML = '<td class="govuk-table__cell"><a class="govuk-link" href="#">' + app.name + '</a></td><td class="govuk-table__cell">' + app.environment + '</td><td class="govuk-table__cell">' + app.owner + '</td>';
       tr.addEventListener('click', function () {
         currentApp = app;
         renderDetail(app);
@@ -520,7 +633,7 @@
     document.getElementById('detail-breadcrumb-name').textContent = app.name;
     document.getElementById('detail-name').textContent = app.name;
     document.getElementById('detail-app-name').textContent = app.name;
-    document.getElementById('detail-description').textContent = app.description || '\u2014';
+    document.getElementById('detail-description').textContent = app.description || '—';
     document.getElementById('detail-owner').textContent = app.owner;
     document.getElementById('detail-created').textContent = app.createdAt;
     document.getElementById('detail-id').textContent = app.id;
@@ -538,11 +651,11 @@
     var subHint = document.getElementById('detail-subscription-hint');
     if (app.connectedApis.length === 0) {
       subStatus.textContent = 'Pending subscription';
-      subStatus.className = 'status-badge status-badge-pending';
+      subStatus.className = 'govuk-tag govuk-tag--grey';
       subHint.textContent = 'Subscribe to an API to receive your subscription key.';
     } else {
       subStatus.textContent = 'Active';
-      subStatus.className = 'status-badge status-badge-env';
+      subStatus.className = 'govuk-tag govuk-tag--green';
       subHint.textContent = 'Subscribed to ' + app.connectedApis.length + ' API' + (app.connectedApis.length === 1 ? '' : 's') + '.';
     }
 
@@ -809,36 +922,47 @@
 })();
 </script>
 
-</main>
-
-<footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-grid footer-grid-2">
-      <div>
-        <h2>Legal</h2>
-        <ul>
-          <li><a href="#">Accessibility statement</a></li>
-          <li><a href="#">Cookies</a></li>
-          <li><a href="#">Privacy notice</a></li>
-          <li><a href="data-governance.html">Data governance</a></li>
+<footer class="govuk-footer">
+  <div class="govuk-width-container">
+    <svg focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 60" height="30" width="32" fill="currentcolor" class="govuk-footer__crown">
+      <g>
+        <circle cx="20" cy="17.6" r="3.7"></circle>
+        <circle cx="10.2" cy="23.5" r="3.7"></circle>
+        <circle cx="3.7" cy="33.2" r="3.7"></circle>
+        <circle cx="31.7" cy="30.6" r="3.7"></circle>
+        <circle cx="43.3" cy="17.6" r="3.7"></circle>
+        <circle cx="53.2" cy="23.5" r="3.7"></circle>
+        <circle cx="59.7" cy="33.2" r="3.7"></circle>
+        <circle cx="31.7" cy="30.6" r="3.7"></circle>
+        <path d="M33.1,9.8c.2-.1.3-.3.5-.5l4.6,2.4v-6.8l-4.6,1.5c-.1-.2-.3-.3-.5-.5l1.9-5.9h-6.7l1.9,5.9c-.2.1-.3.3-.5.5l-4.6-1.5v6.8l4.6-2.4c.1.2.3.3.5.5l-2.6,8c-.9,2.8,1.2,5.7,4.1,5.7h0c3,0,5.1-2.9,4.1-5.7l-2.6-8ZM37,37.9s-3.4,3.8-4.1,6.1c2.2,0,4.2-.5,6.4-2.8l-.7,8.5c-2-2.8-4.4-4.1-5.7-3.8.1,3.1.5,6.7,5.8,7.2,3.7.3,6.7-1.5,7-3.8.4-2.6-2-4.3-3.7-1.6-1.4-4.5,2.4-6.1,4.9-3.2-1.9-4.5-1.8-7.7,2.4-10.9,3,4,2.6,7.3-1.2,11.1,2.4-1.3,6.2,0,4,4.6-1.2-2.8-3.7-2.2-4.2.2-.3,1.7.7,3.7,3,4.2,1.9.3,4.7-.9,7-5.9-1.3,0-2.4.7-3.9,1.7l2.4-8c.6,2.3,1.4,3.7,2.2,4.5.6-1.6.5-2.8,0-5.3l5,1.8c-2.6,3.6-5.2,8.7-7.3,17.5-7.4-1.1-15.7-1.7-24.5-1.7h0c-8.8,0-17.1.6-24.5,1.7-2.1-8.9-4.7-13.9-7.3-17.5l5-1.8c-.5,2.5-.6,3.7,0,5.3.8-.8,1.6-2.3,2.2-4.5l2.4,8c-1.5-1-2.6-1.7-3.9-1.7,2.3,5,5.2,6.2,7,5.9,2.3-.4,3.3-2.4,3-4.2-.5-2.4-3-3.1-4.2-.2-2.2-4.6,1.6-6,4-4.6-3.7-3.7-4.2-7.1-1.2-11.1,4.2,3.2,4.3,6.4,2.4,10.9,2.5-2.8,6.3-1.3,4.9,3.2-1.8-2.7-4.1-1-3.7,1.6.3,2.3,3.3,4.1,7,3.8,5.4-.5,5.7-4.2,5.8-7.2-1.3-.2-3.7,1-5.7,3.8l-.7-8.5c2.2,2.3,4.2,2.7,6.4,2.8-.7-2.3-4.1-6.1-4.1-6.1h10.6,0Z"></path>
+      </g>
+    </svg>
+    <div class="govuk-footer__meta">
+      <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+        <h2 class="govuk-visually-hidden">Support and legal</h2>
+        <ul class="govuk-footer__inline-list">
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="contact.html">Contact the marketplace team</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="request-new-api.html">Request a new API</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="onboarding-guide.html">Onboarding guide</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="publish-api.html">Publish an API</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Accessibility statement</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Cookies</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Privacy notice</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="data-governance.html">Data governance</a></li>
         </ul>
       </div>
-      <div>
-        <h2>Get in touch</h2>
-        <ul>
-          <li><a href="contact.html">Contact the marketplace team</a></li>
-          <li><a href="request-new-api.html">Request a new API</a></li>
-          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
-          <li><a href="publish-api.html">Publish an API</a></li>
-        </ul>
+      <div class="govuk-footer__meta-item">
+        <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.gov.uk">&copy; Crown copyright &mdash; MIT Licence</a>
+        <p class="govuk-body-s">Built by <a class="govuk-footer__link" href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></p>
       </div>
-    </div>
-    <div class="footer-bottom">
-      <span>&copy; Crown copyright &mdash; MIT Licence</span>
-      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
     </div>
   </div>
 </footer>
+
+<script type="module">
+  import { initAll } from "https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/govuk-frontend.min.js";
+  initAll();
+</script>
 <script src="assets/scripts.js"></script>
 
 </body>

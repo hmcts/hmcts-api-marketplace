@@ -1,154 +1,263 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Create an account — HMCTS API Marketplace</title>
 <meta name="description" content="Create an HMCTS API Marketplace developer account.">
-<link rel="stylesheet" href="assets/styles.css">
-</head>
-<body>
-<a class="skip-link" href="#main-content">Skip to main content</a>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/govuk-frontend.min.css">
+<style>
+@font-face {
+  font-family: "GDS Transport";
+  src: url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/light-94a07e06a1-v2.woff2") format("woff2"),
+       url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/light-f591880d6f-v2.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "GDS Transport";
+  src: url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/bold-b542beb274-v2.woff2") format("woff2"),
+       url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/bold-1d5e47bda2-v2.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+body, input, select, textarea, button {
+  font-family: "GDS Transport", arial, sans-serif !important;
+}
+:root { --red: #d4351c; --green: #00703c; --grey-dark: #505a5f; --border-light: #b1b4b6; }
 
-<div class="auth-logo-bar">
-  <div class="wrap">
-    <a class="crest" href="index.html"><img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img"></a>
+/* Mock-submit mechanics — this page's own inline <script> toggles these same
+   class names directly, so the CSS mechanics must still be redefined here
+   now that styles.css is gone. */
+.error-summary { display: none; }
+.error-summary.show { display: block; }
+.confirmation { display: none; }
+.confirmation.show { display: block; }
+form.hidden-after-submit { display: none; }
+</style>
+</head>
+<body class="govuk-template__body">
+<script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled') + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+<a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+<header class="govuk-header" data-module="govuk-header">
+  <div class="govuk-header__container govuk-width-container">
+    <div class="govuk-header__logo">
+      <a href="https://www.gov.uk" class="govuk-header__link govuk-header__link--homepage">
+        <svg focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 324 60" height="30" width="162" fill="currentcolor" class="govuk-header__logotype" aria-label="GOV.UK">
+          <title>GOV.UK</title>
+          <g>
+            <circle cx="20" cy="17.6" r="3.7"></circle>
+            <circle cx="10.2" cy="23.5" r="3.7"></circle>
+            <circle cx="3.7" cy="33.2" r="3.7"></circle>
+            <circle cx="31.7" cy="30.6" r="3.7"></circle>
+            <circle cx="43.3" cy="17.6" r="3.7"></circle>
+            <circle cx="53.2" cy="23.5" r="3.7"></circle>
+            <circle cx="59.7" cy="33.2" r="3.7"></circle>
+            <circle cx="31.7" cy="30.6" r="3.7"></circle>
+            <path d="M33.1,9.8c.2-.1.3-.3.5-.5l4.6,2.4v-6.8l-4.6,1.5c-.1-.2-.3-.3-.5-.5l1.9-5.9h-6.7l1.9,5.9c-.2.1-.3.3-.5.5l-4.6-1.5v6.8l4.6-2.4c.1.2.3.3.5.5l-2.6,8c-.9,2.8,1.2,5.7,4.1,5.7h0c3,0,5.1-2.9,4.1-5.7l-2.6-8ZM37,37.9s-3.4,3.8-4.1,6.1c2.2,0,4.2-.5,6.4-2.8l-.7,8.5c-2-2.8-4.4-4.1-5.7-3.8.1,3.1.5,6.7,5.8,7.2,3.7.3,6.7-1.5,7-3.8.4-2.6-2-4.3-3.7-1.6-1.4-4.5,2.4-6.1,4.9-3.2-1.9-4.5-1.8-7.7,2.4-10.9,3,4,2.6,7.3-1.2,11.1,2.4-1.3,6.2,0,4,4.6-1.2-2.8-3.7-2.2-4.2.2-.3,1.7.7,3.7,3,4.2,1.9.3,4.7-.9,7-5.9-1.3,0-2.4.7-3.9,1.7l2.4-8c.6,2.3,1.4,3.7,2.2,4.5.6-1.6.5-2.8,0-5.3l5,1.8c-2.6,3.6-5.2,8.7-7.3,17.5-7.4-1.1-15.7-1.7-24.5-1.7h0c-8.8,0-17.1.6-24.5,1.7-2.1-8.9-4.7-13.9-7.3-17.5l5-1.8c-.5,2.5-.6,3.7,0,5.3.8-.8,1.6-2.3,2.2-4.5l2.4,8c-1.5-1-2.6-1.7-3.9-1.7,2.3,5,5.2,6.2,7,5.9,2.3-.4,3.3-2.4,3-4.2-.5-2.4-3-3.1-4.2-.2-2.2-4.6,1.6-6,4-4.6-3.7-3.7-4.2-7.1-1.2-11.1,4.2,3.2,4.3,6.4,2.4,10.9,2.5-2.8,6.3-1.3,4.9,3.2-1.8-2.7-4.1-1-3.7,1.6.3,2.3,3.3,4.1,7,3.8,5.4-.5,5.7-4.2,5.8-7.2-1.3-.2-3.7,1-5.7,3.8l-.7-8.5c2.2,2.3,4.2,2.7,6.4,2.8-.7-2.3-4.1-6.1-4.1-6.1h10.6,0Z"></path>
+          </g>
+          <circle class="govuk-logo-dot" cx="226" cy="36" r="7.3"></circle>
+        </svg>
+      </a>
+    </div>
   </div>
+</header>
+
+<section aria-label="Service information" class="govuk-service-navigation" data-module="govuk-service-navigation">
+  <div class="govuk-width-container">
+    <div class="govuk-service-navigation__container">
+      <span class="govuk-service-navigation__service-name">
+        <a href="index.html" class="govuk-service-navigation__link">HMCTS API Marketplace</a>
+      </span>
+      <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
+        <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
+          Menu
+        </button>
+        <ul class="govuk-service-navigation__list" id="navigation">
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="index.html">Home</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="api-catalogue.html">API catalogue</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="getting-started.html">Get started</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="documentation.html">Documentation</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="publish-api.html">Publish an API</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="help-and-support.html">Help and support</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="sign-in.html" id="nav-auth-link">Sign in</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<div class="govuk-width-container">
+  <div class="govuk-phase-banner">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag">Beta</strong>
+      <span class="govuk-phase-banner__text">This is a new service. <a class="govuk-link" href="contact.html">Help us improve it by giving feedback</a>.</span>
+    </p>
+  </div>
+
+  <main class="govuk-main-wrapper" id="main-content">
+
+    <p class="govuk-body"><a class="govuk-back-link" href="sign-in.html">Back to sign in or create a developer account</a></p>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Create an account</h1>
+        <p class="govuk-body">You need to provide your details to create an account. For more information on why we collect your information, see our <a class="govuk-link" href="#">privacy policy</a>.</p>
+
+        <form novalidate id="register-form">
+          <div class="govuk-error-summary error-summary" id="register-error" data-module="govuk-error-summary">
+            <div role="alert">
+              <h2 class="govuk-error-summary__title">There is a problem</h2>
+              <div class="govuk-error-summary__body">
+                <p class="govuk-body" id="register-error-text">Please fill in all required fields.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="reg-first">First name</label>
+            <input class="govuk-input" type="text" id="reg-first" required>
+          </div>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="reg-last">Last name</label>
+            <input class="govuk-input" type="text" id="reg-last" required>
+          </div>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="reg-email">Email address</label>
+            <input class="govuk-input" type="email" id="reg-email" required>
+          </div>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="reg-org">Organisation or team</label>
+            <div class="govuk-hint">For example: HMCTS DTS, Ministry of Justice Digital</div>
+            <input class="govuk-input" type="text" id="reg-org" required>
+          </div>
+
+          <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">I am registering as&hellip;</legend>
+              <div class="govuk-radios">
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" type="radio" name="role" id="role-consumer" value="consumer" required>
+                  <label class="govuk-label govuk-radios__label" for="role-consumer">Consumer</label>
+                  <div class="govuk-hint govuk-radios__hint">Find and use existing APIs</div>
+                </div>
+                <div class="govuk-radios__item">
+                  <input class="govuk-radios__input" type="radio" name="role" id="role-producer" value="producer">
+                  <label class="govuk-label govuk-radios__label" for="role-producer">Producer</label>
+                  <div class="govuk-hint govuk-radios__hint">List and manage my APIs</div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+          <h2 class="govuk-heading-m">Create your password</h2>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="reg-password">Password</label>
+            <div class="govuk-hint">Your password must be at least 12 characters long.</div>
+            <input class="govuk-input" type="password" id="reg-password" required minlength="12">
+          </div>
+
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="reg-password-confirm">Confirm your password</label>
+            <input class="govuk-input" type="password" id="reg-password-confirm" required minlength="12">
+          </div>
+
+          <button type="submit" class="govuk-button govuk-button--start" data-module="govuk-button">
+            Create
+            <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false"><path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path></svg>
+          </button>
+        </form>
+
+        <div class="confirmation" id="register-confirmation">
+          <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">Account created</h1>
+            <div class="govuk-panel__body" id="register-success-text">Your account has been created.</div>
+          </div>
+          <p class="govuk-body"><a class="govuk-button" data-module="govuk-button" href="index.html">Return to homepage</a></p>
+        </div>
+      </div>
+
+      <div class="govuk-grid-column-one-third">
+        <div class="side-card">
+          <h3 class="govuk-heading-s">Why create an account?</h3>
+          <ul class="govuk-list">
+            <li>Request access to HMCTS APIs</li>
+            <li>Publish and manage your own APIs</li>
+            <li>Take part in the developer community</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </main>
 </div>
 
-<main id="main-content" class="split-auth">
-  <div class="split-auth-brand">
-    <h1>Join the HMCTS developer community</h1>
-    <p>Create an account to request API access, publish your own APIs, and take part in the developer community.</p>
-
-    <svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:100%;max-width:280px;margin:1.2em 0;">
-      <circle cx="150" cy="130" r="105" fill="#D1E4F7"/>
-      <circle cx="150" cy="130" r="72" fill="#0096d6" opacity="0.15"/>
-      <g transform="translate(95,75)">
-        <circle cx="35" cy="30" r="18" fill="none" stroke="#002d59" stroke-width="4"/>
-        <circle cx="95" cy="30" r="18" fill="none" stroke="#724695" stroke-width="4"/>
-        <path d="M10 95c0-18 11-30 25-30s25 12 25 30" fill="none" stroke="#002d59" stroke-width="4"/>
-        <path d="M70 95c0-18 11-30 25-30s25 12 25 30" fill="none" stroke="#724695" stroke-width="4"/>
-      </g>
-      <g stroke="#f9ae00" stroke-width="2.5" fill="none">
-        <path d="M255 55c14 10 18 28 8 42-10 14-30 16-42 4" />
-        <path d="M255 55c-3 8 0 18 8 24" />
-      </g>
-      <g stroke="#11a63c" stroke-width="2.5" fill="none">
-        <path d="M45 195c-14 8-20 25-12 40 8 15 28 19 42 9" />
-        <path d="M45 195c-4 8-3 18 4 25" />
+<footer class="govuk-footer">
+  <div class="govuk-width-container">
+    <svg focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 60" height="30" width="32" fill="currentcolor" class="govuk-footer__crown">
+      <g>
+        <circle cx="20" cy="17.6" r="3.7"></circle>
+        <circle cx="10.2" cy="23.5" r="3.7"></circle>
+        <circle cx="3.7" cy="33.2" r="3.7"></circle>
+        <circle cx="31.7" cy="30.6" r="3.7"></circle>
+        <circle cx="43.3" cy="17.6" r="3.7"></circle>
+        <circle cx="53.2" cy="23.5" r="3.7"></circle>
+        <circle cx="59.7" cy="33.2" r="3.7"></circle>
+        <circle cx="31.7" cy="30.6" r="3.7"></circle>
+        <path d="M33.1,9.8c.2-.1.3-.3.5-.5l4.6,2.4v-6.8l-4.6,1.5c-.1-.2-.3-.3-.5-.5l1.9-5.9h-6.7l1.9,5.9c-.2.1-.3.3-.5.5l-4.6-1.5v6.8l4.6-2.4c.1.2.3.3.5.5l-2.6,8c-.9,2.8,1.2,5.7,4.1,5.7h0c3,0,5.1-2.9,4.1-5.7l-2.6-8ZM37,37.9s-3.4,3.8-4.1,6.1c2.2,0,4.2-.5,6.4-2.8l-.7,8.5c-2-2.8-4.4-4.1-5.7-3.8.1,3.1.5,6.7,5.8,7.2,3.7.3,6.7-1.5,7-3.8.4-2.6-2-4.3-3.7-1.6-1.4-4.5,2.4-6.1,4.9-3.2-1.9-4.5-1.8-7.7,2.4-10.9,3,4,2.6,7.3-1.2,11.1,2.4-1.3,6.2,0,4,4.6-1.2-2.8-3.7-2.2-4.2.2-.3,1.7.7,3.7,3,4.2,1.9.3,4.7-.9,7-5.9-1.3,0-2.4.7-3.9,1.7l2.4-8c.6,2.3,1.4,3.7,2.2,4.5.6-1.6.5-2.8,0-5.3l5,1.8c-2.6,3.6-5.2,8.7-7.3,17.5-7.4-1.1-15.7-1.7-24.5-1.7h0c-8.8,0-17.1.6-24.5,1.7-2.1-8.9-4.7-13.9-7.3-17.5l5-1.8c-.5,2.5-.6,3.7,0,5.3.8-.8,1.6-2.3,2.2-4.5l2.4,8c-1.5-1-2.6-1.7-3.9-1.7,2.3,5,5.2,6.2,7,5.9,2.3-.4,3.3-2.4,3-4.2-.5-2.4-3-3.1-4.2-.2-2.2-4.6,1.6-6,4-4.6-3.7-3.7-4.2-7.1-1.2-11.1,4.2,3.2,4.3,6.4,2.4,10.9,2.5-2.8,6.3-1.3,4.9,3.2-1.8-2.7-4.1-1-3.7,1.6.3,2.3,3.3,4.1,7,3.8,5.4-.5,5.7-4.2,5.8-7.2-1.3-.2-3.7,1-5.7,3.8l-.7-8.5c2.2,2.3,4.2,2.7,6.4,2.8-.7-2.3-4.1-6.1-4.1-6.1h10.6,0Z"></path>
       </g>
     </svg>
-
-    <ul class="auth-benefits">
-      <li><span class="auth-benefit-icon" style="background:#D1E4F7;color:#0096d6;">&#10003;</span>Request access to HMCTS APIs</li>
-      <li><span class="auth-benefit-icon" style="background:#D9CFE8;color:#724695;">&#10003;</span>Publish and manage your own APIs</li>
-      <li><span class="auth-benefit-icon" style="background:#FFEBCB;color:#c78b00;">&#10003;</span>Take part in the developer community</li>
-    </ul>
-  </div>
-
-  <div class="split-auth-form">
-    <div class="split-auth-form-inner" style="--chip:#0096d6;">
-      <p><a href="sign-in.html">&lsaquo; Back to sign in or create a developer account</a></p>
-
-      <h1>Create an account</h1>
-      <div class="accent-bar"></div>
-      <p style="color:var(--grey-dark);font-size:0.98rem;">You need to provide your details to create an account. For more information on why we collect your information, see our <a href="#">privacy policy</a>.</p>
-
-      <form novalidate id="register-form">
-        <div class="error-summary" id="register-error"><h2>There is a problem</h2><p id="register-error-text">Please fill in all required fields.</p></div>
-
-        <div class="field">
-          <label for="reg-first">First name</label>
-          <input type="text" id="reg-first" required>
-        </div>
-
-        <div class="field">
-          <label for="reg-last">Last name</label>
-          <input type="text" id="reg-last" required>
-        </div>
-
-        <div class="field">
-          <label for="reg-email">Email address</label>
-          <input type="email" id="reg-email" required>
-        </div>
-
-        <div class="field">
-          <label for="reg-org">Organisation or team</label>
-          <span class="hint">For example: HMCTS DTS, Ministry of Justice Digital</span>
-          <input type="text" id="reg-org" required>
-        </div>
-
-        <fieldset>
-          <legend>I am registering as&hellip;</legend>
-          <div class="role-pick">
-            <label><input type="radio" name="role" value="consumer" required><span><svg class="role-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg>Consumer<br><small style="font-weight:400;color:var(--grey-dark);">Find and use existing APIs</small></span></label>
-            <label><input type="radio" name="role" value="producer"><span><svg class="role-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="1"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Producer<br><small style="font-weight:400;color:var(--grey-dark);">List and manage my APIs</small></span></label>
-          </div>
-        </fieldset>
-
-        <h2 style="font-size:1.3rem;margin-top:1.6em;margin-bottom:0.6em;">Create your password</h2>
-
-        <div class="field">
-          <label for="reg-password">Password</label>
-          <span class="hint">Your password must be at least 12 characters long.</span>
-          <input type="password" id="reg-password" required minlength="12">
-        </div>
-
-        <div class="field">
-          <label for="reg-password-confirm">Confirm your password</label>
-          <input type="password" id="reg-password-confirm" required minlength="12">
-        </div>
-
-        <button type="submit" class="btn btn-start" style="width:100%;justify-content:center;">Create</button>
-      </form>
-
-      <div class="confirmation" id="register-confirmation">
-        <div class="banner">
-          <h2>Account created</h2>
-          <p id="register-success-text">Your account has been created.</p>
-          <a class="btn btn-primary" href="index.html">Return to homepage</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</main>
-
-
-<footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-grid footer-grid-2">
-      <div>
-        <h2>Legal</h2>
-        <ul>
-          <li><a href="#">Accessibility statement</a></li>
-          <li><a href="#">Cookies</a></li>
-          <li><a href="#">Privacy notice</a></li>
-          <li><a href="data-governance.html">Data governance</a></li>
+    <div class="govuk-footer__meta">
+      <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+        <h2 class="govuk-visually-hidden">Support and legal</h2>
+        <ul class="govuk-footer__inline-list">
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="contact.html">Contact the marketplace team</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="request-new-api.html">Request a new API</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="onboarding-guide.html">Onboarding guide</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="publish-api.html">Publish an API</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Accessibility statement</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Cookies</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Privacy notice</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="data-governance.html">Data governance</a></li>
         </ul>
       </div>
-      <div>
-        <h2>Get in touch</h2>
-        <ul>
-          <li><a href="contact.html">Contact the marketplace team</a></li>
-          <li><a href="request-new-api.html">Request a new API</a></li>
-          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
-          <li><a href="publish-api.html">Publish an API</a></li>
-        </ul>
+      <div class="govuk-footer__meta-item">
+        <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.gov.uk">&copy; Crown copyright &mdash; MIT Licence</a>
+        <p class="govuk-body-s">Built by <a class="govuk-footer__link" href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></p>
       </div>
-    </div>
-    <div class="footer-bottom">
-      <span>&copy; Crown copyright &mdash; MIT Licence</span>
-      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
     </div>
   </div>
 </footer>
+
+<script type="module">
+  import { initAll } from "https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/govuk-frontend.min.js";
+  initAll();
+</script>
 <script src="assets/scripts.js"></script>
 
 <script>
-  // Change this to wherever the auth-server is actually running/deployed.
-  // See auth-server/README.md for local setup and deployment options.
-  const API_BASE = "https://hmcts-api-marketplace-auth.onrender.com";
+  const API_BASE = "https://hmcts-api-marketplace-auth-vu5d.onrender.com";
 
   const form = document.getElementById('register-form');
   const errorBox = document.getElementById('register-error');
@@ -187,7 +296,6 @@
     try {
       const res = await fetch(API_BASE + '/api/register', {
         method: 'POST',
-        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           firstName, lastName, email, organisation,
@@ -202,13 +310,13 @@
         return;
       }
 
+      window.HmctsAuth.setToken(data.token);
       successText.textContent = 'Welcome, ' + data.user.firstName + ' — your account has been created.';
       form.style.display = 'none';
       confirmation.classList.add('show');
       window.location.href = 'account.html';
     } catch (err) {
-      errorText.textContent =
-        'Could not reach the registration server at ' + API_BASE + '. Is auth-server running? See auth-server/README.md.';
+      errorText.textContent = 'Could not reach the registration server. Please try again in a moment.';
       errorBox.classList.add('show');
     }
   });

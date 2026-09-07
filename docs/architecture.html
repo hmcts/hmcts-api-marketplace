@@ -1,108 +1,199 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HMCTS architecture — HMCTS API Marketplace</title>
 <meta name="description" content="Architecture is integral to the design and delivery of all products and services that HMCTS produces and maintains for the justice system.">
-<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/govuk-frontend.min.css">
+<style>
+@font-face {
+  font-family: "GDS Transport";
+  src: url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/light-94a07e06a1-v2.woff2") format("woff2"),
+       url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/light-f591880d6f-v2.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "GDS Transport";
+  src: url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/bold-b542beb274-v2.woff2") format("woff2"),
+       url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/bold-1d5e47bda2-v2.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+body, input, select, textarea, button {
+  font-family: "GDS Transport", arial, sans-serif !important;
+}
+</style>
 </head>
-<body>
-<a class="skip-link" href="#main-content">Skip to main content</a>
-<div class="top-bar">
-  <div class="wrap">
-    <a class="crest" href="index.html">
-      <img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img">
-    </a>
-    <div class="top-bar-actions">
-      <form class="site-search" action="resources-a-z.html" method="get" role="search">
-        <label class="visually-hidden" for="site-search-input">Search</label>
-        <input type="search" id="site-search-input" name="q" placeholder="Search">
-        <button type="submit" aria-label="Search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
-      </form>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+<body class="govuk-template__body">
+<script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled') + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+<a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+<header class="govuk-header" data-module="govuk-header">
+  <div class="govuk-header__container govuk-width-container">
+    <div class="govuk-header__logo">
+      <a href="https://www.gov.uk" class="govuk-header__link govuk-header__link--homepage">
+        <svg focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 324 60" height="30" width="162" fill="currentcolor" class="govuk-header__logotype" aria-label="GOV.UK">
+          <title>GOV.UK</title>
+          <g>
+            <circle cx="20" cy="17.6" r="3.7"></circle>
+            <circle cx="10.2" cy="23.5" r="3.7"></circle>
+            <circle cx="3.7" cy="33.2" r="3.7"></circle>
+            <circle cx="31.7" cy="30.6" r="3.7"></circle>
+            <circle cx="43.3" cy="17.6" r="3.7"></circle>
+            <circle cx="53.2" cy="23.5" r="3.7"></circle>
+            <circle cx="59.7" cy="33.2" r="3.7"></circle>
+            <circle cx="31.7" cy="30.6" r="3.7"></circle>
+            <path d="M33.1,9.8c.2-.1.3-.3.5-.5l4.6,2.4v-6.8l-4.6,1.5c-.1-.2-.3-.3-.5-.5l1.9-5.9h-6.7l1.9,5.9c-.2.1-.3.3-.5.5l-4.6-1.5v6.8l4.6-2.4c.1.2.3.3.5.5l-2.6,8c-.9,2.8,1.2,5.7,4.1,5.7h0c3,0,5.1-2.9,4.1-5.7l-2.6-8ZM37,37.9s-3.4,3.8-4.1,6.1c2.2,0,4.2-.5,6.4-2.8l-.7,8.5c-2-2.8-4.4-4.1-5.7-3.8.1,3.1.5,6.7,5.8,7.2,3.7.3,6.7-1.5,7-3.8.4-2.6-2-4.3-3.7-1.6-1.4-4.5,2.4-6.1,4.9-3.2-1.9-4.5-1.8-7.7,2.4-10.9,3,4,2.6,7.3-1.2,11.1,2.4-1.3,6.2,0,4,4.6-1.2-2.8-3.7-2.2-4.2.2-.3,1.7.7,3.7,3,4.2,1.9.3,4.7-.9,7-5.9-1.3,0-2.4.7-3.9,1.7l2.4-8c.6,2.3,1.4,3.7,2.2,4.5.6-1.6.5-2.8,0-5.3l5,1.8c-2.6,3.6-5.2,8.7-7.3,17.5-7.4-1.1-15.7-1.7-24.5-1.7h0c-8.8,0-17.1.6-24.5,1.7-2.1-8.9-4.7-13.9-7.3-17.5l5-1.8c-.5,2.5-.6,3.7,0,5.3.8-.8,1.6-2.3,2.2-4.5l2.4,8c-1.5-1-2.6-1.7-3.9-1.7,2.3,5,5.2,6.2,7,5.9,2.3-.4,3.3-2.4,3-4.2-.5-2.4-3-3.1-4.2-.2-2.2-4.6,1.6-6,4-4.6-3.7-3.7-4.2-7.1-1.2-11.1,4.2,3.2,4.3,6.4,2.4,10.9,2.5-2.8,6.3-1.3,4.9,3.2-1.8-2.7-4.1-1-3.7,1.6.3,2.3,3.3,4.1,7,3.8,5.4-.5,5.7-4.2,5.8-7.2-1.3-.2-3.7,1-5.7,3.8l-.7-8.5c2.2,2.3,4.2,2.7,6.4,2.8-.7-2.3-4.1-6.1-4.1-6.1h10.6,0Z"></path>
+          </g>
+          <circle class="govuk-logo-dot" cx="226" cy="36" r="7.3"></circle>
+        </svg>
+      </a>
     </div>
-  </div>
-</div>
-<header class="site-header">
-  <div class="wrap">
-    <a class="site-title" href="index.html">API Marketplace</a>
-    <nav class="primary-nav" id="primary-nav" aria-label="Primary">
-      <ul>
-        <li><a href="sign-in.html" id="nav-auth-link">Sign in</a></li>
-      </ul>
-    </nav>
   </div>
 </header>
 
-<div class="breadcrumbs"><div class="wrap"><ol><li><a href="index.html">HMCTS</a></li><li>Architecture</li></ol></div></div>
-
-<main id="main-content">
-
-<section class="block" style="padding-bottom:0;">
-  <div class="wrap">
-    <h1>HMCTS architecture</h1>
-    <p class="lede" style="color:var(--grey-dark);font-size:1.1rem;max-width:65ch;">Architecture is integral to the design and delivery of all products and services that we produce and maintain for the justice system.</p>
-
-    <p style="max-width:70ch;">Below are the HMCTS Architectural Principles that all our products and services must adhere to. All architects and those involved in the architecture and design of products and services should follow these principles when designing digital solutions for the justice system.</p>
-    <p style="max-width:70ch;">Also on this page you can find definitions of the capabilities we have developed to describe the business services we offer.</p>
-
-    <div class="card-grid" style="margin-top:2em;">
-      <div class="card" style="--chip:#0096d6;">
-        <h3><a href="architecture-principles.html" style="color:var(--ink);text-decoration:none;">HMCTS architecture principles</a></h3>
-        <p>A guide to best practice when designing systems and services for HMCTS and the wider justice sector.</p>
-        <a class="card-link" href="architecture-principles.html">Read more &rsaquo;</a>
-      </div><div class="card" style="--chip:#724695;">
-        <h3><a href="our-capabilities.html" style="color:var(--ink);text-decoration:none;">Our capabilities</a></h3>
-        <p>Categories for the business services HMCTS provides across the justice system.</p>
-        <a class="card-link" href="our-capabilities.html">Read more &rsaquo;</a>
-      </div><div class="card" style="--chip:#f9ae00;">
-        <h3><a href="documentation.html" style="color:var(--ink);text-decoration:none;">Guidance and documentation</a></h3>
-        <p>Our architects' guidance on how architecture works in practice to support and improve justice services.</p>
-        <a class="card-link" href="documentation.html">Read more &rsaquo;</a>
-      </div><div class="card" style="--chip:#11a63c;">
-        <h3><a href="index.html" style="color:var(--ink);text-decoration:none;">API Marketplace home</a></h3>
-        <p>Connect your apps to our APIs and integrate with official HMCTS services.</p>
-        <a class="card-link" href="index.html">Read more &rsaquo;</a>
-      </div><div class="card" style="--chip:#008c9d;">
-        <h3><a href="producer-standards.html" style="color:var(--ink);text-decoration:none;">Integration patterns</a></h3>
-        <p>A guide for architects and engineers to help choose the right integration approach when publishing or consuming an API.</p>
-        <a class="card-link" href="producer-standards.html">Read more &rsaquo;</a>
-      </div>
+<section aria-label="Service information" class="govuk-service-navigation" data-module="govuk-service-navigation">
+  <div class="govuk-width-container">
+    <div class="govuk-service-navigation__container">
+      <span class="govuk-service-navigation__service-name">
+        <a href="index.html" class="govuk-service-navigation__link">HMCTS API Marketplace</a>
+      </span>
+      <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
+        <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
+          Menu
+        </button>
+        <ul class="govuk-service-navigation__list" id="navigation">
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="index.html">Home</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="api-catalogue.html">API catalogue</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="getting-started.html">Get started</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="documentation.html">Documentation</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="publish-api.html">Publish an API</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="help-and-support.html">Help and support</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="sign-in.html" id="nav-auth-link">Sign in</a>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </section>
 
-</main>
+<div class="govuk-width-container">
+  <div class="govuk-phase-banner">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag">Beta</strong>
+      <span class="govuk-phase-banner__text">This is a new service. <a class="govuk-link" href="contact.html">Help us improve it by giving feedback</a>.</span>
+    </p>
+  </div>
 
-<footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-grid footer-grid-2">
-      <div>
-        <h2>Legal</h2>
-        <ul>
-          <li><a href="#">Accessibility statement</a></li>
-          <li><a href="#">Cookies</a></li>
-          <li><a href="#">Privacy notice</a></li>
-          <li><a href="data-governance.html">Data governance</a></li>
-        </ul>
+  <nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
+    <ol class="govuk-breadcrumbs__list">
+      <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="index.html">HMCTS</a></li>
+      <li class="govuk-breadcrumbs__list-item">Architecture</li>
+    </ol>
+  </nav>
+
+  <main class="govuk-main-wrapper" id="main-content">
+
+    <h1 class="govuk-heading-xl">HMCTS architecture</h1>
+    <p class="govuk-body-l">Architecture is integral to the design and delivery of all products and services that we produce and maintain for the justice system.</p>
+
+    <p class="govuk-body">Below are the HMCTS Architectural Principles that all our products and services must adhere to. All architects and those involved in the architecture and design of products and services should follow these principles when designing digital solutions for the justice system.</p>
+    <p class="govuk-body">Also on this page you can find definitions of the capabilities we have developed to describe the business services we offer.</p>
+
+    <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--l">
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-m"><a class="govuk-link" href="architecture-principles.html">HMCTS architecture principles</a></h2>
+        <p class="govuk-body">A guide to best practice when designing systems and services for HMCTS and the wider justice sector.</p>
+        <p class="govuk-body"><a class="govuk-link" href="architecture-principles.html">Read more &rsaquo;</a></p>
       </div>
-      <div>
-        <h2>Get in touch</h2>
-        <ul>
-          <li><a href="contact.html">Contact the marketplace team</a></li>
-          <li><a href="request-new-api.html">Request a new API</a></li>
-          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
-          <li><a href="publish-api.html">Publish an API</a></li>
-        </ul>
+      <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-m"><a class="govuk-link" href="our-capabilities.html">Our capabilities</a></h2>
+        <p class="govuk-body">Categories for the business services HMCTS provides across the justice system.</p>
+        <p class="govuk-body"><a class="govuk-link" href="our-capabilities.html">Read more &rsaquo;</a></p>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-m"><a class="govuk-link" href="documentation.html">Guidance and documentation</a></h2>
+        <p class="govuk-body">Our architects' guidance on how architecture works in practice to support and improve justice services.</p>
+        <p class="govuk-body"><a class="govuk-link" href="documentation.html">Read more &rsaquo;</a></p>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>&copy; Crown copyright &mdash; MIT Licence</span>
-      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-m"><a class="govuk-link" href="index.html">API Marketplace home</a></h2>
+        <p class="govuk-body">Connect your apps to our APIs and integrate with official HMCTS services.</p>
+        <p class="govuk-body"><a class="govuk-link" href="index.html">Read more &rsaquo;</a></p>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-m"><a class="govuk-link" href="producer-standards.html">Integration patterns</a></h2>
+        <p class="govuk-body">A guide for architects and engineers to help choose the right integration approach when publishing or consuming an API.</p>
+        <p class="govuk-body"><a class="govuk-link" href="producer-standards.html">Read more &rsaquo;</a></p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer class="govuk-footer">
+  <div class="govuk-width-container">
+    <svg focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 60" height="30" width="32" fill="currentcolor" class="govuk-footer__crown">
+      <g>
+        <circle cx="20" cy="17.6" r="3.7"></circle>
+        <circle cx="10.2" cy="23.5" r="3.7"></circle>
+        <circle cx="3.7" cy="33.2" r="3.7"></circle>
+        <circle cx="31.7" cy="30.6" r="3.7"></circle>
+        <circle cx="43.3" cy="17.6" r="3.7"></circle>
+        <circle cx="53.2" cy="23.5" r="3.7"></circle>
+        <circle cx="59.7" cy="33.2" r="3.7"></circle>
+        <circle cx="31.7" cy="30.6" r="3.7"></circle>
+        <path d="M33.1,9.8c.2-.1.3-.3.5-.5l4.6,2.4v-6.8l-4.6,1.5c-.1-.2-.3-.3-.5-.5l1.9-5.9h-6.7l1.9,5.9c-.2.1-.3.3-.5.5l-4.6-1.5v6.8l4.6-2.4c.1.2.3.3.5.5l-2.6,8c-.9,2.8,1.2,5.7,4.1,5.7h0c3,0,5.1-2.9,4.1-5.7l-2.6-8ZM37,37.9s-3.4,3.8-4.1,6.1c2.2,0,4.2-.5,6.4-2.8l-.7,8.5c-2-2.8-4.4-4.1-5.7-3.8.1,3.1.5,6.7,5.8,7.2,3.7.3,6.7-1.5,7-3.8.4-2.6-2-4.3-3.7-1.6-1.4-4.5,2.4-6.1,4.9-3.2-1.9-4.5-1.8-7.7,2.4-10.9,3,4,2.6,7.3-1.2,11.1,2.4-1.3,6.2,0,4,4.6-1.2-2.8-3.7-2.2-4.2.2-.3,1.7.7,3.7,3,4.2,1.9.3,4.7-.9,7-5.9-1.3,0-2.4.7-3.9,1.7l2.4-8c.6,2.3,1.4,3.7,2.2,4.5.6-1.6.5-2.8,0-5.3l5,1.8c-2.6,3.6-5.2,8.7-7.3,17.5-7.4-1.1-15.7-1.7-24.5-1.7h0c-8.8,0-17.1.6-24.5,1.7-2.1-8.9-4.7-13.9-7.3-17.5l5-1.8c-.5,2.5-.6,3.7,0,5.3.8-.8,1.6-2.3,2.2-4.5l2.4,8c-1.5-1-2.6-1.7-3.9-1.7,2.3,5,5.2,6.2,7,5.9,2.3-.4,3.3-2.4,3-4.2-.5-2.4-3-3.1-4.2-.2-2.2-4.6,1.6-6,4-4.6-3.7-3.7-4.2-7.1-1.2-11.1,4.2,3.2,4.3,6.4,2.4,10.9,2.5-2.8,6.3-1.3,4.9,3.2-1.8-2.7-4.1-1-3.7,1.6.3,2.3,3.3,4.1,7,3.8,5.4-.5,5.7-4.2,5.8-7.2-1.3-.2-3.7,1-5.7,3.8l-.7-8.5c2.2,2.3,4.2,2.7,6.4,2.8-.7-2.3-4.1-6.1-4.1-6.1h10.6,0Z"></path>
+      </g>
+    </svg>
+    <div class="govuk-footer__meta">
+      <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+        <h2 class="govuk-visually-hidden">Support and legal</h2>
+        <ul class="govuk-footer__inline-list">
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="contact.html">Contact the marketplace team</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="request-new-api.html">Request a new API</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="onboarding-guide.html">Onboarding guide</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="publish-api.html">Publish an API</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Accessibility statement</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Cookies</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Privacy notice</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="data-governance.html">Data governance</a></li>
+        </ul>
+      </div>
+      <div class="govuk-footer__meta-item">
+        <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.gov.uk">&copy; Crown copyright &mdash; MIT Licence</a>
+        <p class="govuk-body-s">Built by <a class="govuk-footer__link" href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></p>
+      </div>
     </div>
   </div>
 </footer>
+
+<script type="module">
+  import { initAll } from "https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/govuk-frontend.min.js";
+  initAll();
+</script>
 <script src="assets/scripts.js"></script>
 
 </body>

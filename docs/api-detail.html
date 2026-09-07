@@ -1,56 +1,151 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>API detail — HMCTS API Marketplace</title>
 <meta name="description" content="View technical documentation and details for an HMCTS API.">
-<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/govuk-frontend.min.css">
+<style>
+@font-face {
+  font-family: "GDS Transport";
+  src: url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/light-94a07e06a1-v2.woff2") format("woff2"),
+       url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/light-f591880d6f-v2.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "GDS Transport";
+  src: url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/bold-b542beb274-v2.woff2") format("woff2"),
+       url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/bold-1d5e47bda2-v2.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+body, input, select, textarea, button {
+  font-family: "GDS Transport", arial, sans-serif !important;
+}
+:root { --border-light: #b1b4b6; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.detail-tabs { border-bottom: 1px solid #b1b4b6; margin-bottom: 24px; }
+.detail-tabs button {
+  background: none; border: none; border-bottom: 4px solid transparent; margin: 0 8px -1px 0;
+  padding: 10px 4px; font-family: inherit; font-size: 19px; cursor: pointer; color: #1d70b8;
+}
+.detail-tabs button.active { color: #0b0c0c; font-weight: 700; border-bottom-color: #1d70b8; }
+
+.app-code-block { background: #0b0c0c; color: #fff; padding: 15px; overflow-x: auto; font-family: monospace; font-size: 0.9rem; white-space: pre-wrap; margin: 0 0 20px; }
+
+.endpoint-row { display: flex; align-items: baseline; gap: 12px; padding: 12px 0; border-bottom: 1px solid #b1b4b6; flex-wrap: wrap; }
+.endpoint-row code { font-family: monospace; font-size: 0.95rem; }
+.endpoint-row .desc { color: #505a5f; }
+.method { font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 3px; text-transform: uppercase; }
+.method.get { background: #d1e8fa; color: #003d6a; }
+.method.post { background: #cce2d8; color: #005a30; }
+.method.put { background: #fce9c8; color: #6e3b00; }
+
+.side-card { border-top: 1px solid #b1b4b6; padding-top: 16px; margin-top: 16px; }
+.side-card h3 { margin: 0 0 8px; }
+.api-info-grid .row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid #f3f2f1; }
+</style>
 </head>
-<body>
-<a class="skip-link" href="#main-content">Skip to main content</a>
-<div class="top-bar">
-  <div class="wrap">
-    <a class="crest" href="index.html">
-      <img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img">
-    </a>
-    <div class="top-bar-actions">
-      <form class="site-search" action="resources-a-z.html" method="get" role="search">
-        <label class="visually-hidden" for="site-search-input">Search</label>
-        <input type="search" id="site-search-input" name="q" placeholder="Search">
-        <button type="submit" aria-label="Search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
-      </form>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+<body class="govuk-template__body">
+<script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled') + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+<a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+<header class="govuk-header" data-module="govuk-header">
+  <div class="govuk-header__container govuk-width-container">
+    <div class="govuk-header__logo">
+      <a href="https://www.gov.uk" class="govuk-header__link govuk-header__link--homepage">
+        <svg focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 324 60" height="30" width="162" fill="currentcolor" class="govuk-header__logotype" aria-label="GOV.UK">
+          <title>GOV.UK</title>
+          <g>
+            <circle cx="20" cy="17.6" r="3.7"></circle>
+            <circle cx="10.2" cy="23.5" r="3.7"></circle>
+            <circle cx="3.7" cy="33.2" r="3.7"></circle>
+            <circle cx="31.7" cy="30.6" r="3.7"></circle>
+            <circle cx="43.3" cy="17.6" r="3.7"></circle>
+            <circle cx="53.2" cy="23.5" r="3.7"></circle>
+            <circle cx="59.7" cy="33.2" r="3.7"></circle>
+            <circle cx="31.7" cy="30.6" r="3.7"></circle>
+            <path d="M33.1,9.8c.2-.1.3-.3.5-.5l4.6,2.4v-6.8l-4.6,1.5c-.1-.2-.3-.3-.5-.5l1.9-5.9h-6.7l1.9,5.9c-.2.1-.3.3-.5.5l-4.6-1.5v6.8l4.6-2.4c.1.2.3.3.5.5l-2.6,8c-.9,2.8,1.2,5.7,4.1,5.7h0c3,0,5.1-2.9,4.1-5.7l-2.6-8ZM37,37.9s-3.4,3.8-4.1,6.1c2.2,0,4.2-.5,6.4-2.8l-.7,8.5c-2-2.8-4.4-4.1-5.7-3.8.1,3.1.5,6.7,5.8,7.2,3.7.3,6.7-1.5,7-3.8.4-2.6-2-4.3-3.7-1.6-1.4-4.5,2.4-6.1,4.9-3.2-1.9-4.5-1.8-7.7,2.4-10.9,3,4,2.6,7.3-1.2,11.1,2.4-1.3,6.2,0,4,4.6-1.2-2.8-3.7-2.2-4.2.2-.3,1.7.7,3.7,3,4.2,1.9.3,4.7-.9,7-5.9-1.3,0-2.4.7-3.9,1.7l2.4-8c.6,2.3,1.4,3.7,2.2,4.5.6-1.6.5-2.8,0-5.3l5,1.8c-2.6,3.6-5.2,8.7-7.3,17.5-7.4-1.1-15.7-1.7-24.5-1.7h0c-8.8,0-17.1.6-24.5,1.7-2.1-8.9-4.7-13.9-7.3-17.5l5-1.8c-.5,2.5-.6,3.7,0,5.3.8-.8,1.6-2.3,2.2-4.5l2.4,8c-1.5-1-2.6-1.7-3.9-1.7,2.3,5,5.2,6.2,7,5.9,2.3-.4,3.3-2.4,3-4.2-.5-2.4-3-3.1-4.2-.2-2.2-4.6,1.6-6,4-4.6-3.7-3.7-4.2-7.1-1.2-11.1,4.2,3.2,4.3,6.4,2.4,10.9,2.5-2.8,6.3-1.3,4.9,3.2-1.8-2.7-4.1-1-3.7,1.6.3,2.3,3.3,4.1,7,3.8,5.4-.5,5.7-4.2,5.8-7.2-1.3-.2-3.7,1-5.7,3.8l-.7-8.5c2.2,2.3,4.2,2.7,6.4,2.8-.7-2.3-4.1-6.1-4.1-6.1h10.6,0Z"></path>
+          </g>
+          <circle class="govuk-logo-dot" cx="226" cy="36" r="7.3"></circle>
+        </svg>
+      </a>
     </div>
-  </div>
-</div>
-<header class="site-header">
-  <div class="wrap">
-    <a class="site-title" href="index.html">API Marketplace</a>
-    <nav class="primary-nav" id="primary-nav" aria-label="Primary">
-      <ul>
-        <li><a href="sign-in.html" id="nav-auth-link">Sign in</a></li>
-      </ul>
-    </nav>
   </div>
 </header>
 
-<div class="breadcrumbs"><div class="wrap"><ol><li><a href="index.html">Home</a></li><li><a href="api-catalogue.html">API Catalogue</a></li><li>API detail</li></ol></div></div>
+<section aria-label="Service information" class="govuk-service-navigation" data-module="govuk-service-navigation">
+  <div class="govuk-width-container">
+    <div class="govuk-service-navigation__container">
+      <span class="govuk-service-navigation__service-name">
+        <a href="index.html" class="govuk-service-navigation__link">HMCTS API Marketplace</a>
+      </span>
+      <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
+        <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
+          Menu
+        </button>
+        <ul class="govuk-service-navigation__list" id="navigation">
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="index.html">Home</a>
+          </li>
+          <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
+            <a class="govuk-service-navigation__link" href="api-catalogue.html" aria-current="true">API catalogue</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="getting-started.html">Get started</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="documentation.html">Documentation</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="publish-api.html">Publish an API</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="help-and-support.html">Help and support</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="sign-in.html" id="nav-auth-link">Sign in</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</section>
 
-<main id="main-content">
+<div class="govuk-width-container">
+  <div class="govuk-phase-banner">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag">Beta</strong>
+      <span class="govuk-phase-banner__text">This is a new service. <a class="govuk-link" href="contact.html">Help us improve it by giving feedback</a>.</span>
+    </p>
+  </div>
 
-<section class="block" style="padding-bottom:0;">
-  <div class="wrap">
-    <p id="loading-msg">Loading API details&hellip;</p>
+  <nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
+    <ol class="govuk-breadcrumbs__list">
+      <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="index.html">Home</a></li>
+      <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="api-catalogue.html">API Catalogue</a></li>
+      <li class="govuk-breadcrumbs__list-item">API detail</li>
+    </ol>
+  </nav>
+
+  <main class="govuk-main-wrapper" id="main-content">
+
+    <p class="govuk-body" id="loading-msg">Loading API details&hellip;</p>
 
     <div id="detail-root" style="display:none;">
-      <h1 id="api-name">API name</h1>
-      <div class="tags" style="margin-bottom:1em;">
-        <span class="tag" id="api-domain-tag">Domain</span>
-        <span class="tag" id="api-classification-tag">Classification</span>
-        <span class="tag live" id="api-status-tag">Status</span>
+      <h1 class="govuk-heading-xl" id="api-name">API name</h1>
+      <div style="margin-bottom:1em;display:flex;gap:8px;flex-wrap:wrap;">
+        <strong class="govuk-tag govuk-tag--grey" id="api-domain-tag">Domain</strong>
+        <strong class="govuk-tag govuk-tag--blue" id="api-classification-tag">Classification</strong>
+        <strong class="govuk-tag govuk-tag--green" id="api-status-tag">Status</strong>
       </div>
-      <p class="lede" id="api-summary" style="color:var(--grey-dark);font-size:1.1rem;max-width:70ch;"></p>
+      <p class="govuk-body-l" id="api-summary" style="max-width:70ch;"></p>
 
       <div class="detail-tabs" data-tabs role="tablist">
         <button class="active" data-target="tab-overview" role="tab" aria-selected="true">Overview</button>
@@ -60,80 +155,85 @@
         <button data-target="tab-tryit" role="tab" aria-selected="false">Try it out</button>
       </div>
 
-      <div class="content-layout" style="margin-top:0;">
-        <div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
           <div id="tab-overview" class="tab-panel active">
-            <h2 style="margin-top:1.2em;">What does this API do?</h2>
-            <p id="api-what-it-does"></p>
-            <div class="panel-info">
-              <strong>Read the full guidance</strong><br>
-              Before requesting access, check the <a href="consumer-guidance.html">Consumer Guidance</a> for how to use this API responsibly.
+            <h2 class="govuk-heading-l">What does this API do?</h2>
+            <p class="govuk-body" id="api-what-it-does"></p>
+            <div class="govuk-inset-text">
+              <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">Read the full guidance</p>
+              <p class="govuk-body govuk-!-margin-bottom-0">Before requesting access, check the <a class="govuk-link" href="consumer-guidance.html">Consumer Guidance</a> for how to use this API responsibly.</p>
             </div>
           </div>
 
           <div id="tab-endpoints" class="tab-panel">
-            <h2 style="margin-top:1.2em;">Endpoints at a glance</h2>
+            <h2 class="govuk-heading-l">Endpoints at a glance</h2>
             <div id="endpoint-list"></div>
           </div>
 
           <div id="tab-datamodel" class="tab-panel">
-            <h2 style="margin-top:1.2em;">Data model</h2>
-            <p>Requests and responses are defined as named schemas in the OpenAPI specification:</p>
-            <ul id="schema-list"></ul>
+            <h2 class="govuk-heading-l">Data model</h2>
+            <p class="govuk-body">Requests and responses are defined as named schemas in the OpenAPI specification:</p>
+            <ul class="govuk-list govuk-list--bullet" id="schema-list"></ul>
           </div>
 
           <div id="tab-changelog" class="tab-panel">
-            <h2 style="margin-top:1.2em;">Changelog</h2>
-            <ol class="steps" id="changelog-list" style="counter-reset:none;"></ol>
+            <h2 class="govuk-heading-l">Changelog</h2>
+            <ol class="govuk-list" id="changelog-list"></ol>
           </div>
 
           <div id="tab-tryit" class="tab-panel">
-            <h2 style="margin-top:1.2em;">Try it out &mdash; mock server</h2>
-            <div class="panel-warning"><div><strong>Sandbox only.</strong> Try-It calls are sent to a mock server and never touch production data.</div></div>
-            <div class="mock-console">
-              <div class="line">$ curl -H "Authorization: Bearer &lt;token&gt;" \</div>
-              <div class="line" id="tryit-url">&nbsp;&nbsp;https://sandbox.api.hmcts.net/...</div>
-              <div class="line">&nbsp;</div>
-              <div class="line">200 OK</div>
-              <div class="line">{ "status": "ok", "environment": "sandbox" }</div>
+            <h2 class="govuk-heading-l">Try it out &mdash; mock server</h2>
+            <div class="govuk-warning-text">
+              <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+              <strong class="govuk-warning-text__text"><span class="govuk-visually-hidden">Warning</span>Sandbox only. Try-It calls are sent to a mock server and never touch production data.</strong>
             </div>
+            <pre class="app-code-block">$ curl -H "Authorization: Bearer &lt;token&gt;" \
+<span id="tryit-url">  https://sandbox.api.hmcts.net/...</span>
+
+200 OK
+{ "status": "ok", "environment": "sandbox" }</pre>
           </div>
         </div>
 
-        <aside class="side">
-          <a class="btn btn-start" id="request-api-btn" href="request-api.html" style="width:100%;justify-content:center;margin-bottom:1.4em;">Request to use this API</a>
+        <div class="govuk-grid-column-one-third">
+          <a class="govuk-button govuk-button--start" data-module="govuk-button" id="request-api-btn" href="request-api.html" style="width:100%;justify-content:center;">
+            Request to use this API
+            <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false"><path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path></svg>
+          </a>
 
           <div class="side-card">
-            <h3>API information</h3>
+            <h3 class="govuk-heading-s">API information</h3>
             <div class="api-info-grid">
-              <div class="row"><b>Owning team</b><span id="api-team"></span></div>
-              <div class="row"><b>Repository</b><span id="api-repo"></span></div>
-              <div class="row"><b>Current version</b><span id="api-version"></span></div>
+              <div class="row"><span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Owning team</span><span class="govuk-body govuk-!-margin-bottom-0" id="api-team"></span></div>
+              <div class="row"><span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Repository</span><span class="govuk-body govuk-!-margin-bottom-0" id="api-repo"></span></div>
+              <div class="row"><span class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Current version</span><span class="govuk-body govuk-!-margin-bottom-0" id="api-version"></span></div>
             </div>
           </div>
           <div class="side-card">
-            <h3>Authentication</h3>
-            <p>OAuth 2.0 with JWT bearer tokens</p>
+            <h3 class="govuk-heading-s">Authentication</h3>
+            <p class="govuk-body">OAuth 2.0 with JWT bearer tokens</p>
           </div>
           <div class="side-card">
-            <h3>Response codes</h3>
-            <p>400, 401, 404 and 500 documented per operation</p>
+            <h3 class="govuk-heading-s">Response codes</h3>
+            <p class="govuk-body">400, 401, 404 and 500 documented per operation</p>
           </div>
           <div class="side-card">
-            <h3>Links</h3>
-            <p><a href="consumer-guidance.html">Consumer guidance &rsaquo;</a></p>
+            <h3 class="govuk-heading-s">Links</h3>
+            <p class="govuk-body"><a class="govuk-link" href="consumer-guidance.html">Consumer guidance &rsaquo;</a></p>
           </div>
-        </aside>
+        </div>
       </div>
     </div>
 
     <div id="not-found" style="display:none;">
-      <h1>API not found</h1>
-      <p>We couldn&rsquo;t find that API in the catalogue.</p>
-      <a class="btn btn-primary" href="api-catalogue.html">Back to the API Catalogue</a>
+      <h1 class="govuk-heading-xl">API not found</h1>
+      <p class="govuk-body">We couldn&rsquo;t find that API in the catalogue.</p>
+      <a class="govuk-button" data-module="govuk-button" href="api-catalogue.html">Back to the API Catalogue</a>
     </div>
-  </div>
-</section>
+
+  </main>
+</div>
 
 <script src="assets/api-data.js"></script>
 <script>
@@ -155,7 +255,7 @@
   document.getElementById('api-name').textContent = data.name;
   document.getElementById('api-domain-tag').textContent = data.domain;
   document.getElementById('api-classification-tag').textContent = data.classification;
-  if (data.classificationId === 'sensitive') document.getElementById('api-classification-tag').classList.add('sensitive');
+  if (data.classificationId === 'sensitive') document.getElementById('api-classification-tag').className = 'govuk-tag govuk-tag--red';
   document.getElementById('api-status-tag').textContent = data.status;
   document.getElementById('api-summary').textContent = data.summary;
   document.getElementById('api-what-it-does').textContent = data.whatItDoes;
@@ -184,7 +284,7 @@
   data.changelog.forEach(function (c) {
     var li = document.createElement('li');
     li.style.paddingLeft = '0';
-    li.innerHTML = '<h3>v' + c.version + '</h3><p>' + c.note + '</p>';
+    li.innerHTML = '<h3 class="govuk-heading-s govuk-!-margin-bottom-1">v' + c.version + '</h3><p class="govuk-body">' + c.note + '</p>';
     li.style.borderBottom = '1px solid var(--border-light)';
     li.style.padding = '16px 0';
     changelogList.appendChild(li);
@@ -192,36 +292,47 @@
 })();
 </script>
 
-</main>
-
-<footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-grid footer-grid-2">
-      <div>
-        <h2>Legal</h2>
-        <ul>
-          <li><a href="#">Accessibility statement</a></li>
-          <li><a href="#">Cookies</a></li>
-          <li><a href="#">Privacy notice</a></li>
-          <li><a href="data-governance.html">Data governance</a></li>
+<footer class="govuk-footer">
+  <div class="govuk-width-container">
+    <svg focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 60" height="30" width="32" fill="currentcolor" class="govuk-footer__crown">
+      <g>
+        <circle cx="20" cy="17.6" r="3.7"></circle>
+        <circle cx="10.2" cy="23.5" r="3.7"></circle>
+        <circle cx="3.7" cy="33.2" r="3.7"></circle>
+        <circle cx="31.7" cy="30.6" r="3.7"></circle>
+        <circle cx="43.3" cy="17.6" r="3.7"></circle>
+        <circle cx="53.2" cy="23.5" r="3.7"></circle>
+        <circle cx="59.7" cy="33.2" r="3.7"></circle>
+        <circle cx="31.7" cy="30.6" r="3.7"></circle>
+        <path d="M33.1,9.8c.2-.1.3-.3.5-.5l4.6,2.4v-6.8l-4.6,1.5c-.1-.2-.3-.3-.5-.5l1.9-5.9h-6.7l1.9,5.9c-.2.1-.3.3-.5.5l-4.6-1.5v6.8l4.6-2.4c.1.2.3.3.5.5l-2.6,8c-.9,2.8,1.2,5.7,4.1,5.7h0c3,0,5.1-2.9,4.1-5.7l-2.6-8ZM37,37.9s-3.4,3.8-4.1,6.1c2.2,0,4.2-.5,6.4-2.8l-.7,8.5c-2-2.8-4.4-4.1-5.7-3.8.1,3.1.5,6.7,5.8,7.2,3.7.3,6.7-1.5,7-3.8.4-2.6-2-4.3-3.7-1.6-1.4-4.5,2.4-6.1,4.9-3.2-1.9-4.5-1.8-7.7,2.4-10.9,3,4,2.6,7.3-1.2,11.1,2.4-1.3,6.2,0,4,4.6-1.2-2.8-3.7-2.2-4.2.2-.3,1.7.7,3.7,3,4.2,1.9.3,4.7-.9,7-5.9-1.3,0-2.4.7-3.9,1.7l2.4-8c.6,2.3,1.4,3.7,2.2,4.5.6-1.6.5-2.8,0-5.3l5,1.8c-2.6,3.6-5.2,8.7-7.3,17.5-7.4-1.1-15.7-1.7-24.5-1.7h0c-8.8,0-17.1.6-24.5,1.7-2.1-8.9-4.7-13.9-7.3-17.5l5-1.8c-.5,2.5-.6,3.7,0,5.3.8-.8,1.6-2.3,2.2-4.5l2.4,8c-1.5-1-2.6-1.7-3.9-1.7,2.3,5,5.2,6.2,7,5.9,2.3-.4,3.3-2.4,3-4.2-.5-2.4-3-3.1-4.2-.2-2.2-4.6,1.6-6,4-4.6-3.7-3.7-4.2-7.1-1.2-11.1,4.2,3.2,4.3,6.4,2.4,10.9,2.5-2.8,6.3-1.3,4.9,3.2-1.8-2.7-4.1-1-3.7,1.6.3,2.3,3.3,4.1,7,3.8,5.4-.5,5.7-4.2,5.8-7.2-1.3-.2-3.7,1-5.7,3.8l-.7-8.5c2.2,2.3,4.2,2.7,6.4,2.8-.7-2.3-4.1-6.1-4.1-6.1h10.6,0Z"></path>
+      </g>
+    </svg>
+    <div class="govuk-footer__meta">
+      <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+        <h2 class="govuk-visually-hidden">Support and legal</h2>
+        <ul class="govuk-footer__inline-list">
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="contact.html">Contact the marketplace team</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="request-new-api.html">Request a new API</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="onboarding-guide.html">Onboarding guide</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="publish-api.html">Publish an API</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Accessibility statement</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Cookies</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Privacy notice</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="data-governance.html">Data governance</a></li>
         </ul>
       </div>
-      <div>
-        <h2>Get in touch</h2>
-        <ul>
-          <li><a href="contact.html">Contact the marketplace team</a></li>
-          <li><a href="request-new-api.html">Request a new API</a></li>
-          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
-          <li><a href="publish-api.html">Publish an API</a></li>
-        </ul>
+      <div class="govuk-footer__meta-item">
+        <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.gov.uk">&copy; Crown copyright &mdash; MIT Licence</a>
+        <p class="govuk-body-s">Built by <a class="govuk-footer__link" href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></p>
       </div>
-    </div>
-    <div class="footer-bottom">
-      <span>&copy; Crown copyright &mdash; MIT Licence</span>
-      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
     </div>
   </div>
 </footer>
+
+<script type="module">
+  import { initAll } from "https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/govuk-frontend.min.js";
+  initAll();
+</script>
 <script src="assets/scripts.js"></script>
 
 </body>

@@ -1,94 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>My developer account — HMCTS API Marketplace</title>
 <meta name="description" content="Manage your HMCTS API Marketplace developer account.">
-<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/govuk-frontend.min.css">
+<style>
+@font-face {
+  font-family: "GDS Transport";
+  src: url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/light-94a07e06a1-v2.woff2") format("woff2"),
+       url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/light-f591880d6f-v2.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "GDS Transport";
+  src: url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/bold-b542beb274-v2.woff2") format("woff2"),
+       url("https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/assets/fonts/bold-1d5e47bda2-v2.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+body, input, select, textarea, button {
+  font-family: "GDS Transport", arial, sans-serif !important;
+}
+</style>
 </head>
-<body>
-<a class="skip-link" href="#main-content">Skip to main content</a>
-<div class="top-bar">
-  <div class="wrap">
-    <a class="crest" href="index.html">
-      <img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img">
-    </a>
-    <div class="top-bar-actions">
-      <form class="site-search" action="resources-a-z.html" method="get" role="search">
-        <label class="visually-hidden" for="site-search-input">Search</label>
-        <input type="search" id="site-search-input" name="q" placeholder="Search">
-        <button type="submit" aria-label="Search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
-      </form>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+<body class="govuk-template__body">
+<script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled') + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+<a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+<header class="govuk-header" data-module="govuk-header">
+  <div class="govuk-header__container govuk-width-container">
+    <div class="govuk-header__logo">
+      <a href="https://www.gov.uk" class="govuk-header__link govuk-header__link--homepage">
+        <svg focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 324 60" height="30" width="162" fill="currentcolor" class="govuk-header__logotype" aria-label="GOV.UK">
+          <title>GOV.UK</title>
+          <g>
+            <circle cx="20" cy="17.6" r="3.7"></circle>
+            <circle cx="10.2" cy="23.5" r="3.7"></circle>
+            <circle cx="3.7" cy="33.2" r="3.7"></circle>
+            <circle cx="31.7" cy="30.6" r="3.7"></circle>
+            <circle cx="43.3" cy="17.6" r="3.7"></circle>
+            <circle cx="53.2" cy="23.5" r="3.7"></circle>
+            <circle cx="59.7" cy="33.2" r="3.7"></circle>
+            <circle cx="31.7" cy="30.6" r="3.7"></circle>
+            <path d="M33.1,9.8c.2-.1.3-.3.5-.5l4.6,2.4v-6.8l-4.6,1.5c-.1-.2-.3-.3-.5-.5l1.9-5.9h-6.7l1.9,5.9c-.2.1-.3.3-.5.5l-4.6-1.5v6.8l4.6-2.4c.1.2.3.3.5.5l-2.6,8c-.9,2.8,1.2,5.7,4.1,5.7h0c3,0,5.1-2.9,4.1-5.7l-2.6-8ZM37,37.9s-3.4,3.8-4.1,6.1c2.2,0,4.2-.5,6.4-2.8l-.7,8.5c-2-2.8-4.4-4.1-5.7-3.8.1,3.1.5,6.7,5.8,7.2,3.7.3,6.7-1.5,7-3.8.4-2.6-2-4.3-3.7-1.6-1.4-4.5,2.4-6.1,4.9-3.2-1.9-4.5-1.8-7.7,2.4-10.9,3,4,2.6,7.3-1.2,11.1,2.4-1.3,6.2,0,4,4.6-1.2-2.8-3.7-2.2-4.2.2-.3,1.7.7,3.7,3,4.2,1.9.3,4.7-.9,7-5.9-1.3,0-2.4.7-3.9,1.7l2.4-8c.6,2.3,1.4,3.7,2.2,4.5.6-1.6.5-2.8,0-5.3l5,1.8c-2.6,3.6-5.2,8.7-7.3,17.5-7.4-1.1-15.7-1.7-24.5-1.7h0c-8.8,0-17.1.6-24.5,1.7-2.1-8.9-4.7-13.9-7.3-17.5l5-1.8c-.5,2.5-.6,3.7,0,5.3.8-.8,1.6-2.3,2.2-4.5l2.4,8c-1.5-1-2.6-1.7-3.9-1.7,2.3,5,5.2,6.2,7,5.9,2.3-.4,3.3-2.4,3-4.2-.5-2.4-3-3.1-4.2-.2-2.2-4.6,1.6-6,4-4.6-3.7-3.7-4.2-7.1-1.2-11.1,4.2,3.2,4.3,6.4,2.4,10.9,2.5-2.8,6.3-1.3,4.9,3.2-1.8-2.7-4.1-1-3.7,1.6.3,2.3,3.3,4.1,7,3.8,5.4-.5,5.7-4.2,5.8-7.2-1.3-.2-3.7,1-5.7,3.8l-.7-8.5c2.2,2.3,4.2,2.7,6.4,2.8-.7-2.3-4.1-6.1-4.1-6.1h10.6,0Z"></path>
+          </g>
+          <circle class="govuk-logo-dot" cx="226" cy="36" r="7.3"></circle>
+        </svg>
+      </a>
     </div>
-  </div>
-</div>
-<header class="site-header">
-  <div class="wrap">
-    <a class="site-title" href="index.html">API Marketplace</a>
-    <nav class="primary-nav" id="primary-nav" aria-label="Primary">
-      <ul>
-        <li><a href="sign-in.html" id="nav-auth-link">Sign in</a></li>
-      </ul>
-    </nav>
   </div>
 </header>
 
-<div class="breadcrumbs"><div class="wrap"><ol><li><a href="index.html">HMCTS</a></li><li>My developer account</li></ol></div></div>
-
-<main id="main-content">
-
-<section class="block" style="padding-bottom:0;">
-  <div class="wrap">
-    <h1>My developer account</h1>
-    <div class="accent-bar" style="--chip:#0096d6;"></div>
-    <p class="lede" style="color:var(--grey-dark);font-size:1.1rem;max-width:65ch;">Use your developer account to access everything you need to integrate with HMCTS APIs for testing, assurance, and production purposes.</p>
-
-    <div class="auth-callout" id="signed-in-panel" style="display:none;max-width:560px;">
-      <div class="auth-callout-tab">Signed in</div>
-      <div class="auth-callout-body">
-        <p>You're signed in as <strong id="account-email"></strong>. Not you? <a href="#" id="sign-out-link">Sign out</a>.</p>
-      </div>
-    </div>
-
-    <div class="card-grid" style="margin-top:1.8em;">
-      <div class="card" style="--chip:#0096d6;">
-        <h3>Introduction</h3>
-        <ul style="margin:0;padding-left:1.1em;">
-          <li><a href="getting-started.html">Get started with our APIs</a></li>
-          <li><a href="api-catalogue.html">API &amp; Integration catalogue</a></li>
-          <li><a href="request-new-api.html">Request a new API</a></li>
+<section aria-label="Service information" class="govuk-service-navigation" data-module="govuk-service-navigation">
+  <div class="govuk-width-container">
+    <div class="govuk-service-navigation__container">
+      <span class="govuk-service-navigation__service-name">
+        <a href="index.html" class="govuk-service-navigation__link">HMCTS API Marketplace</a>
+      </span>
+      <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
+        <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
+          Menu
+        </button>
+        <ul class="govuk-service-navigation__list" id="navigation">
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="index.html">Home</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="api-catalogue.html">API catalogue</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="getting-started.html">Get started</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="documentation.html">Documentation</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="publish-api.html">Publish an API</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="help-and-support.html">Help and support</a>
+          </li>
+          <li class="govuk-service-navigation__item">
+            <a class="govuk-service-navigation__link" href="sign-in.html" id="nav-auth-link">Sign in</a>
+          </li>
         </ul>
-      </div>
-      <div class="card" style="--chip:#724695;">
-        <h3>Access &amp; onboarding</h3>
-        <ul style="margin:0;padding-left:1.1em;">
-          <li><a href="my-applications.html">Environment access</a></li>
-          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
-          <li><a href="request-api.html">Request API access</a></li>
-          <li><a href="publish-api.html">Publish an API</a></li>
-        </ul>
-      </div>
-      <div class="card" style="--chip:#f9ae00;">
-        <h3>Support</h3>
-        <ul style="margin:0;padding-left:1.1em;">
-          <li><a href="community.html">Developer community</a></li>
-          <li><a href="help-and-support.html">Help and support</a></li>
-          <li><a href="contact.html">Report an issue</a></li>
-        </ul>
-      </div>
+      </nav>
     </div>
   </div>
 </section>
 
+<div class="govuk-width-container">
+  <div class="govuk-phase-banner">
+    <p class="govuk-phase-banner__content">
+      <strong class="govuk-tag govuk-phase-banner__content__tag">Beta</strong>
+      <span class="govuk-phase-banner__text">This is a new service. <a class="govuk-link" href="contact.html">Help us improve it by giving feedback</a>.</span>
+    </p>
+  </div>
+
+  <nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
+    <ol class="govuk-breadcrumbs__list">
+      <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="index.html">HMCTS</a></li>
+      <li class="govuk-breadcrumbs__list-item">My developer account</li>
+    </ol>
+  </nav>
+
+  <main class="govuk-main-wrapper" id="main-content">
+
+    <h1 class="govuk-heading-xl">My developer account</h1>
+    <p class="govuk-body-l">Use your developer account to access everything you need to integrate with HMCTS APIs for testing, assurance, and production purposes.</p>
+
+    <div class="govuk-inset-text" id="signed-in-panel" style="display:none;">
+      <p class="govuk-body">You're signed in as <strong id="account-email"></strong>. Not you? <a class="govuk-link" href="#" id="sign-out-link">Sign out</a>.</p>
+    </div>
+
+    <div class="govuk-grid-row" style="margin-top:1.4em;">
+      <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-m">Introduction</h2>
+        <ul class="govuk-list">
+          <li><a class="govuk-link" href="getting-started.html">Get started with our APIs</a></li>
+          <li><a class="govuk-link" href="api-catalogue.html">API &amp; Integration catalogue</a></li>
+          <li><a class="govuk-link" href="request-new-api.html">Request a new API</a></li>
+        </ul>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-m">Access &amp; onboarding</h2>
+        <ul class="govuk-list">
+          <li><a class="govuk-link" href="my-applications.html">Environment access</a></li>
+          <li><a class="govuk-link" href="onboarding-guide.html">Onboarding guide</a></li>
+          <li><a class="govuk-link" href="request-api.html">Request API access</a></li>
+          <li><a class="govuk-link" href="publish-api.html">Publish an API</a></li>
+        </ul>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-m">Support</h2>
+        <ul class="govuk-list">
+          <li><a class="govuk-link" href="community.html">Developer community</a></li>
+          <li><a class="govuk-link" href="help-and-support.html">Help and support</a></li>
+          <li><a class="govuk-link" href="contact.html">Report an issue</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer class="govuk-footer">
+  <div class="govuk-width-container">
+    <svg focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 60" height="30" width="32" fill="currentcolor" class="govuk-footer__crown">
+      <g>
+        <circle cx="20" cy="17.6" r="3.7"></circle>
+        <circle cx="10.2" cy="23.5" r="3.7"></circle>
+        <circle cx="3.7" cy="33.2" r="3.7"></circle>
+        <circle cx="31.7" cy="30.6" r="3.7"></circle>
+        <circle cx="43.3" cy="17.6" r="3.7"></circle>
+        <circle cx="53.2" cy="23.5" r="3.7"></circle>
+        <circle cx="59.7" cy="33.2" r="3.7"></circle>
+        <circle cx="31.7" cy="30.6" r="3.7"></circle>
+        <path d="M33.1,9.8c.2-.1.3-.3.5-.5l4.6,2.4v-6.8l-4.6,1.5c-.1-.2-.3-.3-.5-.5l1.9-5.9h-6.7l1.9,5.9c-.2.1-.3.3-.5.5l-4.6-1.5v6.8l4.6-2.4c.1.2.3.3.5.5l-2.6,8c-.9,2.8,1.2,5.7,4.1,5.7h0c3,0,5.1-2.9,4.1-5.7l-2.6-8ZM37,37.9s-3.4,3.8-4.1,6.1c2.2,0,4.2-.5,6.4-2.8l-.7,8.5c-2-2.8-4.4-4.1-5.7-3.8.1,3.1.5,6.7,5.8,7.2,3.7.3,6.7-1.5,7-3.8.4-2.6-2-4.3-3.7-1.6-1.4-4.5,2.4-6.1,4.9-3.2-1.9-4.5-1.8-7.7,2.4-10.9,3,4,2.6,7.3-1.2,11.1,2.4-1.3,6.2,0,4,4.6-1.2-2.8-3.7-2.2-4.2.2-.3,1.7.7,3.7,3,4.2,1.9.3,4.7-.9,7-5.9-1.3,0-2.4.7-3.9,1.7l2.4-8c.6,2.3,1.4,3.7,2.2,4.5.6-1.6.5-2.8,0-5.3l5,1.8c-2.6,3.6-5.2,8.7-7.3,17.5-7.4-1.1-15.7-1.7-24.5-1.7h0c-8.8,0-17.1.6-24.5,1.7-2.1-8.9-4.7-13.9-7.3-17.5l5-1.8c-.5,2.5-.6,3.7,0,5.3.8-.8,1.6-2.3,2.2-4.5l2.4,8c-1.5-1-2.6-1.7-3.9-1.7,2.3,5,5.2,6.2,7,5.9,2.3-.4,3.3-2.4,3-4.2-.5-2.4-3-3.1-4.2-.2-2.2-4.6,1.6-6,4-4.6-3.7-3.7-4.2-7.1-1.2-11.1,4.2,3.2,4.3,6.4,2.4,10.9,2.5-2.8,6.3-1.3,4.9,3.2-1.8-2.7-4.1-1-3.7,1.6.3,2.3,3.3,4.1,7,3.8,5.4-.5,5.7-4.2,5.8-7.2-1.3-.2-3.7,1-5.7,3.8l-.7-8.5c2.2,2.3,4.2,2.7,6.4,2.8-.7-2.3-4.1-6.1-4.1-6.1h10.6,0Z"></path>
+      </g>
+    </svg>
+    <div class="govuk-footer__meta">
+      <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+        <h2 class="govuk-visually-hidden">Support and legal</h2>
+        <ul class="govuk-footer__inline-list">
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="contact.html">Contact the marketplace team</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="request-new-api.html">Request a new API</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="onboarding-guide.html">Onboarding guide</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="publish-api.html">Publish an API</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Accessibility statement</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Cookies</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="#">Privacy notice</a></li>
+          <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="data-governance.html">Data governance</a></li>
+        </ul>
+      </div>
+      <div class="govuk-footer__meta-item">
+        <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.gov.uk">&copy; Crown copyright &mdash; MIT Licence</a>
+        <p class="govuk-body-s">Built by <a class="govuk-footer__link" href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script type="module">
+  import { initAll } from "https://cdn.jsdelivr.net/npm/govuk-frontend@5.11.1/dist/govuk/govuk-frontend.min.js";
+  initAll();
+</script>
+<script src="assets/scripts.js"></script>
+
 <script>
-  const API_BASE = "https://hmcts-api-marketplace-auth.onrender.com";
+  const API_BASE = "https://hmcts-api-marketplace-auth-vu5d.onrender.com";
 
   (async function () {
+    const token = window.HmctsAuth.getToken();
+    if (!token) {
+      window.location.href = 'sign-in.html';
+      return;
+    }
     try {
-      const res = await fetch(API_BASE + '/api/me', { credentials: 'include' });
+      const res = await fetch(API_BASE + '/api/me', { headers: { Authorization: 'Bearer ' + token } });
       if (!res.ok) {
+        window.HmctsAuth.clearToken();
         window.location.href = 'sign-in.html';
         return;
       }
@@ -103,43 +219,12 @@
   document.getElementById('sign-out-link').addEventListener('click', async function (e) {
     e.preventDefault();
     try {
-      await fetch(API_BASE + '/api/logout', { method: 'POST', credentials: 'include' });
+      await fetch(API_BASE + '/api/logout', { method: 'POST' });
     } catch (err) {}
+    window.HmctsAuth.clearToken();
     window.location.href = 'sign-in.html';
   });
 </script>
-
-</main>
-
-<footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-grid footer-grid-2">
-      <div>
-        <h2>Legal</h2>
-        <ul>
-          <li><a href="#">Accessibility statement</a></li>
-          <li><a href="#">Cookies</a></li>
-          <li><a href="#">Privacy notice</a></li>
-          <li><a href="data-governance.html">Data governance</a></li>
-        </ul>
-      </div>
-      <div>
-        <h2>Get in touch</h2>
-        <ul>
-          <li><a href="contact.html">Contact the marketplace team</a></li>
-          <li><a href="request-new-api.html">Request a new API</a></li>
-          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
-          <li><a href="publish-api.html">Publish an API</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>&copy; Crown copyright &mdash; MIT Licence</span>
-      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
-    </div>
-  </div>
-</footer>
-<script src="assets/scripts.js"></script>
 
 </body>
 </html>
