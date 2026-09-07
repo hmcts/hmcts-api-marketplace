@@ -110,7 +110,7 @@
 
   // ---- site-wide: send signed-out visitors to sign in first ---------------
   // A page marks itself with a hidden data-requires-auth element carrying the
-  // route to return to once signed in - see get-started/request-api/*.
+  // route to return to once signed in - see api-catalogue/request-new-api/*.
   var authGate = document.querySelector('[data-requires-auth]')
   if (authGate && !getToken()) {
     var returnTo = authGate.getAttribute('data-requires-auth')

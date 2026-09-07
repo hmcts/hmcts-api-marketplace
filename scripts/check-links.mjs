@@ -35,8 +35,8 @@ const { redirects } = JSON.parse(await readFile('scripts/redirects.json', 'utf8'
 // to be its own page with the same problem, but now lives as a tab on
 // account/index.html itself, so it needs no entry of its own here.
 //
-// The three request confirmation pages are a different shape of the same
-// problem: check-answers no longer advances to them via a static data-next
+// The request-new-api confirmation page is a different shape of the same
+// problem: check-answers no longer advances to it via a static data-next
 // attribute (see requests.js) because advancing is now conditional on a real
 // POST to /api/requests succeeding, not an unconditional next step - so
 // there is no declarative edge for this crawler to follow either, only a
@@ -68,10 +68,6 @@ const ALLOW_UNREACHABLE = new Set([
   'cy/account/applications/team-members/add/index.html',
   'account/applications/delete/index.html',
   'cy/account/applications/delete/index.html',
-  'get-started/request-api/confirmation/index.html',
-  'cy/get-started/request-api/confirmation/index.html',
-  'publish/submit/confirmation/index.html',
-  'cy/publish/submit/confirmation/index.html',
   'api-catalogue/request-new-api/confirmation/index.html',
   'cy/api-catalogue/request-new-api/confirmation/index.html'
 ])

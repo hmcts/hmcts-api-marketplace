@@ -2,15 +2,24 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "v2-static",
+      "name": "site-static",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8010", "--directory", "docs/v2"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8010",
+        "--directory",
+        "docs"
+      ],
       "port": 8010
     },
     {
-      "name": "v2-kit",
+      "name": "kit",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "kit"],
+      "runtimeArgs": [
+        "run",
+        "kit"
+      ],
       "port": 3100
     }
   ]
