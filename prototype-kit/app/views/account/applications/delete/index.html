@@ -1,0 +1,58 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName = "Delete application" %}
+{% set section = "account" %}
+{% set breadcrumbs = [
+  { text: "Home", href: "/" },
+  { text: "Your account", href: "/account" },
+  { text: "Manage applications", href: "/account/applications" }
+] %}
+
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <p class="govuk-body" id="delete-loading">Loading&hellip;</p>
+
+    <div id="delete-content" hidden>
+
+      <h1 class="govuk-heading-l">Delete <span id="delete-app-name"></span>?</h1>
+
+      <p class="govuk-body">
+        <strong>Application:</strong> <span id="delete-app-name-2"></span><br>
+        <strong>Environment:</strong> <span id="delete-environment"></span>
+      </p>
+
+      {{ govukWarningText({
+        text: "This will permanently delete the application, its client secrets, connected APIs and team members. This cannot be undone.",
+        iconFallbackText: "Warning"
+      }) }}
+
+      <form id="delete-app-form">
+        {{ govukButton({ text: "Delete application", classes: "govuk-button--warning", attributes: { id: "delete-app-submit" } }) }}
+        <p class="govuk-body"><a class="govuk-link" id="delete-app-cancel-link" href="../">Cancel</a></p>
+      </form>
+
+    </div>
+
+    <div class="govuk-error-summary" data-module="govuk-error-summary" id="delete-error-summary" hidden tabindex="-1">
+      <div role="alert">
+        <h2 class="govuk-error-summary__title">There is a problem</h2>
+        <div class="govuk-error-summary__body">
+          <p id="delete-error-text">Something went wrong. Please try again.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block pageScripts %}
+  <script src="/public/javascripts/applications.js"></script>
+{% endblock %}

@@ -310,6 +310,13 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('edit-description').hidden = !isAdmin
       document.getElementById('edit-redirect-uri').hidden = !isAdmin
       document.getElementById('add-attr-form').hidden = !isAdmin
+
+      // Deleting outranks Administrator - it takes the application away from
+      // every team member at once, not something an Administrator could undo
+      // by re-inviting people (see the backend's Team members roles).
+      var deleteLink = document.getElementById('detail-delete-link')
+      deleteLink.hidden = app.viewerRole !== 'owner'
+      deleteLink.setAttribute('href', Auth.siteUrl('account/applications/delete/?id=' + encodeURIComponent(app.id)))
       var teamLink = document.getElementById('detail-team-link')
       teamLink.textContent = isAdmin ? 'Change' : 'View'
       teamLink.setAttribute('href', Auth.siteUrl('account/applications/team-members/?id=' + encodeURIComponent(app.id)))
@@ -712,6 +719,75 @@ document.addEventListener('DOMContentLoaded', function () {
         link.textContent = 'Could not reach the applications service. Try again in a moment.'
         summary.hidden = false
         summary.focus()
+      })
+    })
+  }
+
+  // ---- delete application --------------------------------------------------
+  //
+  // Its own confirmation page rather than a plain confirm() dialog - matching
+  // the pattern the rest of this journey uses for anything destructive. The
+  // backend rejects this at anything below Owner with 403, so the link that
+  // gets here is hidden for everyone else (see the detail page's render()).
+
+  var deleteForm = document.getElementById('delete-app-form')
+  if (deleteForm) {
+    if (!requireSignedIn()) return
+
+    var deleteParams = new URLSearchParams(window.location.search)
+    var deleteAppId = deleteParams.get('id')
+    var deleteLoadingEl = document.getElementById('delete-loading')
+    var deleteErrorSummary = document.getElementById('delete-error-summary')
+    var deleteErrorText = document.getElementById('delete-error-text')
+
+    function showDeleteError (message) {
+      deleteLoadingEl.hidden = true
+      deleteErrorText.textContent = message
+      deleteErrorSummary.hidden = false
+      deleteErrorSummary.focus()
+    }
+
+    if (!deleteAppId) {
+      showDeleteError('No application was specified.')
+    } else {
+      Auth.authedFetch('/api/applications/' + encodeURIComponent(deleteAppId)).then(function (res) {
+        if (res.status === 401) { window.location.href = Auth.siteUrl('sign-in/'); return null }
+        if (res.status === 404) { showDeleteError('This application could not be found.'); return null }
+        return res.json()
+      }).then(function (data) {
+        if (!data) return
+        var app = data.application
+        document.getElementById('delete-app-name').textContent = app.name
+        document.getElementById('delete-app-name-2').textContent = app.name
+        document.getElementById('delete-environment').textContent = ENVIRONMENT_LABELS[app.environment] || app.environment
+        document.getElementById('delete-app-cancel-link').setAttribute('href', Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(app.id)))
+        deleteLoadingEl.hidden = true
+        document.getElementById('delete-content').hidden = false
+      }).catch(function () {
+        showDeleteError('Could not load this application. Try again in a moment.')
+      })
+    }
+
+    deleteForm.addEventListener('submit', function (event) {
+      event.preventDefault()
+      var button = document.getElementById('delete-app-submit')
+      button.disabled = true
+      button.textContent = 'Deleting…'
+
+      Auth.authedFetch('/api/applications/' + encodeURIComponent(deleteAppId), { method: 'DELETE' }).then(function (res) {
+        if (res.ok) {
+          window.location.href = Auth.siteUrl('account/applications/')
+          return
+        }
+        return res.json().then(function (data) {
+          button.disabled = false
+          button.textContent = 'Delete application'
+          showDeleteError((data && data.error) || 'Something went wrong. Please try again.')
+        })
+      }).catch(function () {
+        button.disabled = false
+        button.textContent = 'Delete application'
+        showDeleteError('Could not reach the applications service. Try again in a moment.')
       })
     })
   }
