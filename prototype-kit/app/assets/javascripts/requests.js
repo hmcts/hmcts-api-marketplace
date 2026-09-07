@@ -209,4 +209,21 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }).catch(function () {})
   }
+
+  // ---- request-api form: preselect environment from Environment access -
+  //
+  // Set by the "Request production access" link on the Environment access
+  // dashboard (environment-access.js) - single-use, under its own
+  // sessionStorage key so it never collides with the API preselect above.
+  var environmentField = document.querySelector('input[name="environment"][value="production"]')
+  if (environmentField) {
+    var envPreselect = null
+    try { envPreselect = JSON.parse(window.sessionStorage.getItem('environmentAccessPreselect')) } catch (e) {}
+    if (envPreselect) {
+      try { window.sessionStorage.removeItem('environmentAccessPreselect') } catch (e) {}
+      environmentField.checked = true
+      var useCaseField = document.getElementById('use-case')
+      if (useCaseField && !useCaseField.value) useCaseField.value = envPreselect.useCaseNote
+    }
+  }
 })
