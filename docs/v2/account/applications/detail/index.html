@@ -342,6 +342,11 @@ data-module="govuk-service-navigation"
         </div>
       </dl>
 
+      <h2 class="govuk-heading-m">Other environments</h2>
+      <p class="govuk-body" id="other-envs-hint">This application is only registered for one environment.</p>
+      <ul class="govuk-list govuk-list--bullet" id="other-envs-list" hidden></ul>
+      <p class="govuk-body" id="add-env-links"></p>
+
       <h2 class="govuk-heading-m">Security details</h2>
       <dl class="govuk-summary-list" id="detail-keys-list"></dl>
       <form id="rotate-key-form">
@@ -353,6 +358,7 @@ data-module="govuk-service-navigation"
 </button>
 
       </form>
+      <p class="govuk-body" id="keys-cap-hint" hidden>You have reached the limit of 5 active API keys. Revoke one before issuing another.</p>
       <p class="govuk-body" id="new-key-notice" hidden></p>
 
       <dl class="govuk-summary-list">

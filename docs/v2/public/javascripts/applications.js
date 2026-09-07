@@ -19,6 +19,31 @@ document.addEventListener('DOMContentLoaded', function () {
     production: 'Production'
   }
 
+  // Matches HMRC Developer Hub's stated limit of 5 concurrent client secrets.
+  // Not enforced by the backend (see hmcts-api-marketplace-auth), which
+  // never revokes a key on your behalf - only "Revoke" does that - so this
+  // is a UI guardrail rather than something the server would reject anyway.
+  var MAX_ACTIVE_KEYS = 5
+
+  // Groups an owner's applications by name, so a sandbox and a production
+  // registration of "the same" application show up together - the same
+  // grouping HMRC's Developer Hub gives you for free by treating them as
+  // one logical application with per-environment credentials underneath.
+  // Order follows first appearance, which is createdAt DESC from the API.
+  function groupApplicationsByName (applications) {
+    var order = []
+    var groups = {}
+    applications.forEach(function (app) {
+      var key = app.name.toLowerCase()
+      if (!groups[key]) {
+        groups[key] = { name: app.name, apps: [] }
+        order.push(key)
+      }
+      groups[key].apps.push(app)
+    })
+    return order.map(function (key) { return groups[key] })
+  }
+
   var API_CATALOGUE = {
     'crime-prosecution-case-details': 'Crime Prosecution Case Details API',
     'hearing-results': 'Hearing Results API',
@@ -73,18 +98,43 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       appsTable.hidden = false
-      data.applications.forEach(function (app) {
-        var tr = document.createElement('tr')
-        tr.className = 'govuk-table__row'
-        tr.innerHTML =
-          '<td class="govuk-table__cell"><a class="govuk-link" href="' + Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(app.id)) + '">' + escapeHtml(app.name) + '</a></td>' +
-          '<td class="govuk-table__cell">' + escapeHtml(ENVIRONMENT_LABELS[app.environment] || app.environment) + '</td>' +
-          '<td class="govuk-table__cell">' + escapeHtml(app.owner.type === 'user' ? 'Me' : app.owner.type) + '</td>'
-        body.appendChild(tr)
+      groupApplicationsByName(data.applications).forEach(function (group) {
+        group.apps.forEach(function (app, index) {
+          var tr = document.createElement('tr')
+          tr.className = 'govuk-table__row'
+          var nameCell = index === 0
+            ? '<td class="govuk-table__cell" rowspan="' + group.apps.length + '"><strong>' + escapeHtml(group.name) + '</strong></td>'
+            : ''
+          tr.innerHTML =
+            nameCell +
+            '<td class="govuk-table__cell"><a class="govuk-link" href="' + Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(app.id)) + '">' + escapeHtml(ENVIRONMENT_LABELS[app.environment] || app.environment) + '</a></td>' +
+            '<td class="govuk-table__cell">' + escapeHtml(app.owner.type === 'user' ? 'Me' : app.owner.type) + '</td>'
+          body.appendChild(tr)
+        })
       })
     }).catch(function () {
       document.getElementById('apps-loading').textContent = 'Could not load your applications. Try again in a moment.'
     })
+  }
+
+  // ---- new application form: prefill from "add this environment" links -
+  //
+  // Set by the detail page's "Add this application in <environment>" links
+  // (below) - single-use, so a stale value never resurfaces on some later,
+  // unrelated visit to this form.
+  var newAppForm = document.querySelector('form[data-journey="new-application"]')
+  if (newAppForm) {
+    var appPrefill = null
+    try { appPrefill = JSON.parse(window.sessionStorage.getItem('newApplicationPreselect')) } catch (e) {}
+    if (appPrefill) {
+      try { window.sessionStorage.removeItem('newApplicationPreselect') } catch (e) {}
+      var nameField = document.getElementById('app-name')
+      if (nameField && appPrefill.name) nameField.value = appPrefill.name
+      if (appPrefill.environment) {
+        var envField = document.querySelector('input[name="environment"][value="' + appPrefill.environment + '"]')
+        if (envField) envField.checked = true
+      }
+    }
   }
 
   // ---- check answers: real creation ------------------------------------
@@ -197,6 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var loadingEl = document.getElementById('detail-loading')
     var errorSummary = document.getElementById('detail-error-summary')
     var errorText = document.getElementById('detail-error-text')
+    var currentApp = null
 
     function showDetailError (message) {
       loadingEl.hidden = true
@@ -224,8 +275,40 @@ document.addEventListener('DOMContentLoaded', function () {
       })
     }
 
+    function renderOtherEnvironments (app, allApplications) {
+      var siblings = allApplications.filter(function (a) {
+        return a.id !== app.id && a.name.toLowerCase() === app.name.toLowerCase()
+      })
+
+      var hint = document.getElementById('other-envs-hint')
+      var list = document.getElementById('other-envs-list')
+      if (siblings.length) {
+        hint.hidden = true
+        list.hidden = false
+        list.innerHTML = siblings.map(function (sib) {
+          return '<li><a class="govuk-link" href="' + Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(sib.id)) + '">' +
+            escapeHtml(ENVIRONMENT_LABELS[sib.environment] || sib.environment) + '</a></li>'
+        }).join('')
+      } else {
+        hint.hidden = false
+        list.hidden = true
+      }
+
+      var taken = [app.environment].concat(siblings.map(function (s) { return s.environment }))
+      var missing = Object.keys(ENVIRONMENT_LABELS).filter(function (env) { return taken.indexOf(env) === -1 })
+      var addEnvLinksEl = document.getElementById('add-env-links')
+      if (missing.length) {
+        addEnvLinksEl.innerHTML = 'Add this application in: ' + missing.map(function (env) {
+          return '<a class="govuk-link" href="#" data-add-environment="' + escapeHtml(env) + '">' + escapeHtml(ENVIRONMENT_LABELS[env]) + '</a>'
+        }).join(', ')
+      } else {
+        addEnvLinksEl.textContent = 'Registered in every environment.'
+      }
+    }
+
     function render (data) {
       var app = data.application
+      currentApp = app
 
       document.getElementById('detail-name').textContent = app.name
       document.getElementById('detail-name-value').textContent = app.name
@@ -235,13 +318,29 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('detail-id').textContent = app.id
       document.getElementById('detail-environment').textContent = ENVIRONMENT_LABELS[app.environment] || app.environment
 
+      // Siblings (same name, other environments) aren't in this response -
+      // a second, non-blocking fetch of the full list is the only way to
+      // find them, since there's no "get related applications" endpoint.
+      Auth.authedFetch('/api/applications').then(function (res) { return res.json() }).then(function (listData) {
+        renderOtherEnvironments(app, (listData && listData.applications) || [])
+      }).catch(function () {})
+
+      var activeKeys = data.apiKeys.filter(function (k) { return !k.revokedAt })
       var keysList = document.getElementById('detail-keys-list')
-      keysList.innerHTML = data.apiKeys.filter(function (k) { return !k.revokedAt }).map(function (k) {
-        return '<div class="govuk-summary-list__row">' +
-          '<dt class="govuk-summary-list__key">Active API key</dt>' +
-          '<dd class="govuk-summary-list__value">Created: ' + formatDateTime(k.createdAt) + ' (ends ' + escapeHtml(k.preview) + ')</dd>' +
-          '</div>'
-      }).join('') || '<div class="govuk-summary-list__row"><dt class="govuk-summary-list__key">Active API keys</dt><dd class="govuk-summary-list__value">None</dd></div>'
+      keysList.innerHTML = activeKeys.length
+        ? activeKeys.map(function (k) {
+          return '<div class="govuk-summary-list__row">' +
+            '<dt class="govuk-summary-list__key">API key ending ' + escapeHtml(k.preview) + '</dt>' +
+            '<dd class="govuk-summary-list__value">Created ' + formatDateTime(k.createdAt) + '</dd>' +
+            '<dd class="govuk-summary-list__actions"><a class="govuk-link" href="#" data-revoke-key="' + escapeHtml(k.id) + '">Revoke<span class="govuk-visually-hidden"> key ending ' + escapeHtml(k.preview) + '</span></a></dd>' +
+            '</div>'
+        }).join('')
+        : '<div class="govuk-summary-list__row"><dt class="govuk-summary-list__key">Active API keys</dt><dd class="govuk-summary-list__value">None</dd></div>'
+
+      var rotateButton = document.querySelector('#rotate-key-form .govuk-button')
+      var atCap = activeKeys.length >= MAX_ACTIVE_KEYS
+      rotateButton.disabled = atCap
+      document.getElementById('keys-cap-hint').hidden = !atCap
 
       document.getElementById('detail-public-key-url').textContent = app.publicKeyUrl || 'Not set yet'
       document.getElementById('detail-callback-url').textContent = app.callbackUrl || 'Not set yet'
@@ -296,6 +395,28 @@ document.addEventListener('DOMContentLoaded', function () {
           notice.hidden = false
           loadDetail()
         })
+    })
+
+    document.getElementById('detail-keys-list').addEventListener('click', function (event) {
+      var link = event.target.closest('[data-revoke-key]')
+      if (!link) return
+      event.preventDefault()
+      Auth.authedFetch('/api/applications/' + encodeURIComponent(appId) + '/api-keys/' + encodeURIComponent(link.getAttribute('data-revoke-key')), {
+        method: 'DELETE'
+      }).then(function () { loadDetail() })
+    })
+
+    document.getElementById('add-env-links').addEventListener('click', function (event) {
+      var link = event.target.closest('[data-add-environment]')
+      if (!link || !currentApp) return
+      event.preventDefault()
+      try {
+        window.sessionStorage.setItem('newApplicationPreselect', JSON.stringify({
+          name: currentApp.name,
+          environment: link.getAttribute('data-add-environment')
+        }))
+      } catch (e) { /* private browsing, etc. */ }
+      window.location.href = Auth.siteUrl('account/applications/new/')
     })
 
     function editUrlField (linkId, fieldLabel, bodyKey) {

@@ -26,6 +26,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var SELF_SERVICE_ENVIRONMENTS = ['sandbox', 'development', 'integration-test']
 
+  // Groups an owner's applications by name, matching the same grouping on
+  // My applications and teams - a sandbox and a production registration of
+  // "the same" application show up together rather than as two unrelated
+  // rows. Order follows first appearance, which is createdAt DESC from the API.
+  function groupApplicationsByName (applications) {
+    var order = []
+    var groups = {}
+    applications.forEach(function (app) {
+      var key = app.name.toLowerCase()
+      if (!groups[key]) {
+        groups[key] = { name: app.name, apps: [] }
+        order.push(key)
+      }
+      groups[key].apps.push(app)
+    })
+    return order.map(function (key) { return groups[key] })
+  }
+
   function requireSignedIn () {
     if (Auth.getToken()) return true
     window.location.href = Auth.siteUrl('sign-in/')
@@ -58,24 +76,41 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     envTable.hidden = false
-    data.applications.forEach(function (app) {
-      var tr = document.createElement('tr')
-      tr.className = 'govuk-table__row'
+    groupApplicationsByName(data.applications).forEach(function (group) {
+      group.apps.forEach(function (app, index) {
+        var tr = document.createElement('tr')
+        tr.className = 'govuk-table__row'
 
-      var selfService = SELF_SERVICE_ENVIRONMENTS.indexOf(app.environment) !== -1
-      var status = selfService
-        ? '<strong class="govuk-tag govuk-tag--green">Active</strong>'
-        : '<strong class="govuk-tag govuk-tag--grey">Needs approval</strong>'
-      var action = selfService
-        ? '<a class="govuk-link" href="' + Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(app.id)) + '">Manage credentials</a>'
-        : '<a class="govuk-link" href="#" data-request-production="' + escapeHtml(app.id) + '" data-app-name="' + escapeHtml(app.name) + '">Request production access</a>'
+        var selfService = SELF_SERVICE_ENVIRONMENTS.indexOf(app.environment) !== -1
+        var status = selfService
+          ? '<strong class="govuk-tag govuk-tag--green">Active</strong>'
+          : '<strong class="govuk-tag govuk-tag--grey">Needs approval</strong>'
+        var action = selfService
+          ? '<a class="govuk-link" href="' + Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(app.id)) + '">Manage credentials</a>'
+          : '<a class="govuk-link" href="#" data-request-production="' + escapeHtml(app.id) + '" data-app-name="' + escapeHtml(app.name) + '">Request production access</a>'
+        var nameCell = index === 0
+          ? '<td class="govuk-table__cell" rowspan="' + group.apps.length + '"><strong>' + escapeHtml(group.name) + '</strong></td>'
+          : ''
 
-      tr.innerHTML =
-        '<td class="govuk-table__cell">' + escapeHtml(app.name) + '</td>' +
-        '<td class="govuk-table__cell">' + escapeHtml(ENVIRONMENT_LABELS[app.environment] || app.environment) + '</td>' +
-        '<td class="govuk-table__cell">' + status + '</td>' +
-        '<td class="govuk-table__cell">' + action + '</td>'
-      body.appendChild(tr)
+        tr.innerHTML =
+          nameCell +
+          '<td class="govuk-table__cell">' + escapeHtml(ENVIRONMENT_LABELS[app.environment] || app.environment) + '</td>' +
+          '<td class="govuk-table__cell">' + status + '</td>' +
+          '<td class="govuk-table__cell">' + action + '</td>'
+        body.appendChild(tr)
+      })
+
+      var taken = group.apps.map(function (a) { return a.environment })
+      var missing = Object.keys(ENVIRONMENT_LABELS).filter(function (env) { return taken.indexOf(env) === -1 })
+      if (missing.length) {
+        var addRow = document.createElement('tr')
+        addRow.className = 'govuk-table__row'
+        addRow.innerHTML = '<td class="govuk-table__cell" colspan="4">Add ' + escapeHtml(group.name) + ' in: ' +
+          missing.map(function (env) {
+            return '<a class="govuk-link" href="#" data-add-environment="' + escapeHtml(env) + '" data-app-name="' + escapeHtml(group.name) + '">' + escapeHtml(ENVIRONMENT_LABELS[env]) + '</a>'
+          }).join(', ') + '</td>'
+        body.appendChild(addRow)
+      }
     })
   }).catch(function () {
     document.getElementById('env-loading').textContent = 'Could not load your applications. Try again in a moment.'
@@ -96,5 +131,22 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (e) { /* private browsing, etc. */ }
 
     window.location.href = Auth.siteUrl('get-started/request-api/')
+  })
+
+  document.getElementById('env-table-body').addEventListener('click', function (event) {
+    var link = event.target.closest('[data-add-environment]')
+    if (!link) return
+    event.preventDefault()
+
+    // Read once and cleared by applications.js on the new-application form -
+    // see applications.js for the matching single-use handling.
+    try {
+      window.sessionStorage.setItem('newApplicationPreselect', JSON.stringify({
+        name: link.getAttribute('data-app-name'),
+        environment: link.getAttribute('data-add-environment')
+      }))
+    } catch (e) { /* private browsing, etc. */ }
+
+    window.location.href = Auth.siteUrl('account/applications/new/')
   })
 })

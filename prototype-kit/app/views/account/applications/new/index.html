@@ -55,7 +55,7 @@
       <div data-required data-error="Enter an application name">
         {{ govukInput({
           label: { text: "What is your application name?", classes: "govuk-label--m" },
-          hint: { text: "The application name must be unique. This means you cannot have applications with the same name and owner." },
+          hint: { text: "You can register the same name once per environment - for example the same application as both Sandbox and Production." },
           id: "app-name",
           name: "app-name",
           autocomplete: "off"
