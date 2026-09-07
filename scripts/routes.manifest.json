@@ -139,7 +139,7 @@
     },
     {
       "path": "/account/applications",
-      "name": "My applications and teams"
+      "name": "Manage applications"
     },
     {
       "path": "/account/applications/new",
@@ -172,10 +172,6 @@
     {
       "path": "/account/applications/team-members/add",
       "name": "Add a team member"
-    },
-    {
-      "path": "/account/environment-access",
-      "name": "Environment access"
     },
     {
       "path": "/accessibility-statement",
