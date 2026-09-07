@@ -1,0 +1,68 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName = "Manage team members" %}
+{% set section = "account" %}
+{% set breadcrumbs = [
+  { text: "Home", href: "/" },
+  { text: "Your account", href: "/account" },
+  { text: "My applications and teams", href: "/account/applications" }
+] %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <p class="govuk-body" id="team-loading">Loading&hellip;</p>
+
+    <div id="team-content" hidden>
+
+      <h1 class="govuk-heading-l">Manage team members</h1>
+
+      <p class="govuk-body">
+        <strong>Application:</strong> <span id="team-app-name"></span><br>
+        <strong>Environment:</strong> <span id="team-environment"></span>
+      </p>
+
+      <table class="govuk-table" id="team-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Email address</th>
+            <th scope="col" class="govuk-table__header">Role</th>
+            <th scope="col" class="govuk-table__header">Remove</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body" id="team-table-body"></tbody>
+      </table>
+
+      {{ govukDetails({
+        summaryText: "Why can't I remove myself from this application?",
+        text: "Every application needs at least one person who can always reach it. If you need to hand over an application entirely, ask an administrator to remove you after adding someone else to take your place."
+      }) }}
+
+      <p class="govuk-body"><a class="govuk-button" data-module="govuk-button" id="team-add-link" href="add/" role="button" draggable="false">Add a team member</a></p>
+
+      <p class="govuk-body"><a class="govuk-link" id="team-detail-link" href="../">View your application details</a></p>
+
+    </div>
+
+    <div class="govuk-error-summary" data-module="govuk-error-summary" id="team-error-summary" hidden tabindex="-1">
+      <div role="alert">
+        <h2 class="govuk-error-summary__title">There is a problem</h2>
+        <div class="govuk-error-summary__body">
+          <p id="team-error-text">Something went wrong. Please try again.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block pageScripts %}
+  <script src="/public/javascripts/applications.js"></script>
+{% endblock %}

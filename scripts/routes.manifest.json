@@ -166,6 +166,14 @@
       "name": "New client secret generated"
     },
     {
+      "path": "/account/applications/team-members",
+      "name": "Manage team members"
+    },
+    {
+      "path": "/account/applications/team-members/add",
+      "name": "Add a team member"
+    },
+    {
       "path": "/account/environment-access",
       "name": "Environment access"
     },
