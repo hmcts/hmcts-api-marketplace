@@ -13,7 +13,7 @@ import { readFile, writeFile, cp, rm, mkdir, access } from 'node:fs/promises'
 import { spawnSync } from 'node:child_process'
 import { join } from 'node:path'
 
-const SOURCE = process.env.EXPORT_OUT ?? 'docs/v2'
+const SOURCE = process.env.EXPORT_OUT ?? 'docs'
 const WORK = '.gate-verify'
 const COPY = join(WORK, 'v2')
 

@@ -12,7 +12,7 @@ import { once } from 'node:events'
 import pa11y from 'pa11y'
 import { loadRoutes } from './routes.mjs'
 
-const OUT = process.env.EXPORT_OUT ?? 'docs/v2'
+const OUT = process.env.EXPORT_OUT ?? 'docs'
 const PORT = Number(process.env.A11Y_PORT ?? 8149)
 const routes = await loadRoutes()
 

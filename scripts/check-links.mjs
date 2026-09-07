@@ -13,7 +13,7 @@ import { readdir, readFile } from 'node:fs/promises'
 import { join, relative, sep, posix } from 'node:path'
 import { loadManifest } from './routes.mjs'
 
-const OUT = process.env.EXPORT_OUT ?? 'docs/v2'
+const OUT = process.env.EXPORT_OUT ?? 'docs'
 
 // Reachable by URL, never by link: the 404 page, and every redirect stub - the
 // whole point of a stub is that an old external link or bookmark lands on it.

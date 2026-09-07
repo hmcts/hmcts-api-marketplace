@@ -9,7 +9,7 @@ import { readdir, access, readFile } from 'node:fs/promises'
 import { join, relative, sep } from 'node:path'
 import { loadRoutes, outputRelFor } from './routes.mjs'
 
-const OUT = process.env.EXPORT_OUT ?? 'docs/v2'
+const OUT = process.env.EXPORT_OUT ?? 'docs'
 const routes = await loadRoutes()
 const { redirects } = JSON.parse(await readFile('scripts/redirects.json', 'utf8'))
 const problems = []
@@ -35,16 +35,20 @@ for (const entry of await readdir(OUT, { recursive: true, withFileTypes: true })
   if (!expected.has(rel)) problems.push(`output file is not a declared route: ${rel}`)
 }
 
-// Completeness: every URL the current live site publishes must have a redirect,
-// or it will 404 the moment docs/v2 is promoted to the root. index.html is
-// exempt because the old and new homepages share the same URL.
-const LIVE_SITE = 'docs'
+// Completeness: every URL the superseded site published must still have a
+// redirect, or that URL 404s. Before promotion this read docs/, because that
+// was where the old site lived and the risk was in the future tense. The old
+// site is now archive/v1 and the stubs are live at the root, so the check
+// points at the archive and the guarantee becomes permanent: drop a redirect
+// and a URL that used to work stops working. index.html is exempt because the
+// old and new homepages share the same URL.
+const LIVE_SITE = 'archive/v1'
 const redirectFroms = new Set(redirects.map((r) => r.from))
 for (const entry of await readdir(LIVE_SITE, { withFileTypes: true })) {
   if (!entry.isFile() || !entry.name.endsWith('.html')) continue
   if (entry.name === 'index.html') continue
   if (!redirectFroms.has(entry.name)) {
-    problems.push(`live site publishes ${entry.name} with no redirect - it will 404 at promotion`)
+    problems.push(`archived site published ${entry.name} with no redirect - that URL now 404s`)
   }
 }
 

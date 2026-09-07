@@ -65,14 +65,14 @@ jobs:
       - name: Export the site
         run: npm run export
 
-      # docs/v2 is committed output. If it differs from a fresh export, the
+      # docs/ is committed output. If it differs from a fresh export, the
       # generated site has drifted from the Kit source it claims to come from.
       - name: Fail if the committed export is stale
         run: |
-          if ! git diff --quiet docs/v2; then
-            echo "::error::docs/v2 differs from a fresh export. Run 'npm run export' and commit the result."
-            git diff --stat docs/v2
-            git diff docs/v2 | head -100
+          if ! git diff --quiet docs; then
+            echo "::error::docs/ differs from a fresh export. Run 'npm run export' and commit the result."
+            git diff --stat docs
+            git diff docs | head -100
             exit 1
           fi
           echo "Committed export matches a fresh build."
@@ -84,38 +84,40 @@ jobs:
       - name: Run the gates
         run: npm run gates
 
-      # The live site must stay byte-identical until docs/v2 is promoted.
+      # The archives must stay byte-identical. docs/ is now the live site -
+      # v2 has been promoted to the publishing root - so the old guard's
+      # subject no longer exists. What still needs protecting is archive/,
+      # which holds the superseded v0 and v1 generations: an archive that
+      # quietly changes is not an archive.
       #
-      # This compares content, not paths. Previously it diffed the paths under
-      # docs/ excluding docs/v2, which meant relocating the live site was
-      # indistinguishable from editing it - and archiving it into docs/v1 is a
-      # step towards promotion, not a change to it.
-      #
-      # Instead, collect the blob hash of every file under docs/ except
-      # docs/v2, on both sides, and require the two multisets to match. A file
-      # that moves keeps its hash, so a pure relocation passes. Any edit,
-      # addition or removal changes the multiset and fails, wherever the file
-      # sits - so this still protects docs/v0 and docs/v1 exactly as before.
-      - name: Guard the live site
+      # Compares content, not paths, so relocating an archived file passes
+      # while editing one fails.
+      - name: Guard the archives
         if: github.base_ref != ''
         env:
           BASE_REF: ${{ github.base_ref }}
         run: |
           git fetch --no-tags origin "+refs/heads/$BASE_REF:refs/remotes/origin/$BASE_REF"
 
-          live_blobs () {
-            git ls-tree -r "$1" -- docs | grep -v $'\tdocs/v2/' | awk '{print $3}' | sort
+          # Both the new and old locations are listed, so the same content is
+          # found wherever it sits. Before promotion the archived generations
+          # live at docs/v0 and docs/v1; after it, under archive/. Naming only
+          # the new location would make the promotion itself look like 61
+          # additions rather than a relocation - the same path assumption this
+          # check exists to avoid.
+          archive_blobs () {
+            git ls-tree -r "$1" -- archive docs/v0 docs/v1 | awk '{print $3}' | sort
           }
 
-          live_blobs "origin/$BASE_REF" > /tmp/base-blobs
-          live_blobs HEAD > /tmp/head-blobs
+          archive_blobs "origin/$BASE_REF" > /tmp/base-blobs
+          archive_blobs HEAD > /tmp/head-blobs
 
           if ! diff -q /tmp/base-blobs /tmp/head-blobs > /dev/null; then
-            echo "::error::This change alters the live site (docs/ outside docs/v2). It must stay untouched until promotion. Relocating files is allowed; changing their content is not."
-            git diff --stat "origin/$BASE_REF" -- docs ':(exclude)docs/v2'
+            echo "::error::This change alters archive/. The superseded v0 and v1 generations must stay untouched. Relocating files is allowed; changing their content is not."
+            git diff --stat "origin/$BASE_REF" -- archive
             exit 1
           fi
-          echo "Live site content unchanged ($(wc -l < /tmp/head-blobs | tr -d ' ') file(s))."
+          echo "Archive content unchanged ($(wc -l < /tmp/head-blobs | tr -d ' ') file(s))."
 
       - name: Stop the Kit
         if: always()

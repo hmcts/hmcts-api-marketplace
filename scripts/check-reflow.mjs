@@ -20,7 +20,7 @@ import { once } from 'node:events'
 import puppeteer from 'puppeteer'
 import { loadRoutes } from './routes.mjs'
 
-const OUT = process.env.EXPORT_OUT ?? 'docs/v2'
+const OUT = process.env.EXPORT_OUT ?? 'docs'
 const PORT = Number(process.env.REFLOW_PORT ?? 8153)
 const VIEWPORT_WIDTH = 320
 const TOLERANCE = 1 // sub-pixel rounding
