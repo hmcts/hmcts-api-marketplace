@@ -60,12 +60,17 @@ document.addEventListener('DOMContentLoaded', function () {
   // Sandbox and production are two separate registrations that happen to
   // share a name - HMRC's own "View all applications" lists them as plain,
   // unrelated rows (even two applications both named "Test" show up as two
-  // ordinary rows), not grouped or cross-linked. This lists the same way.
+  // ordinary rows), not grouped or cross-linked. This lists the same way,
+  // but grouped into one table per environment ("Sandbox applications",
+  // "Production applications"), matching HMRC's own list page.
+
+  var ROLE_DISPLAY = { owner: 'Admin', administrator: 'Admin', developer: 'Developer' }
+  var ENVIRONMENT_ORDER = ['sandbox', 'development', 'integration-test', 'production']
 
   // ---- list page ------------------------------------------------------
 
-  var appsTable = document.getElementById('apps-table')
-  if (appsTable) {
+  var appsGroups = document.getElementById('apps-groups')
+  if (appsGroups) {
     if (!requireSignedIn()) return
 
     Auth.authedFetch('/api/applications').then(function (res) {
@@ -73,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function () {
       return res.json()
     }).then(function (data) {
       if (!data) return
-      var body = document.getElementById('apps-table-body')
       var loading = document.getElementById('apps-loading')
       var empty = document.getElementById('apps-empty-hint')
       loading.hidden = true
@@ -83,15 +87,43 @@ document.addEventListener('DOMContentLoaded', function () {
         return
       }
 
-      appsTable.hidden = false
+      var groups = {}
       data.applications.forEach(function (app) {
-        var tr = document.createElement('tr')
-        tr.className = 'govuk-table__row'
-        tr.innerHTML =
-          '<td class="govuk-table__cell"><a class="govuk-link" href="' + Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(app.id)) + '">' + escapeHtml(app.name) + '</a></td>' +
-          '<td class="govuk-table__cell">' + escapeHtml(ENVIRONMENT_LABELS[app.environment] || app.environment) + '</td>' +
-          '<td class="govuk-table__cell">' + escapeHtml(app.owner.type === 'user' ? 'Me' : app.owner.type) + '</td>'
-        body.appendChild(tr)
+        if (!groups[app.environment]) groups[app.environment] = []
+        groups[app.environment].push(app)
+      })
+
+      ENVIRONMENT_ORDER.filter(function (env) { return groups[env] }).forEach(function (env) {
+        var section = document.createElement('div')
+        section.className = 'govuk-!-margin-bottom-8'
+
+        var heading = document.createElement('h2')
+        heading.className = 'govuk-heading-m'
+        heading.textContent = (ENVIRONMENT_LABELS[env] || env) + ' applications'
+        section.appendChild(heading)
+
+        var table = document.createElement('table')
+        table.className = 'govuk-table'
+        table.innerHTML =
+          '<thead class="govuk-table__head"><tr class="govuk-table__row">' +
+          '<th scope="col" class="govuk-table__header">Name</th>' +
+          '<th scope="col" class="govuk-table__header">Last API call</th>' +
+          '<th scope="col" class="govuk-table__header">Your role</th>' +
+          '</tr></thead><tbody class="govuk-table__body"></tbody>'
+        var body = table.querySelector('tbody')
+
+        groups[env].forEach(function (app) {
+          var tr = document.createElement('tr')
+          tr.className = 'govuk-table__row'
+          tr.innerHTML =
+            '<td class="govuk-table__cell"><a class="govuk-link" href="' + Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(app.id)) + '">' + escapeHtml(app.name) + '</a></td>' +
+            '<td class="govuk-table__cell">No API called</td>' +
+            '<td class="govuk-table__cell">' + escapeHtml(ROLE_DISPLAY[app.viewerRole] || 'Developer') + '</td>'
+          body.appendChild(tr)
+        })
+
+        section.appendChild(table)
+        appsGroups.appendChild(section)
       })
     }).catch(function () {
       document.getElementById('apps-loading').textContent = 'Could not load your applications. Try again in a moment.'
@@ -129,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (!environment || !name) {
         link.textContent = 'Your answers could not be read back. Go back and fill in the form again.'
-        link.setAttribute('href', '../')
+        link.setAttribute('href', '../details/')
         summary.hidden = false
         summary.focus()
         return
@@ -149,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
           button.disabled = false
           button.textContent = 'Create application'
           link.textContent = result.data.error || 'Something went wrong. Please try again.'
-          link.setAttribute('href', '../')
+          link.setAttribute('href', '../details/')
           summary.hidden = false
           summary.focus()
           return
@@ -167,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
         button.disabled = false
         button.textContent = 'Create application'
         link.textContent = 'Could not reach the applications service. Try again in a moment.'
-        link.setAttribute('href', '../')
+        link.setAttribute('href', '../details/')
         summary.hidden = false
         summary.focus()
       })
@@ -240,11 +272,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
       document.getElementById('detail-name').textContent = app.name
       document.getElementById('detail-name-value').textContent = app.name
-      document.getElementById('detail-description').textContent = app.description || '—'
-      document.getElementById('detail-owner').textContent = app.owner.type === 'user' ? 'Me' : app.owner.type
       document.getElementById('detail-created').textContent = formatDate(app.createdAt)
       document.getElementById('detail-id').textContent = app.id
+      document.getElementById('detail-client-id').textContent = app.id
       document.getElementById('detail-environment').textContent = ENVIRONMENT_LABELS[app.environment] || app.environment
+
+      // Matches HMRC's own "Enter application description" link shown in
+      // place of a value when nothing has been set yet, becoming "Change"
+      // once a description exists.
+      var descValueEl = document.getElementById('detail-description')
+      var descLinkEl = document.getElementById('edit-description')
+      if (app.description) {
+        descValueEl.textContent = app.description
+        descLinkEl.innerHTML = 'Change<span class="govuk-visually-hidden"> application description</span>'
+      } else {
+        descValueEl.textContent = ''
+        descLinkEl.innerHTML = 'Enter application description'
+      }
 
       // Client secrets get a summary row here - matching HMRC's Application
       // details page ("Client secrets: 1 of 5 client secrets created") -
@@ -253,8 +297,9 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('detail-keys-summary').textContent = activeKeyCount + ' of ' + MAX_ACTIVE_KEYS + ' client secrets created'
       document.getElementById('detail-keys-link').setAttribute('href', Auth.siteUrl('account/applications/client-secrets/?id=' + encodeURIComponent(app.id)))
 
-      document.getElementById('detail-public-key-url').textContent = app.publicKeyUrl || 'Not set yet'
-      document.getElementById('detail-callback-url').textContent = app.callbackUrl || 'Not set yet'
+      // Redirect URIs re-uses the existing callback URL field, displayed the
+      // way HMRC shows its Redirect URIs row ("0 of 5 URIs added").
+      document.getElementById('detail-redirect-uris').textContent = (app.callbackUrl ? '1' : '0') + ' of 5 URIs added'
 
       // Administrator-only actions - changing details, managing secrets and
       // managing the team are not Developer permissions (see the backend's
@@ -262,8 +307,8 @@ document.addEventListener('DOMContentLoaded', function () {
       // since a developer would otherwise see a button that cannot work.
       var isAdmin = app.viewerRole === 'owner' || app.viewerRole === 'administrator'
       document.getElementById('detail-keys-link').hidden = !isAdmin
-      document.getElementById('edit-public-key-url').hidden = !isAdmin
-      document.getElementById('edit-callback-url').hidden = !isAdmin
+      document.getElementById('edit-description').hidden = !isAdmin
+      document.getElementById('edit-redirect-uri').hidden = !isAdmin
       document.getElementById('add-attr-form').hidden = !isAdmin
       var teamLink = document.getElementById('detail-team-link')
       teamLink.textContent = isAdmin ? 'Change' : 'View'
@@ -333,8 +378,18 @@ document.addEventListener('DOMContentLoaded', function () {
       })
     }
 
-    editUrlField('edit-public-key-url', 'public key URL', 'publicKeyUrl')
-    editUrlField('edit-callback-url', 'callback URL', 'callbackUrl')
+    editUrlField('edit-redirect-uri', 'redirect URI', 'callbackUrl')
+
+    document.getElementById('edit-description').addEventListener('click', function (event) {
+      event.preventDefault()
+      var value = window.prompt('Enter an application description:')
+      if (value === null) return
+      Auth.authedFetch('/api/applications/' + encodeURIComponent(appId), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description: value.trim() })
+      }).then(function () { loadDetail() })
+    })
 
     document.getElementById('add-attr-form').addEventListener('submit', function (event) {
       event.preventDefault()
@@ -442,6 +497,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return '<tr class="govuk-table__row">' +
           '<td class="govuk-table__cell">' + '&bull;'.repeat(20) + escapeHtml(k.preview) + '</td>' +
           '<td class="govuk-table__cell">' + formatDate(k.createdAt) + '</td>' +
+          '<td class="govuk-table__cell">Not used</td>' +
           '<td class="govuk-table__cell">' + deleteCell + '</td>' +
           '</tr>'
       }).join('')
