@@ -29,8 +29,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // from. confirmation is where the form's own confirmation page lives,
   // relative to the site root, matching how Auth.siteUrl expects routes.
   var SUBMIT_FORMS = [
-    { formId: 'access-request-submit-form', journey: 'request-api', kind: 'access-request', confirmation: 'get-started/request-api/confirmation/' },
-    { formId: 'publish-submit-submit-form', journey: 'publish-submit', kind: 'publish-api', confirmation: 'publish/submit/confirmation/' },
     { formId: 'new-api-submit-form', journey: 'request-new-api', kind: 'new-api', confirmation: 'api-catalogue/request-new-api/confirmation/' }
   ]
 

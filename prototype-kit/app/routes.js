@@ -18,6 +18,18 @@ const router = govukPrototypeKit.requests.setupRouter()
 // no href. scripts/check-structure.mjs now fails on that.
 const AMP_CATALOGUE_URL = 'https://hmcts.github.io/amp-catalog/'
 
+// Requesting API access ("subscribe") and publishing an API are owned by the
+// hosted marketplace web app on the Azure sandbox, not by this prototype.
+// Every link to them comes from here, so swapping the final URLs is a two-line
+// change.
+//
+// These are template locals rather than keys in app/config.json or
+// app/data/session-data-defaults.js for the same reason as the catalogue URL
+// above: an arbitrary key in either is silently undefined in a template.
+const SANDBOX_WEB = 'https://apim-marketplace-web.sandbox.platform.hmcts.net'
+const REQUEST_API_URL = `${SANDBOX_WEB}/subscribe`
+const PUBLISH_API_URL = `${SANDBOX_WEB}/publish`
+
 // ---------------------------------------------------------------- languages
 //
 // HMCTS runs courts and tribunals in England *and Wales*, so Welsh is a duty
@@ -75,7 +87,9 @@ function localeLocals (locale, currentPath) {
     localeRoot: locale === 'cy' ? WELSH_PREFIX : '',
     otherLocale: locale === 'cy' ? 'en' : 'cy',
     t: translator(locale),
-    ampCatalogueUrl: AMP_CATALOGUE_URL
+    ampCatalogueUrl: AMP_CATALOGUE_URL,
+    requestApiUrl: REQUEST_API_URL,
+    publishApiUrl: PUBLISH_API_URL
   }
 }
 

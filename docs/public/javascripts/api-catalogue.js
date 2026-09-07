@@ -57,11 +57,23 @@
     return window.location.pathname.replace(/\/?detail\/?$/, '/')
   }
 
-  // Same reasoning as catalogueUrl/detailUrl above: built from the site root
-  // rather than hardcoded, so it still resolves once the site is served from
-  // a subpath (as it is on GitHub Pages) rather than the origin root.
+  // The access-request journey is owned by the hosted marketplace web app, so
+  // this is an absolute external URL rather than a path derived from the site
+  // root. It cannot be read from routes.js - this file runs in the browser,
+  // long after the export baked the templates - so the detail view carries it
+  // on data-request-api-url and we read it back here. That keeps one
+  // definition, in routes.js, rather than repeating the URL in JavaScript.
+  //
+  // The fallback should be unreachable: the attribute is rendered by the same
+  // template that loads this script. It exists so a missing attribute degrades
+  // to a real page rather than a button with no href, which check-structure
+  // would flag as a dead govuk-button. It points at the get-started guidance,
+  // which links out to the hosted journey - the old in-site form is gone.
   function requestApiUrl () {
-    return catalogueUrl().replace(/api-catalogue\/$/, '') + 'get-started/request-api'
+    var host = document.querySelector('[data-request-api-url]')
+    var configured = host && host.getAttribute('data-request-api-url')
+    if (configured) return configured
+    return catalogueUrl().replace(/api-catalogue\/$/, '') + 'get-started'
   }
 
   // ------------------------------------------------------------------ data
@@ -210,11 +222,8 @@
       // explicit that a page should have at most one, and requesting access
       // is the more consequential next step for a consumer than opening
       // documentation, so that button (Try it out tab) is secondary instead.
-      // Signed-out visitors are sent to sign in first and back here
-      // afterwards, the same data-requires-auth handling every other link to
-      // this form relies on (see get-started/request-api/index.html and
-      // app/assets/javascripts/auth.js) - this is a plain link needing no
-      // gating logic of its own.
+      // The target is the hosted marketplace web app, which handles its own
+      // sign-in, so this needs no data-requires-auth gating of its own.
       '<a class="govuk-button" id="requestApiAccess" href="' + requestApiUrl() + '">Request API access</a>'
   }
 

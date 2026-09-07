@@ -89,8 +89,9 @@
     },
     {
       "from": "publish-api.html",
-      "to": "/publish/submit",
-      "kind": "moved"
+      "to": "/publish",
+      "kind": "superseded",
+      "because": "Publishing an API is handled by the hosted marketplace web app. This points at the publishing guidance, which links out to it."
     },
     {
       "from": "help-and-support.html",
@@ -120,8 +121,9 @@
     },
     {
       "from": "request-api.html",
-      "to": "/get-started/request-api",
-      "kind": "moved"
+      "to": "/get-started",
+      "kind": "superseded",
+      "because": "Requesting API access is handled by the hosted marketplace web app. This points at the getting-started guidance, which links out to it."
     },
     {
       "from": "request-new-api.html",

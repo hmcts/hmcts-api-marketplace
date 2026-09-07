@@ -112,7 +112,11 @@ const mutations = [
     // so cutting that orphans both it and confirmation.
     gate: 'links',
     what: 'a page left unreachable from the homepage',
-    target: 'publish/submit/index.html',
+    // Was publish/submit. That journey is now owned by the hosted web app and
+    // its pages are allowlisted in check-links.mjs, so cutting its edge orphans
+    // nothing and this mutation would stop biting. request-new-api is still
+    // served from here, still linked, and its check-answers is not allowlisted.
+    target: 'api-catalogue/request-new-api/index.html',
     html: (h) => h.replace('data-next="check-answers/"', 'data-next=""')
   },
   {
