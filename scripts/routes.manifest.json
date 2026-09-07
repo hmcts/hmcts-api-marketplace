@@ -158,6 +158,10 @@
       "name": "Application detail"
     },
     {
+      "path": "/account/environment-access",
+      "name": "Environment access"
+    },
+    {
       "path": "/accessibility-statement",
       "name": "Accessibility statement"
     },
