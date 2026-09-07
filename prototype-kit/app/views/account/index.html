@@ -59,7 +59,7 @@
               <ul class="govuk-list">
                 <li><a class="govuk-link" href="/account/applications">Manage applications</a></li>
                 <li><a class="govuk-link" href="/get-started/onboarding-guide">Onboarding guide</a></li>
-                <li><a class="govuk-link" href="/get-started/request-api">Request API access</a></li>
+                <li><a class="govuk-link" href="' ~ requestApiUrl ~ '">Request API access</a></li>
                 <li><a class="govuk-link" href="/publish">Publish an API</a></li>
               </ul>
             </div>
@@ -103,8 +103,8 @@
 
           <p class="govuk-body" id="requests-empty-hint" hidden>
             You have not submitted any requests yet. Start from
-            <a class="govuk-link" href="/get-started/request-api">Request API access</a>,
-            <a class="govuk-link" href="/publish/submit">Submit an API for publication</a> or
+            <a class="govuk-link" href="' ~ requestApiUrl ~ '">Request API access</a>,
+            <a class="govuk-link" href="' ~ publishApiUrl ~ '">Submit an API for publication</a> or
             <a class="govuk-link" href="/api-catalogue/request-new-api">Request a new API</a>.
           </p>
         '
