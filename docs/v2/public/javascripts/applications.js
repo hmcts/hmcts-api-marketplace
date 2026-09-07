@@ -25,25 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // is a UI guardrail rather than something the server would reject anyway.
   var MAX_ACTIVE_KEYS = 5
 
-  // Groups an owner's applications by name, so a sandbox and a production
-  // registration of "the same" application show up together - the same
-  // grouping HMRC's Developer Hub gives you for free by treating them as
-  // one logical application with per-environment credentials underneath.
-  // Order follows first appearance, which is createdAt DESC from the API.
-  function groupApplicationsByName (applications) {
-    var order = []
-    var groups = {}
-    applications.forEach(function (app) {
-      var key = app.name.toLowerCase()
-      if (!groups[key]) {
-        groups[key] = { name: app.name, apps: [] }
-        order.push(key)
-      }
-      groups[key].apps.push(app)
-    })
-    return order.map(function (key) { return groups[key] })
-  }
-
   var API_CATALOGUE = {
     'crime-prosecution-case-details': 'Crime Prosecution Case Details API',
     'hearing-results': 'Hearing Results API',
@@ -76,6 +57,11 @@ document.addEventListener('DOMContentLoaded', function () {
     return div.innerHTML
   }
 
+  // Sandbox and production are two separate registrations that happen to
+  // share a name - HMRC's own "View all applications" lists them as plain,
+  // unrelated rows (even two applications both named "Test" show up as two
+  // ordinary rows), not grouped or cross-linked. This lists the same way.
+
   // ---- list page ------------------------------------------------------
 
   var appsTable = document.getElementById('apps-table')
@@ -98,43 +84,18 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       appsTable.hidden = false
-      groupApplicationsByName(data.applications).forEach(function (group) {
-        group.apps.forEach(function (app, index) {
-          var tr = document.createElement('tr')
-          tr.className = 'govuk-table__row'
-          var nameCell = index === 0
-            ? '<td class="govuk-table__cell" rowspan="' + group.apps.length + '"><strong>' + escapeHtml(group.name) + '</strong></td>'
-            : ''
-          tr.innerHTML =
-            nameCell +
-            '<td class="govuk-table__cell"><a class="govuk-link" href="' + Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(app.id)) + '">' + escapeHtml(ENVIRONMENT_LABELS[app.environment] || app.environment) + '</a></td>' +
-            '<td class="govuk-table__cell">' + escapeHtml(app.owner.type === 'user' ? 'Me' : app.owner.type) + '</td>'
-          body.appendChild(tr)
-        })
+      data.applications.forEach(function (app) {
+        var tr = document.createElement('tr')
+        tr.className = 'govuk-table__row'
+        tr.innerHTML =
+          '<td class="govuk-table__cell"><a class="govuk-link" href="' + Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(app.id)) + '">' + escapeHtml(app.name) + '</a></td>' +
+          '<td class="govuk-table__cell">' + escapeHtml(ENVIRONMENT_LABELS[app.environment] || app.environment) + '</td>' +
+          '<td class="govuk-table__cell">' + escapeHtml(app.owner.type === 'user' ? 'Me' : app.owner.type) + '</td>'
+        body.appendChild(tr)
       })
     }).catch(function () {
       document.getElementById('apps-loading').textContent = 'Could not load your applications. Try again in a moment.'
     })
-  }
-
-  // ---- new application form: prefill from "add this environment" links -
-  //
-  // Set by the detail page's "Add this application in <environment>" links
-  // (below) - single-use, so a stale value never resurfaces on some later,
-  // unrelated visit to this form.
-  var newAppForm = document.querySelector('form[data-journey="new-application"]')
-  if (newAppForm) {
-    var appPrefill = null
-    try { appPrefill = JSON.parse(window.sessionStorage.getItem('newApplicationPreselect')) } catch (e) {}
-    if (appPrefill) {
-      try { window.sessionStorage.removeItem('newApplicationPreselect') } catch (e) {}
-      var nameField = document.getElementById('app-name')
-      if (nameField && appPrefill.name) nameField.value = appPrefill.name
-      if (appPrefill.environment) {
-        var envField = document.querySelector('input[name="environment"][value="' + appPrefill.environment + '"]')
-        if (envField) envField.checked = true
-      }
-    }
   }
 
   // ---- check answers: real creation ------------------------------------
@@ -247,7 +208,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var loadingEl = document.getElementById('detail-loading')
     var errorSummary = document.getElementById('detail-error-summary')
     var errorText = document.getElementById('detail-error-text')
-    var currentApp = null
 
     function showDetailError (message) {
       loadingEl.hidden = true
@@ -275,40 +235,8 @@ document.addEventListener('DOMContentLoaded', function () {
       })
     }
 
-    function renderOtherEnvironments (app, allApplications) {
-      var siblings = allApplications.filter(function (a) {
-        return a.id !== app.id && a.name.toLowerCase() === app.name.toLowerCase()
-      })
-
-      var hint = document.getElementById('other-envs-hint')
-      var list = document.getElementById('other-envs-list')
-      if (siblings.length) {
-        hint.hidden = true
-        list.hidden = false
-        list.innerHTML = siblings.map(function (sib) {
-          return '<li><a class="govuk-link" href="' + Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(sib.id)) + '">' +
-            escapeHtml(ENVIRONMENT_LABELS[sib.environment] || sib.environment) + '</a></li>'
-        }).join('')
-      } else {
-        hint.hidden = false
-        list.hidden = true
-      }
-
-      var taken = [app.environment].concat(siblings.map(function (s) { return s.environment }))
-      var missing = Object.keys(ENVIRONMENT_LABELS).filter(function (env) { return taken.indexOf(env) === -1 })
-      var addEnvLinksEl = document.getElementById('add-env-links')
-      if (missing.length) {
-        addEnvLinksEl.innerHTML = 'Add this application in: ' + missing.map(function (env) {
-          return '<a class="govuk-link" href="#" data-add-environment="' + escapeHtml(env) + '">' + escapeHtml(ENVIRONMENT_LABELS[env]) + '</a>'
-        }).join(', ')
-      } else {
-        addEnvLinksEl.textContent = 'Registered in every environment.'
-      }
-    }
-
     function render (data) {
       var app = data.application
-      currentApp = app
 
       document.getElementById('detail-name').textContent = app.name
       document.getElementById('detail-name-value').textContent = app.name
@@ -318,29 +246,12 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('detail-id').textContent = app.id
       document.getElementById('detail-environment').textContent = ENVIRONMENT_LABELS[app.environment] || app.environment
 
-      // Siblings (same name, other environments) aren't in this response -
-      // a second, non-blocking fetch of the full list is the only way to
-      // find them, since there's no "get related applications" endpoint.
-      Auth.authedFetch('/api/applications').then(function (res) { return res.json() }).then(function (listData) {
-        renderOtherEnvironments(app, (listData && listData.applications) || [])
-      }).catch(function () {})
-
-      var activeKeys = data.apiKeys.filter(function (k) { return !k.revokedAt })
-      var keysList = document.getElementById('detail-keys-list')
-      keysList.innerHTML = activeKeys.length
-        ? activeKeys.map(function (k) {
-          return '<div class="govuk-summary-list__row">' +
-            '<dt class="govuk-summary-list__key">API key ending ' + escapeHtml(k.preview) + '</dt>' +
-            '<dd class="govuk-summary-list__value">Created ' + formatDateTime(k.createdAt) + '</dd>' +
-            '<dd class="govuk-summary-list__actions"><a class="govuk-link" href="#" data-revoke-key="' + escapeHtml(k.id) + '">Revoke<span class="govuk-visually-hidden"> key ending ' + escapeHtml(k.preview) + '</span></a></dd>' +
-            '</div>'
-        }).join('')
-        : '<div class="govuk-summary-list__row"><dt class="govuk-summary-list__key">Active API keys</dt><dd class="govuk-summary-list__value">None</dd></div>'
-
-      var rotateButton = document.querySelector('#rotate-key-form .govuk-button')
-      var atCap = activeKeys.length >= MAX_ACTIVE_KEYS
-      rotateButton.disabled = atCap
-      document.getElementById('keys-cap-hint').hidden = !atCap
+      // Client secrets get a summary row here - matching HMRC's Application
+      // details page ("Client secrets: 1 of 5 client secrets created") -
+      // with the full list, generate and revoke actions on their own page.
+      var activeKeyCount = data.apiKeys.filter(function (k) { return !k.revokedAt }).length
+      document.getElementById('detail-keys-summary').textContent = activeKeyCount + ' of ' + MAX_ACTIVE_KEYS + ' client secrets created'
+      document.getElementById('detail-keys-link').setAttribute('href', Auth.siteUrl('account/applications/client-secrets/?id=' + encodeURIComponent(app.id)))
 
       document.getElementById('detail-public-key-url').textContent = app.publicKeyUrl || 'Not set yet'
       document.getElementById('detail-callback-url').textContent = app.callbackUrl || 'Not set yet'
@@ -384,40 +295,6 @@ document.addEventListener('DOMContentLoaded', function () {
       loadingEl.hidden = true
       detailContent.hidden = false
     }
-
-    document.getElementById('rotate-key-form').addEventListener('submit', function (event) {
-      event.preventDefault()
-      Auth.authedFetch('/api/applications/' + encodeURIComponent(appId) + '/api-keys', { method: 'POST' })
-        .then(function (res) { return res.json() })
-        .then(function (data) {
-          var notice = document.getElementById('new-key-notice')
-          notice.textContent = 'New API key created: ' + data.apiKey + ' (copy it now, this is the only time it is shown)'
-          notice.hidden = false
-          loadDetail()
-        })
-    })
-
-    document.getElementById('detail-keys-list').addEventListener('click', function (event) {
-      var link = event.target.closest('[data-revoke-key]')
-      if (!link) return
-      event.preventDefault()
-      Auth.authedFetch('/api/applications/' + encodeURIComponent(appId) + '/api-keys/' + encodeURIComponent(link.getAttribute('data-revoke-key')), {
-        method: 'DELETE'
-      }).then(function () { loadDetail() })
-    })
-
-    document.getElementById('add-env-links').addEventListener('click', function (event) {
-      var link = event.target.closest('[data-add-environment]')
-      if (!link || !currentApp) return
-      event.preventDefault()
-      try {
-        window.sessionStorage.setItem('newApplicationPreselect', JSON.stringify({
-          name: currentApp.name,
-          environment: link.getAttribute('data-add-environment')
-        }))
-      } catch (e) { /* private browsing, etc. */ }
-      window.location.href = Auth.siteUrl('account/applications/new/')
-    })
 
     function editUrlField (linkId, fieldLabel, bodyKey) {
       document.getElementById(linkId).addEventListener('click', function (event) {
@@ -475,5 +352,121 @@ document.addEventListener('DOMContentLoaded', function () {
         method: 'DELETE'
       }).then(function () { loadDetail() })
     })
+  }
+
+  // ---- client secrets page --------------------------------------------
+  //
+  // Its own page, not a section of the detail page - matching HMRC's
+  // "Client secrets" screen (Application/Environment context header, a
+  // table of secrets with Created/Delete, "up to 5" guidance, and a
+  // "Generate another client secret" button).
+
+  var secretsTable = document.getElementById('secrets-table')
+  if (secretsTable) {
+    if (!requireSignedIn()) return
+
+    var secretsParams = new URLSearchParams(window.location.search)
+    var secretsAppId = secretsParams.get('id')
+    var secretsLoadingEl = document.getElementById('secrets-loading')
+    var secretsErrorSummary = document.getElementById('secrets-error-summary')
+    var secretsErrorText = document.getElementById('secrets-error-text')
+
+    function showSecretsError (message) {
+      secretsLoadingEl.hidden = true
+      secretsErrorText.textContent = message
+      secretsErrorSummary.hidden = false
+      secretsErrorSummary.focus()
+    }
+
+    if (!secretsAppId) {
+      showSecretsError('No application was specified.')
+    } else {
+      loadSecrets()
+    }
+
+    function loadSecrets () {
+      Auth.authedFetch('/api/applications/' + encodeURIComponent(secretsAppId)).then(function (res) {
+        if (res.status === 401) { window.location.href = Auth.siteUrl('sign-in/'); return null }
+        if (res.status === 404) { showSecretsError('This application could not be found.'); return null }
+        return res.json()
+      }).then(function (data) {
+        if (!data) return
+        renderSecrets(data)
+      }).catch(function () {
+        showSecretsError('Could not load this application. Try again in a moment.')
+      })
+    }
+
+    function renderSecrets (data) {
+      var app = data.application
+      document.getElementById('secrets-app-name').textContent = app.name
+      document.getElementById('secrets-environment').textContent = ENVIRONMENT_LABELS[app.environment] || app.environment
+      document.getElementById('secrets-detail-link').setAttribute('href', Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(app.id)))
+
+      var activeKeys = data.apiKeys.filter(function (k) { return !k.revokedAt })
+      var body = document.getElementById('secrets-table-body')
+      var onlyOneLeft = activeKeys.length <= 1
+
+      body.innerHTML = activeKeys.map(function (k) {
+        var deleteCell = onlyOneLeft
+          ? 'Not available'
+          : '<a class="govuk-link" href="#" data-revoke-key="' + escapeHtml(k.id) + '">Delete<span class="govuk-visually-hidden"> secret ending ' + escapeHtml(k.preview) + '</span></a>'
+        return '<tr class="govuk-table__row">' +
+          '<td class="govuk-table__cell">' + '&bull;'.repeat(20) + escapeHtml(k.preview) + '</td>' +
+          '<td class="govuk-table__cell">' + formatDate(k.createdAt) + '</td>' +
+          '<td class="govuk-table__cell">' + deleteCell + '</td>' +
+          '</tr>'
+      }).join('')
+
+      var generateButton = document.querySelector('#generate-secret-form .govuk-button')
+      var atCap = activeKeys.length >= MAX_ACTIVE_KEYS
+      generateButton.disabled = atCap
+      document.getElementById('secrets-cap-hint').hidden = !atCap
+
+      secretsLoadingEl.hidden = true
+      document.getElementById('secrets-content').hidden = false
+    }
+
+    document.getElementById('secrets-table-body').addEventListener('click', function (event) {
+      var link = event.target.closest('[data-revoke-key]')
+      if (!link) return
+      event.preventDefault()
+      Auth.authedFetch('/api/applications/' + encodeURIComponent(secretsAppId) + '/api-keys/' + encodeURIComponent(link.getAttribute('data-revoke-key')), {
+        method: 'DELETE'
+      }).then(function () { loadSecrets() })
+    })
+
+    document.getElementById('generate-secret-form').addEventListener('submit', function (event) {
+      event.preventDefault()
+      Auth.authedFetch('/api/applications/' + encodeURIComponent(secretsAppId) + '/api-keys', { method: 'POST' })
+        .then(function (res) { return res.json() })
+        .then(function (data) {
+          try {
+            window.sessionStorage.setItem('generatedSecret', JSON.stringify({ applicationId: secretsAppId, apiKey: data.apiKey }))
+          } catch (e) { /* private browsing, etc - confirmation page has a fallback */ }
+          window.location.href = Auth.siteUrl('account/applications/client-secrets/confirmation/?id=' + encodeURIComponent(secretsAppId))
+        })
+    })
+  }
+
+  // ---- client secret generated (one-time reveal) -----------------------
+
+  var generatedSecretEl = document.getElementById('generated-secret-value')
+  if (generatedSecretEl) {
+    var generated = null
+    try { generated = JSON.parse(window.sessionStorage.getItem('generatedSecret')) } catch (e) {}
+
+    var backLink = document.getElementById('generated-secret-back-link')
+    var params2 = new URLSearchParams(window.location.search)
+    backLink.setAttribute('href', Auth.siteUrl('account/applications/client-secrets/?id=' + encodeURIComponent(params2.get('id') || '')))
+
+    if (!generated) {
+      document.getElementById('generated-secret-fallback').hidden = false
+      document.querySelector('.govuk-panel').hidden = true
+      generatedSecretEl.hidden = true
+    } else {
+      generatedSecretEl.textContent = generated.apiKey
+      try { window.sessionStorage.removeItem('generatedSecret') } catch (e) {}
+    }
   }
 })

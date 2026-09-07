@@ -158,6 +158,14 @@
       "name": "Application detail"
     },
     {
+      "path": "/account/applications/client-secrets",
+      "name": "Client secrets"
+    },
+    {
+      "path": "/account/applications/client-secrets/confirmation",
+      "name": "New client secret generated"
+    },
+    {
       "path": "/account/environment-access",
       "name": "Environment access"
     },

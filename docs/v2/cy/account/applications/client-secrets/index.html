@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>
-  Application detail - HMCTS API Marketplace - GOV.UK
+  Client secrets - HMCTS API Marketplace - GOV.UK
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#1d70b8">
@@ -252,7 +252,7 @@ data-module="govuk-service-navigation"
     
       <span lang="cy">Cymraeg</span>
       <span aria-hidden="true">|</span>
-      <a class="govuk-link" lang="en" hreflang="en" rel="alternate" href="../../../../account/applications/detail/">English</a>
+      <a class="govuk-link" lang="en" hreflang="en" rel="alternate" href="../../../../account/applications/client-secrets/">English</a>
     
   </nav>
   
@@ -325,137 +325,63 @@ data-module="govuk-service-navigation"
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <p class="govuk-body" id="detail-loading">Loading&hellip;</p>
+    <p class="govuk-body" id="secrets-loading">Loading&hellip;</p>
 
-    <div id="detail-content" hidden>
+    <div id="secrets-content" hidden>
 
-      <span class="govuk-caption-l">Application</span>
-      <h1 class="govuk-heading-l" id="detail-name">Application detail</h1>
+      <h1 class="govuk-heading-l">Client secrets</h1>
 
-      <h2 class="govuk-heading-m">Basic details</h2>
-      <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Application name</dt>
-          <dd class="govuk-summary-list__value" id="detail-name-value"></dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Description</dt>
-          <dd class="govuk-summary-list__value" id="detail-description"></dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Owner</dt>
-          <dd class="govuk-summary-list__value" id="detail-owner"></dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Date created</dt>
-          <dd class="govuk-summary-list__value" id="detail-created"></dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Application ID</dt>
-          <dd class="govuk-summary-list__value" id="detail-id"></dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Environment</dt>
-          <dd class="govuk-summary-list__value" id="detail-environment"></dd>
-        </div>
-      </dl>
+      
+      <p class="govuk-body">
+        <strong>Application:</strong> <span id="secrets-app-name"></span><br>
+        <strong>Environment:</strong> <span id="secrets-environment"></span>
+      </p>
 
-      <h2 class="govuk-heading-m">Authorisation details</h2>
-      <p class="govuk-body">To call APIs you need to use your application ID and a client secret to authorise your calls.</p>
-      <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Client secrets</dt>
-          <dd class="govuk-summary-list__value" id="detail-keys-summary"></dd>
-          <dd class="govuk-summary-list__actions"><a class="govuk-link" id="detail-keys-link" href="../client-secrets/">Change<span class="govuk-visually-hidden"> client secrets</span></a></dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Public key URL</dt>
-          <dd class="govuk-summary-list__value" id="detail-public-key-url">Not set yet</dd>
-          <dd class="govuk-summary-list__actions"><a class="govuk-link" href="#detail-public-key-url" id="edit-public-key-url">Edit<span class="govuk-visually-hidden"> public key URL</span></a></dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Callback URL</dt>
-          <dd class="govuk-summary-list__value" id="detail-callback-url">Not set yet</dd>
-          <dd class="govuk-summary-list__actions"><a class="govuk-link" href="#detail-callback-url" id="edit-callback-url">Edit<span class="govuk-visually-hidden"> callback URL</span></a></dd>
-        </div>
-      </dl>
+      <p class="govuk-body">Your client secret is a unique passphrase that you generate to authorise your application.</p>
+      <p class="govuk-body">Use a client secret together with your application ID to call APIs in this environment.</p>
 
-      <h2 class="govuk-heading-m">Custom attributes</h2>
-      <table class="govuk-table" id="attrs-table">
-        <tbody class="govuk-table__body" id="attrs-table-body"></tbody>
+      <table class="govuk-table" id="secrets-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Client secret</th>
+            <th scope="col" class="govuk-table__header">Created</th>
+            <th scope="col" class="govuk-table__header">Delete</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body" id="secrets-table-body"></tbody>
       </table>
-      <p class="govuk-body" id="attrs-empty-hint">No custom attributes.</p>
 
-      <form id="add-attr-form" class="govuk-!-margin-bottom-6">
-        <div class="govuk-form-group govuk-!-display-inline-block govuk-!-margin-right-2">
-          <label class="govuk-label" for="attr-key">Name</label>
-          <input class="govuk-input govuk-input--width-10" id="attr-key" name="attr-key" type="text">
-        </div>
-        <div class="govuk-form-group govuk-!-display-inline-block govuk-!-margin-right-2">
-          <label class="govuk-label" for="attr-value">Value</label>
-          <input class="govuk-input govuk-input--width-10" id="attr-value" name="attr-value" type="text">
-        </div>
-        
-  
+      <p class="govuk-body">Your application must have at least one client secret. If you need to, you can generate a new client secret and delete old ones.</p>
 
-<button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button"
-    
+      <h2 class="govuk-heading-m">Rotate your client secret regularly</h2>
+      <p class="govuk-body">Rotate your application's client secret to shorten the period an access key is active, reducing the impact to your business if it is compromised.</p>
+      <p class="govuk-body">To rotate your client secret:</p>
+      <ol class="govuk-list govuk-list--number">
+        <li>Generate a new client secret, in addition to the one used by your application</li>
+        <li>Update your application to use the new client secret</li>
+        <li>Check that your application is working with the new client secret</li>
+        <li>Delete the inactive client secret</li>
+      </ol>
+      <p class="govuk-body">You can have up to 5 client secrets at any time.</p>
+
+      <form id="generate-secret-form">
         
-        
-      
-        
-      
-    
-   id="add-attr-submit">
-  Add custom attribute
+<button type="submit" class="govuk-button" data-module="govuk-button">
+  Generate another client secret
 </button>
 
       </form>
+      <p class="govuk-body" id="secrets-cap-hint" hidden>You have reached the limit of 5 client secrets. Delete one before generating another.</p>
 
-      <h2 class="govuk-heading-m">Connected APIs</h2>
-      <table class="govuk-table" id="apis-table">
-        <tbody class="govuk-table__body" id="apis-table-body"></tbody>
-      </table>
-      <p class="govuk-body" id="apis-empty-hint">No connected APIs.</p>
-
-      <form id="add-api-form" class="govuk-!-margin-bottom-6">
-        <div class="govuk-form-group govuk-!-display-inline-block govuk-!-margin-right-2">
-          <label class="govuk-label" for="api-select">API</label>
-          <select class="govuk-select" id="api-select" name="api-select">
-            <option value="crime-prosecution-case-details">Crime Prosecution Case Details API</option>
-            <option value="hearing-results">Hearing Results API</option>
-            <option value="court-listings-and-scheduling">Court Listings and Scheduling API</option>
-            <option value="court-and-tribunal-reference-data">Court and Tribunal Reference Data API</option>
-            <option value="fees-and-financial-transactions">Fees and Financial Transactions API</option>
-            <option value="tribunal-case-administration">Tribunal Case Administration API</option>
-          </select>
-        </div>
-        
-  
-
-<button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button"
-    
-        
-        
-      
-        
-      
-    
-   id="add-api-submit">
-  Add API
-</button>
-
-      </form>
-
-      <p class="govuk-body"><a class="govuk-link" href="../">&larr; Back to my applications</a></p>
+      <p class="govuk-body"><a class="govuk-link" id="secrets-detail-link" href="../">View your application details</a></p>
 
     </div>
 
-    <div class="govuk-error-summary" data-module="govuk-error-summary" id="detail-error-summary" hidden tabindex="-1">
+    <div class="govuk-error-summary" data-module="govuk-error-summary" id="secrets-error-summary" hidden tabindex="-1">
       <div role="alert">
         <h2 class="govuk-error-summary__title">There is a problem</h2>
         <div class="govuk-error-summary__body">
-          <p id="detail-error-text">Something went wrong. Please try again.</p>
+          <p id="secrets-error-text">Something went wrong. Please try again.</p>
         </div>
       </div>
     </div>
