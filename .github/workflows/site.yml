@@ -99,8 +99,14 @@ jobs:
         run: |
           git fetch --no-tags origin "+refs/heads/$BASE_REF:refs/remotes/origin/$BASE_REF"
 
+          # Both the new and old locations are listed, so the same content is
+          # found wherever it sits. Before promotion the archived generations
+          # live at docs/v0 and docs/v1; after it, under archive/. Naming only
+          # the new location would make the promotion itself look like 61
+          # additions rather than a relocation - the same path assumption this
+          # check exists to avoid.
           archive_blobs () {
-            git ls-tree -r "$1" -- archive | awk '{print $3}' | sort
+            git ls-tree -r "$1" -- archive docs/v0 docs/v1 | awk '{print $3}' | sort
           }
 
           archive_blobs "origin/$BASE_REF" > /tmp/base-blobs
