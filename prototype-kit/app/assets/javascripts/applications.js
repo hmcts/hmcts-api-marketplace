@@ -256,6 +256,28 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('detail-public-key-url').textContent = app.publicKeyUrl || 'Not set yet'
       document.getElementById('detail-callback-url').textContent = app.callbackUrl || 'Not set yet'
 
+      // Administrator-only actions - changing details, managing secrets and
+      // managing the team are not Developer permissions (see the backend's
+      // Team members roles). Hidden rather than left to fail with a 403,
+      // since a developer would otherwise see a button that cannot work.
+      var isAdmin = app.viewerRole === 'owner' || app.viewerRole === 'administrator'
+      document.getElementById('detail-keys-link').hidden = !isAdmin
+      document.getElementById('edit-public-key-url').hidden = !isAdmin
+      document.getElementById('edit-callback-url').hidden = !isAdmin
+      document.getElementById('add-attr-form').hidden = !isAdmin
+      var teamLink = document.getElementById('detail-team-link')
+      teamLink.textContent = isAdmin ? 'Change' : 'View'
+      teamLink.setAttribute('href', Auth.siteUrl('account/applications/team-members/?id=' + encodeURIComponent(app.id)))
+
+      // Team member count isn't in this response - a second, non-blocking
+      // fetch is the only way to get it, since there's no "include team" flag.
+      Auth.authedFetch('/api/applications/' + encodeURIComponent(app.id) + '/team-members').then(function (res) {
+        return res.json()
+      }).then(function (teamData) {
+        var count = ((teamData && teamData.teamMembers) || []).length + 1 // +1 for the owner, always implicit
+        document.getElementById('detail-team-summary').textContent = count + ' team member' + (count === 1 ? '' : 's')
+      }).catch(function () {})
+
       var attrsBody = document.getElementById('attrs-table-body')
       var attrsHint = document.getElementById('attrs-empty-hint')
       var attrEntries = Object.keys(app.customAttributes || {})
@@ -403,12 +425,18 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('secrets-environment').textContent = ENVIRONMENT_LABELS[app.environment] || app.environment
       document.getElementById('secrets-detail-link').setAttribute('href', Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(app.id)))
 
+      // Managing client secrets is an Administrator-only permission - the
+      // backend rejects a Developer's generate/delete with 403, so their
+      // "Delete" cells show the same "Not available" HMRC uses for actions
+      // you can see but can't take, rather than a button that would fail.
+      var isAdmin = app.viewerRole === 'owner' || app.viewerRole === 'administrator'
+
       var activeKeys = data.apiKeys.filter(function (k) { return !k.revokedAt })
       var body = document.getElementById('secrets-table-body')
       var onlyOneLeft = activeKeys.length <= 1
 
       body.innerHTML = activeKeys.map(function (k) {
-        var deleteCell = onlyOneLeft
+        var deleteCell = (!isAdmin || onlyOneLeft)
           ? 'Not available'
           : '<a class="govuk-link" href="#" data-revoke-key="' + escapeHtml(k.id) + '">Delete<span class="govuk-visually-hidden"> secret ending ' + escapeHtml(k.preview) + '</span></a>'
         return '<tr class="govuk-table__row">' +
@@ -418,10 +446,12 @@ document.addEventListener('DOMContentLoaded', function () {
           '</tr>'
       }).join('')
 
-      var generateButton = document.querySelector('#generate-secret-form .govuk-button')
+      var generateForm = document.getElementById('generate-secret-form')
+      var generateButton = generateForm.querySelector('.govuk-button')
       var atCap = activeKeys.length >= MAX_ACTIVE_KEYS
+      generateForm.hidden = !isAdmin
       generateButton.disabled = atCap
-      document.getElementById('secrets-cap-hint').hidden = !atCap
+      document.getElementById('secrets-cap-hint').hidden = !isAdmin || !atCap
 
       secretsLoadingEl.hidden = true
       document.getElementById('secrets-content').hidden = false
@@ -468,5 +498,165 @@ document.addEventListener('DOMContentLoaded', function () {
       generatedSecretEl.textContent = generated.apiKey
       try { window.sessionStorage.removeItem('generatedSecret') } catch (e) {}
     }
+  }
+
+  // ---- team members page ------------------------------------------------
+  //
+  // Its own page, matching HMRC's "Manage team members" screen: Application/
+  // Environment context header, a table of email/role/remove, and an "Add a
+  // team member" button. Developer is a view-only permission here - the
+  // backend rejects add/remove from anyone below Administrator with 403.
+
+  var ROLE_LABELS = { owner: 'Owner', administrator: 'Administrator', developer: 'Developer' }
+
+  var teamTable = document.getElementById('team-table')
+  if (teamTable) {
+    if (!requireSignedIn()) return
+
+    var teamParams = new URLSearchParams(window.location.search)
+    var teamAppId = teamParams.get('id')
+    var teamLoadingEl = document.getElementById('team-loading')
+    var teamErrorSummary = document.getElementById('team-error-summary')
+    var teamErrorText = document.getElementById('team-error-text')
+    var viewerEmail = null
+
+    function showTeamError (message) {
+      teamLoadingEl.hidden = true
+      teamErrorText.textContent = message
+      teamErrorSummary.hidden = false
+      teamErrorSummary.focus()
+    }
+
+    if (!teamAppId) {
+      showTeamError('No application was specified.')
+    } else {
+      loadTeam()
+    }
+
+    function loadTeam () {
+      Auth.authedFetch('/api/me').then(function (res) { return res.json() }).then(function (meData) {
+        viewerEmail = meData && meData.user && meData.user.email
+        return Auth.authedFetch('/api/applications/' + encodeURIComponent(teamAppId))
+      }).then(function (res) {
+        if (res.status === 401) { window.location.href = Auth.siteUrl('sign-in/'); return null }
+        if (res.status === 404) { showTeamError('This application could not be found.'); return null }
+        return res.json()
+      }).then(function (appData) {
+        if (!appData) return
+        return Auth.authedFetch('/api/applications/' + encodeURIComponent(teamAppId) + '/team-members').then(function (res) {
+          return res.json()
+        }).then(function (teamData) {
+          renderTeam(appData.application, teamData || {})
+        })
+      }).catch(function () {
+        showTeamError('Could not load this application. Try again in a moment.')
+      })
+    }
+
+    function renderTeam (app, teamData) {
+      var members = teamData.teamMembers || []
+      document.getElementById('team-app-name').textContent = app.name
+      document.getElementById('team-environment').textContent = ENVIRONMENT_LABELS[app.environment] || app.environment
+      document.getElementById('team-detail-link').setAttribute('href', Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(app.id)))
+
+      var isAdmin = app.viewerRole === 'owner' || app.viewerRole === 'administrator'
+
+      var body = document.getElementById('team-table-body')
+      var rows = [{ email: teamData.ownerEmail || 'Owner', role: 'owner', id: null, isSelf: app.viewerRole === 'owner' }]
+        .concat(members.map(function (m) {
+          return { email: m.email, role: m.role, id: m.id, isSelf: viewerEmail && m.email.toLowerCase() === viewerEmail.toLowerCase() }
+        }))
+
+      body.innerHTML = rows.map(function (m) {
+        var removeCell = (!isAdmin || m.isSelf || !m.id)
+          ? 'Not available'
+          : '<a class="govuk-link" href="#" data-remove-member="' + escapeHtml(m.id) + '">Remove<span class="govuk-visually-hidden"> ' + escapeHtml(m.email) + '</span></a>'
+        return '<tr class="govuk-table__row">' +
+          '<td class="govuk-table__cell">' + escapeHtml(m.email) + (m.isSelf ? ' (you)' : '') + '</td>' +
+          '<td class="govuk-table__cell">' + escapeHtml(ROLE_LABELS[m.role] || m.role) + '</td>' +
+          '<td class="govuk-table__cell">' + removeCell + '</td>' +
+          '</tr>'
+      }).join('')
+
+      document.getElementById('team-add-link').hidden = !isAdmin
+      document.getElementById('team-add-link').setAttribute('href', Auth.siteUrl('account/applications/team-members/add/?id=' + encodeURIComponent(app.id)))
+
+      teamLoadingEl.hidden = true
+      document.getElementById('team-content').hidden = false
+    }
+
+    document.getElementById('team-table-body').addEventListener('click', function (event) {
+      var link = event.target.closest('[data-remove-member]')
+      if (!link) return
+      event.preventDefault()
+      Auth.authedFetch('/api/applications/' + encodeURIComponent(teamAppId) + '/team-members/' + encodeURIComponent(link.getAttribute('data-remove-member')), {
+        method: 'DELETE'
+      }).then(function () { loadTeam() })
+    })
+  }
+
+  // ---- add a team member --------------------------------------------------
+
+  var addMemberForm = document.getElementById('add-member-form')
+  if (addMemberForm) {
+    if (!requireSignedIn()) return
+
+    var addMemberParams = new URLSearchParams(window.location.search)
+    var addMemberAppId = addMemberParams.get('id')
+
+    document.getElementById('add-member-cancel-link').setAttribute('href', Auth.siteUrl('account/applications/team-members/?id=' + encodeURIComponent(addMemberAppId || '')))
+
+    Auth.authedFetch('/api/applications/' + encodeURIComponent(addMemberAppId)).then(function (res) {
+      if (res.status === 401) { window.location.href = Auth.siteUrl('sign-in/'); return null }
+      return res.json()
+    }).then(function (data) {
+      if (!data) return
+      document.getElementById('add-member-app-name').textContent = data.application.name
+      document.getElementById('add-member-environment').textContent = ENVIRONMENT_LABELS[data.application.environment] || data.application.environment
+    }).catch(function () {})
+
+    addMemberForm.addEventListener('submit', function (event) {
+      event.preventDefault()
+
+      var summary = document.getElementById('add-member-error-summary')
+      var link = document.getElementById('add-member-error-link')
+      var button = addMemberForm.querySelector('.govuk-button')
+      var email = document.getElementById('member-email').value.trim()
+      var role = document.querySelector('input[name="member-role"]:checked')
+
+      if (!email || !role) {
+        link.textContent = 'Enter an email address and select a permission level.'
+        summary.hidden = false
+        summary.focus()
+        return
+      }
+
+      button.disabled = true
+      button.textContent = 'Adding…'
+
+      Auth.authedFetch('/api/applications/' + encodeURIComponent(addMemberAppId) + '/team-members', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, role: role.value })
+      }).then(function (res) {
+        return res.json().then(function (data) { return { ok: res.ok, data: data } })
+      }).then(function (result) {
+        if (!result.ok) {
+          button.disabled = false
+          button.textContent = 'Add team member'
+          link.textContent = result.data.error || 'Something went wrong. Please try again.'
+          summary.hidden = false
+          summary.focus()
+          return
+        }
+        window.location.href = Auth.siteUrl('account/applications/team-members/?id=' + encodeURIComponent(addMemberAppId))
+      }).catch(function () {
+        button.disabled = false
+        button.textContent = 'Add team member'
+        link.textContent = 'Could not reach the applications service. Try again in a moment.'
+        summary.hidden = false
+        summary.focus()
+      })
+    })
   }
 })

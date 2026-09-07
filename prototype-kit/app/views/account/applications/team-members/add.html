@@ -1,0 +1,80 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName = "Add a team member" %}
+{% set section = "account" %}
+{% set breadcrumbs = [
+  { text: "Home", href: "/" },
+  { text: "Your account", href: "/account" },
+  { text: "My applications and teams", href: "/account/applications" }
+] %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <div class="govuk-error-summary" data-module="govuk-error-summary" id="add-member-error-summary" hidden tabindex="-1">
+      <div role="alert">
+        <h2 class="govuk-error-summary__title">There is a problem</h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            <li><a href="#member-email" id="add-member-error-link">Enter an email address and select a permission level</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h1 class="govuk-heading-l">Add a team member</h1>
+
+    <p class="govuk-body">
+      <strong>Application:</strong> <span id="add-member-app-name"></span><br>
+      <strong>Environment:</strong> <span id="add-member-environment"></span>
+    </p>
+
+    <form id="add-member-form" novalidate>
+
+      {{ govukInput({
+        label: { text: "Email address", classes: "govuk-label--m" },
+        id: "member-email",
+        name: "member-email",
+        type: "email",
+        autocomplete: "email",
+        spellcheck: false
+      }) }}
+
+      {{ govukRadios({
+        name: "member-role",
+        fieldset: {
+          legend: { text: "What permissions do you want to give them?", classes: "govuk-fieldset__legend--m" }
+        },
+        items: [
+          {
+            value: "developer",
+            text: "Developer",
+            hint: { html: "Test an application<br>Subscribe to sandbox APIs<br>View team members" }
+          },
+          {
+            value: "administrator",
+            text: "Administrator",
+            hint: { html: "Test an application<br>Subscribe to sandbox APIs<br>Change application details<br>Add or remove team members" }
+          }
+        ]
+      }) }}
+
+      {{ govukButton({ text: "Add team member" }) }}
+      <p class="govuk-body"><a class="govuk-link" id="add-member-cancel-link" href="../">Cancel</a></p>
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block pageScripts %}
+  <script src="/public/javascripts/applications.js"></script>
+{% endblock %}
