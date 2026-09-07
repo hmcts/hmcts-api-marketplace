@@ -8,64 +8,31 @@
   { text: "Manage applications", href: "/account/applications" }
 ] %}
 
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
 {% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <div data-error-summary="new-application" hidden></div>
-
     <h1 class="govuk-heading-xl">Add new application</h1>
 
-    <form data-journey="new-application" data-next="check-answers/" novalidate>
+    <p class="govuk-body">To use APIs for accessing secure data:</p>
+    <ol class="govuk-list govuk-list--number">
+      <li>create an application</li>
+      <li>choose which APIs you want to use</li>
+      <li>get credentials to use our APIs</li>
+      <li>test your software integrates with our APIs</li>
+    </ol>
 
-      <div data-required data-error="Select an environment">
-        {{ govukRadios({
-          name: "environment",
-          fieldset: {
-            legend: { classes: "govuk-fieldset__legend--m", text: "Select your environment" }
-          },
-          hint: { text: "You must have a separate application for each environment." },
-          items: [
-            { value: "sandbox", text: "Sandbox" },
-            { value: "development", text: "Development" },
-            { value: "integration-test", text: "Integration test" },
-            { value: "production", text: "Production" }
-          ]
-        }) }}
-      </div>
+    {{ govukWarningText({
+      text: "You must comply with our terms of use.",
+      iconFallbackText: "Warning"
+    }) }}
 
-      <div data-required data-error="Select an owner">
-        {{ govukRadios({
-          name: "owner",
-          fieldset: {
-            legend: { classes: "govuk-fieldset__legend--m", text: "Select application owner" }
-          },
-          hint: { text: "Teams are not part of this service yet - every application is owned by you directly." },
-          items: [
-            { value: "Me", text: "Me" }
-          ]
-        }) }}
-      </div>
+    <p class="govuk-body">You do not need an application to use APIs with only open access endpoints.</p>
 
-      <div data-required data-error="Enter an application name">
-        {{ govukInput({
-          label: { text: "What is your application name?", classes: "govuk-label--m" },
-          hint: { text: "You can register the same name once per environment - for example the same application as both Sandbox and Production." },
-          id: "app-name",
-          name: "app-name",
-          autocomplete: "off"
-        }) }}
-      </div>
-
-      {{ govukButton({ text: "Continue" }) }}
-      <p class="govuk-body"><a class="govuk-link" href="../">Cancel</a></p>
-
-    </form>
+    <a class="govuk-button" data-module="govuk-button" href="details/" role="button" draggable="false">Continue</a>
 
   </div>
 </div>

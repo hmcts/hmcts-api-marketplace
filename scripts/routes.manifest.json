@@ -146,6 +146,10 @@
       "name": "Add new application"
     },
     {
+      "path": "/account/applications/new/details",
+      "name": "New application details"
+    },
+    {
       "path": "/account/applications/new/check-answers",
       "name": "Check your answers before creating your application"
     },
