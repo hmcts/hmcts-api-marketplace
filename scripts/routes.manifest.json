@@ -174,10 +174,6 @@
       "name": "Add a team member"
     },
     {
-      "path": "/account/environment-access",
-      "name": "Environment access"
-    },
-    {
       "path": "/accessibility-statement",
       "name": "Accessibility statement"
     },

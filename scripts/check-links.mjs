@@ -66,8 +66,6 @@ const ALLOW_UNREACHABLE = new Set([
   'cy/account/applications/team-members/index.html',
   'account/applications/team-members/add/index.html',
   'cy/account/applications/team-members/add/index.html',
-  'account/environment-access/index.html',
-  'cy/account/environment-access/index.html',
   'get-started/request-api/confirmation/index.html',
   'cy/get-started/request-api/confirmation/index.html',
   'publish/submit/confirmation/index.html',
