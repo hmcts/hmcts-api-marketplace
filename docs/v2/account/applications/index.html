@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>
-  My applications and teams - HMCTS API Marketplace - GOV.UK
+  Manage applications - HMCTS API Marketplace - GOV.UK
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#1d70b8">
@@ -298,63 +298,22 @@ data-module="govuk-service-navigation"
         <main class="govuk-main-wrapper" id="main-content">
           
 
-<h1 class="govuk-heading-xl">My applications and teams</h1>
+<h1 class="govuk-heading-xl">Manage applications</h1>
 
-<div class="govuk-tabs" data-module="govuk-tabs">
-  <h2 class="govuk-tabs__title">
-    Contents
-  </h2>
-
-  <ul class="govuk-tabs__list">
-    
-          <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
-      <a class="govuk-tabs__tab" href="#tab-apps">
-        My applications
-      </a>
-    </li>
-      
-    
-          <li class="govuk-tabs__list-item">
-      <a class="govuk-tabs__tab" href="#tab-teams">
-        My teams
-      </a>
-    </li>
-      
-    
-  </ul>
-  
-      <div class="govuk-tabs__panel" id="tab-apps">
-  
-    <h2 class="govuk-heading-l">My applications</h2>
-              <p class="govuk-body">Register your applications in our test and production environments.</p>
-              <a class="govuk-button" data-module="govuk-button" href="../../account/applications/new/" role="button" draggable="false">Add new application</a>
-              <p class="govuk-body" id="apps-loading">Loading your applications&hellip;</p>
-              <table class="govuk-table" id="apps-table" hidden>
-                <thead class="govuk-table__head">
-                  <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header">Name</th>
-                    <th scope="col" class="govuk-table__header">Environment</th>
-                    <th scope="col" class="govuk-table__header">Owner</th>
-                  </tr>
-                </thead>
-                <tbody class="govuk-table__body" id="apps-table-body"></tbody>
-              </table>
-              <p class="govuk-body" id="apps-empty-hint" hidden>You have no applications yet.</p>
-  
-  </div>
-    
-  
-      <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tab-teams">
-  
-    <h2 class="govuk-heading-l">My teams</h2>
-              <p class="govuk-body">Teams are not part of this service yet. Every application is owned by you directly.</p>
-  
-  </div>
-    
-  
-
-</div>
-
+<p class="govuk-body">Register your applications in our test and production environments.</p>
+<a class="govuk-button" data-module="govuk-button" href="../../account/applications/new/" role="button" draggable="false">Add new application</a>
+<p class="govuk-body" id="apps-loading">Loading your applications&hellip;</p>
+<table class="govuk-table" id="apps-table" hidden>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Name</th>
+      <th scope="col" class="govuk-table__header">Environment</th>
+      <th scope="col" class="govuk-table__header">Owner</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body" id="apps-table-body"></tbody>
+</table>
+<p class="govuk-body" id="apps-empty-hint" hidden>You have no applications yet.</p>
 
 
         </main>

@@ -139,7 +139,7 @@
     },
     {
       "path": "/account/applications",
-      "name": "My applications and teams"
+      "name": "Manage applications"
     },
     {
       "path": "/account/applications/new",
