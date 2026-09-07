@@ -85,18 +85,37 @@ jobs:
         run: npm run gates
 
       # The live site must stay byte-identical until docs/v2 is promoted.
+      #
+      # This compares content, not paths. Previously it diffed the paths under
+      # docs/ excluding docs/v2, which meant relocating the live site was
+      # indistinguishable from editing it - and archiving it into docs/v1 is a
+      # step towards promotion, not a change to it.
+      #
+      # Instead, collect the blob hash of every file under docs/ except
+      # docs/v2, on both sides, and require the two multisets to match. A file
+      # that moves keeps its hash, so a pure relocation passes. Any edit,
+      # addition or removal changes the multiset and fails, wherever the file
+      # sits - so this still protects docs/v0 and docs/v1 exactly as before.
       - name: Guard the live site
         if: github.base_ref != ''
         env:
           BASE_REF: ${{ github.base_ref }}
         run: |
           git fetch --no-tags origin "+refs/heads/$BASE_REF:refs/remotes/origin/$BASE_REF"
-          if ! git diff --quiet --exit-code "origin/$BASE_REF" -- docs ':(exclude)docs/v2'; then
-            echo "::error::This change touches docs/ outside docs/v2. The live site must stay untouched until promotion."
+
+          live_blobs () {
+            git ls-tree -r "$1" -- docs | grep -v $'\tdocs/v2/' | awk '{print $3}' | sort
+          }
+
+          live_blobs "origin/$BASE_REF" > /tmp/base-blobs
+          live_blobs HEAD > /tmp/head-blobs
+
+          if ! diff -q /tmp/base-blobs /tmp/head-blobs > /dev/null; then
+            echo "::error::This change alters the live site (docs/ outside docs/v2). It must stay untouched until promotion. Relocating files is allowed; changing their content is not."
             git diff --stat "origin/$BASE_REF" -- docs ':(exclude)docs/v2'
             exit 1
           fi
-          echo "No changes to the live site."
+          echo "Live site content unchanged ($(wc -l < /tmp/head-blobs | tr -d ' ') file(s))."
 
       - name: Stop the Kit
         if: always()
