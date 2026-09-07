@@ -1,0 +1,45 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName = "New client secret generated" %}
+{% set section = "account" %}
+{% set breadcrumbs = [
+  { text: "Home", href: "/" },
+  { text: "Your account", href: "/account" },
+  { text: "My applications and teams", href: "/account/applications" }
+] %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {{ govukPanel({
+      titleText: "New client secret generated"
+    }) }}
+
+    {{ govukWarningText({
+      text: "We only show you a new client secret once, to help keep your data secure. Copy the client secret immediately.",
+      iconFallbackText: "Warning"
+    }) }}
+
+    <p class="govuk-body">Your new client secret</p>
+    <pre class="app-key-display" id="generated-secret-value"></pre>
+
+    <p class="govuk-body" id="generated-secret-fallback" hidden>
+      A new client secret was generated, but this page was opened directly rather than reached from generating one,
+      so there is no secret to show here.
+    </p>
+
+    <p class="govuk-body"><a class="govuk-link" id="generated-secret-back-link" href="../">Back to client secrets</a></p>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block pageScripts %}
+  <script src="/public/javascripts/applications.js"></script>
+{% endblock %}

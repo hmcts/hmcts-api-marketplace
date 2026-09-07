@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>
-  Add new application - HMCTS API Marketplace - GOV.UK
+  Client secrets - HMCTS API Marketplace - GOV.UK
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#1d70b8">
@@ -252,7 +252,7 @@ data-module="govuk-service-navigation"
     
       <span lang="cy">Cymraeg</span>
       <span aria-hidden="true">|</span>
-      <a class="govuk-link" lang="en" hreflang="en" rel="alternate" href="../../../../account/applications/new/">English</a>
+      <a class="govuk-link" lang="en" hreflang="en" rel="alternate" href="../../../../account/applications/client-secrets/">English</a>
     
   </nav>
   
@@ -325,240 +325,66 @@ data-module="govuk-service-navigation"
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <div data-error-summary="new-application" hidden></div>
+    <p class="govuk-body" id="secrets-loading">Loading&hellip;</p>
 
-    <h1 class="govuk-heading-xl">Add new application</h1>
+    <div id="secrets-content" hidden>
 
-    <form data-journey="new-application" data-next="check-answers/" novalidate>
-
-      <div data-required data-error="Select an environment">
-        
-
-
-
-<div class="govuk-form-group">
-
-  <fieldset class="govuk-fieldset" aria-describedby="environment-hint">
-  
-  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-  
-    Select your environment
-  
-  </legend>
-  
-
-  <div id="environment-hint" class="govuk-hint">
-    You must have a separate application for each environment.
-  </div>
-
-
-  <div class="govuk-radios" data-module="govuk-radios">
-    
-    
-      
-  
-    
-    
-    
-    <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="environment" name="environment" type="radio" value="sandbox">
-      <label class="govuk-label govuk-radios__label" for="environment">
-        Sandbox
-      </label>
-      
-    </div>
-    
-  
-    
-      
-  
-    
-    
-    
-    <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="environment-2" name="environment" type="radio" value="development">
-      <label class="govuk-label govuk-radios__label" for="environment-2">
-        Development
-      </label>
-      
-    </div>
-    
-  
-    
-      
-  
-    
-    
-    
-    <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="environment-3" name="environment" type="radio" value="integration-test">
-      <label class="govuk-label govuk-radios__label" for="environment-3">
-        Integration test
-      </label>
-      
-    </div>
-    
-  
-    
-      
-  
-    
-    
-    
-    <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="environment-4" name="environment" type="radio" value="production">
-      <label class="govuk-label govuk-radios__label" for="environment-4">
-        Production
-      </label>
-      
-    </div>
-    
-  
-    
-    
-  </div>
-
-</fieldset>
-
-</div>
-
-      </div>
-
-      <div data-required data-error="Select an owner">
-        
-
-
-
-<div class="govuk-form-group">
-
-  <fieldset class="govuk-fieldset" aria-describedby="owner-hint">
-  
-  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-  
-    Select application owner
-  
-  </legend>
-  
-
-  <div id="owner-hint" class="govuk-hint">
-    Teams are not part of this service yet - every application is owned by you directly.
-  </div>
-
-
-  <div class="govuk-radios" data-module="govuk-radios">
-    
-    
-      
-  
-    
-    
-    
-    <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="owner" name="owner" type="radio" value="Me">
-      <label class="govuk-label govuk-radios__label" for="owner">
-        Me
-      </label>
-      
-    </div>
-    
-  
-    
-    
-  </div>
-
-</fieldset>
-
-</div>
-
-      </div>
-
-      <div data-required data-error="Enter an application name">
-        
-
-
-<div class="govuk-form-group">
-  <label class="govuk-label govuk-label--m" for="app-name">
-    What is your application name?
-  </label>
-
-  
-  
-  <div id="app-name-hint" class="govuk-hint">
-    You can register the same name once per environment - for example the same application as both Sandbox and Production.
-  </div>
-
-
-  <input
-    
-        
-        
-      
-        
-      
-    
-        
-        
-      
-        
-      
-    
-        
-        
-      
-        
-      
-    
-        
-        
-      
-        
-      
-    
-        
-        
-      
-    
-        
-        
-    
-        
-        
-    
-        
-        
-      
-        
-      
-    
-        
-        
-      
-        
-      
-    
-        
-        
-    
-        
-        
-    
-        
-        
-    
-   class="govuk-input" id="app-name" name="app-name" type="text" aria-describedby="app-name-hint" autocomplete="off">
-
-</div>
-
-      </div>
+      <h1 class="govuk-heading-l">Client secrets</h1>
 
       
+      <p class="govuk-body">
+        <strong>Application:</strong> <span id="secrets-app-name"></span><br>
+        <strong>Environment:</strong> <span id="secrets-environment"></span>
+      </p>
+
+      <p class="govuk-body">Your client secret is a unique passphrase that you generate to authorise your application.</p>
+      <p class="govuk-body">Use a client secret together with your application ID to call APIs in this environment.</p>
+
+      <table class="govuk-table" id="secrets-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Client secret</th>
+            <th scope="col" class="govuk-table__header">Created</th>
+            <th scope="col" class="govuk-table__header">Delete</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body" id="secrets-table-body"></tbody>
+      </table>
+
+      <p class="govuk-body">Your application must have at least one client secret. If you need to, you can generate a new client secret and delete old ones.</p>
+
+      <h2 class="govuk-heading-m">Rotate your client secret regularly</h2>
+      <p class="govuk-body">Rotate your application's client secret to shorten the period an access key is active, reducing the impact to your business if it is compromised.</p>
+      <p class="govuk-body">To rotate your client secret:</p>
+      <ol class="govuk-list govuk-list--number">
+        <li>Generate a new client secret, in addition to the one used by your application</li>
+        <li>Update your application to use the new client secret</li>
+        <li>Check that your application is working with the new client secret</li>
+        <li>Delete the inactive client secret</li>
+      </ol>
+      <p class="govuk-body">You can have up to 5 client secrets at any time.</p>
+
+      <form id="generate-secret-form">
+        
 <button type="submit" class="govuk-button" data-module="govuk-button">
-  Continue
+  Generate another client secret
 </button>
 
-      <p class="govuk-body"><a class="govuk-link" href="../">Cancel</a></p>
+      </form>
+      <p class="govuk-body" id="secrets-cap-hint" hidden>You have reached the limit of 5 client secrets. Delete one before generating another.</p>
 
-    </form>
+      <p class="govuk-body"><a class="govuk-link" id="secrets-detail-link" href="../">View your application details</a></p>
+
+    </div>
+
+    <div class="govuk-error-summary" data-module="govuk-error-summary" id="secrets-error-summary" hidden tabindex="-1">
+      <div role="alert">
+        <h2 class="govuk-error-summary__title">There is a problem</h2>
+        <div class="govuk-error-summary__body">
+          <p id="secrets-error-text">Something went wrong. Please try again.</p>
+        </div>
+      </div>
+    </div>
 
   </div>
 </div>
@@ -710,6 +536,8 @@ data-module="govuk-service-navigation"
 
 
     
+  <script src="../../../../public/javascripts/applications.js"></script>
+
   
   <script>
     document.addEventListener('DOMContentLoaded', function () {

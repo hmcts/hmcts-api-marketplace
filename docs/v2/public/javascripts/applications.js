@@ -19,6 +19,12 @@ document.addEventListener('DOMContentLoaded', function () {
     production: 'Production'
   }
 
+  // Matches HMRC Developer Hub's stated limit of 5 concurrent client secrets.
+  // Not enforced by the backend (see hmcts-api-marketplace-auth), which
+  // never revokes a key on your behalf - only "Revoke" does that - so this
+  // is a UI guardrail rather than something the server would reject anyway.
+  var MAX_ACTIVE_KEYS = 5
+
   var API_CATALOGUE = {
     'crime-prosecution-case-details': 'Crime Prosecution Case Details API',
     'hearing-results': 'Hearing Results API',
@@ -50,6 +56,11 @@ document.addEventListener('DOMContentLoaded', function () {
     div.textContent = str == null ? '' : String(str)
     return div.innerHTML
   }
+
+  // Sandbox and production are two separate registrations that happen to
+  // share a name - HMRC's own "View all applications" lists them as plain,
+  // unrelated rows (even two applications both named "Test" show up as two
+  // ordinary rows), not grouped or cross-linked. This lists the same way.
 
   // ---- list page ------------------------------------------------------
 
@@ -235,13 +246,12 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('detail-id').textContent = app.id
       document.getElementById('detail-environment').textContent = ENVIRONMENT_LABELS[app.environment] || app.environment
 
-      var keysList = document.getElementById('detail-keys-list')
-      keysList.innerHTML = data.apiKeys.filter(function (k) { return !k.revokedAt }).map(function (k) {
-        return '<div class="govuk-summary-list__row">' +
-          '<dt class="govuk-summary-list__key">Active API key</dt>' +
-          '<dd class="govuk-summary-list__value">Created: ' + formatDateTime(k.createdAt) + ' (ends ' + escapeHtml(k.preview) + ')</dd>' +
-          '</div>'
-      }).join('') || '<div class="govuk-summary-list__row"><dt class="govuk-summary-list__key">Active API keys</dt><dd class="govuk-summary-list__value">None</dd></div>'
+      // Client secrets get a summary row here - matching HMRC's Application
+      // details page ("Client secrets: 1 of 5 client secrets created") -
+      // with the full list, generate and revoke actions on their own page.
+      var activeKeyCount = data.apiKeys.filter(function (k) { return !k.revokedAt }).length
+      document.getElementById('detail-keys-summary').textContent = activeKeyCount + ' of ' + MAX_ACTIVE_KEYS + ' client secrets created'
+      document.getElementById('detail-keys-link').setAttribute('href', Auth.siteUrl('account/applications/client-secrets/?id=' + encodeURIComponent(app.id)))
 
       document.getElementById('detail-public-key-url').textContent = app.publicKeyUrl || 'Not set yet'
       document.getElementById('detail-callback-url').textContent = app.callbackUrl || 'Not set yet'
@@ -285,18 +295,6 @@ document.addEventListener('DOMContentLoaded', function () {
       loadingEl.hidden = true
       detailContent.hidden = false
     }
-
-    document.getElementById('rotate-key-form').addEventListener('submit', function (event) {
-      event.preventDefault()
-      Auth.authedFetch('/api/applications/' + encodeURIComponent(appId) + '/api-keys', { method: 'POST' })
-        .then(function (res) { return res.json() })
-        .then(function (data) {
-          var notice = document.getElementById('new-key-notice')
-          notice.textContent = 'New API key created: ' + data.apiKey + ' (copy it now, this is the only time it is shown)'
-          notice.hidden = false
-          loadDetail()
-        })
-    })
 
     function editUrlField (linkId, fieldLabel, bodyKey) {
       document.getElementById(linkId).addEventListener('click', function (event) {
@@ -354,5 +352,121 @@ document.addEventListener('DOMContentLoaded', function () {
         method: 'DELETE'
       }).then(function () { loadDetail() })
     })
+  }
+
+  // ---- client secrets page --------------------------------------------
+  //
+  // Its own page, not a section of the detail page - matching HMRC's
+  // "Client secrets" screen (Application/Environment context header, a
+  // table of secrets with Created/Delete, "up to 5" guidance, and a
+  // "Generate another client secret" button).
+
+  var secretsTable = document.getElementById('secrets-table')
+  if (secretsTable) {
+    if (!requireSignedIn()) return
+
+    var secretsParams = new URLSearchParams(window.location.search)
+    var secretsAppId = secretsParams.get('id')
+    var secretsLoadingEl = document.getElementById('secrets-loading')
+    var secretsErrorSummary = document.getElementById('secrets-error-summary')
+    var secretsErrorText = document.getElementById('secrets-error-text')
+
+    function showSecretsError (message) {
+      secretsLoadingEl.hidden = true
+      secretsErrorText.textContent = message
+      secretsErrorSummary.hidden = false
+      secretsErrorSummary.focus()
+    }
+
+    if (!secretsAppId) {
+      showSecretsError('No application was specified.')
+    } else {
+      loadSecrets()
+    }
+
+    function loadSecrets () {
+      Auth.authedFetch('/api/applications/' + encodeURIComponent(secretsAppId)).then(function (res) {
+        if (res.status === 401) { window.location.href = Auth.siteUrl('sign-in/'); return null }
+        if (res.status === 404) { showSecretsError('This application could not be found.'); return null }
+        return res.json()
+      }).then(function (data) {
+        if (!data) return
+        renderSecrets(data)
+      }).catch(function () {
+        showSecretsError('Could not load this application. Try again in a moment.')
+      })
+    }
+
+    function renderSecrets (data) {
+      var app = data.application
+      document.getElementById('secrets-app-name').textContent = app.name
+      document.getElementById('secrets-environment').textContent = ENVIRONMENT_LABELS[app.environment] || app.environment
+      document.getElementById('secrets-detail-link').setAttribute('href', Auth.siteUrl('account/applications/detail/?id=' + encodeURIComponent(app.id)))
+
+      var activeKeys = data.apiKeys.filter(function (k) { return !k.revokedAt })
+      var body = document.getElementById('secrets-table-body')
+      var onlyOneLeft = activeKeys.length <= 1
+
+      body.innerHTML = activeKeys.map(function (k) {
+        var deleteCell = onlyOneLeft
+          ? 'Not available'
+          : '<a class="govuk-link" href="#" data-revoke-key="' + escapeHtml(k.id) + '">Delete<span class="govuk-visually-hidden"> secret ending ' + escapeHtml(k.preview) + '</span></a>'
+        return '<tr class="govuk-table__row">' +
+          '<td class="govuk-table__cell">' + '&bull;'.repeat(20) + escapeHtml(k.preview) + '</td>' +
+          '<td class="govuk-table__cell">' + formatDate(k.createdAt) + '</td>' +
+          '<td class="govuk-table__cell">' + deleteCell + '</td>' +
+          '</tr>'
+      }).join('')
+
+      var generateButton = document.querySelector('#generate-secret-form .govuk-button')
+      var atCap = activeKeys.length >= MAX_ACTIVE_KEYS
+      generateButton.disabled = atCap
+      document.getElementById('secrets-cap-hint').hidden = !atCap
+
+      secretsLoadingEl.hidden = true
+      document.getElementById('secrets-content').hidden = false
+    }
+
+    document.getElementById('secrets-table-body').addEventListener('click', function (event) {
+      var link = event.target.closest('[data-revoke-key]')
+      if (!link) return
+      event.preventDefault()
+      Auth.authedFetch('/api/applications/' + encodeURIComponent(secretsAppId) + '/api-keys/' + encodeURIComponent(link.getAttribute('data-revoke-key')), {
+        method: 'DELETE'
+      }).then(function () { loadSecrets() })
+    })
+
+    document.getElementById('generate-secret-form').addEventListener('submit', function (event) {
+      event.preventDefault()
+      Auth.authedFetch('/api/applications/' + encodeURIComponent(secretsAppId) + '/api-keys', { method: 'POST' })
+        .then(function (res) { return res.json() })
+        .then(function (data) {
+          try {
+            window.sessionStorage.setItem('generatedSecret', JSON.stringify({ applicationId: secretsAppId, apiKey: data.apiKey }))
+          } catch (e) { /* private browsing, etc - confirmation page has a fallback */ }
+          window.location.href = Auth.siteUrl('account/applications/client-secrets/confirmation/?id=' + encodeURIComponent(secretsAppId))
+        })
+    })
+  }
+
+  // ---- client secret generated (one-time reveal) -----------------------
+
+  var generatedSecretEl = document.getElementById('generated-secret-value')
+  if (generatedSecretEl) {
+    var generated = null
+    try { generated = JSON.parse(window.sessionStorage.getItem('generatedSecret')) } catch (e) {}
+
+    var backLink = document.getElementById('generated-secret-back-link')
+    var params2 = new URLSearchParams(window.location.search)
+    backLink.setAttribute('href', Auth.siteUrl('account/applications/client-secrets/?id=' + encodeURIComponent(params2.get('id') || '')))
+
+    if (!generated) {
+      document.getElementById('generated-secret-fallback').hidden = false
+      document.querySelector('.govuk-panel').hidden = true
+      generatedSecretEl.hidden = true
+    } else {
+      generatedSecretEl.textContent = generated.apiKey
+      try { window.sessionStorage.removeItem('generatedSecret') } catch (e) {}
+    }
   }
 })

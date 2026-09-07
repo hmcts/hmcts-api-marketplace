@@ -1,0 +1,86 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName = "Client secrets" %}
+{% set section = "account" %}
+{% set breadcrumbs = [
+  { text: "Home", href: "/" },
+  { text: "Your account", href: "/account" },
+  { text: "My applications and teams", href: "/account/applications" }
+] %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <p class="govuk-body" id="secrets-loading">Loading&hellip;</p>
+
+    <div id="secrets-content" hidden>
+
+      <h1 class="govuk-heading-l">Client secrets</h1>
+
+      {#
+        Matches HMRC Developer Hub's Application/Environment context header,
+        shown on every credentials-related page so it's always clear which
+        application and which environment you're managing.
+      #}
+      <p class="govuk-body">
+        <strong>Application:</strong> <span id="secrets-app-name"></span><br>
+        <strong>Environment:</strong> <span id="secrets-environment"></span>
+      </p>
+
+      <p class="govuk-body">Your client secret is a unique passphrase that you generate to authorise your application.</p>
+      <p class="govuk-body">Use a client secret together with your application ID to call APIs in this environment.</p>
+
+      <table class="govuk-table" id="secrets-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Client secret</th>
+            <th scope="col" class="govuk-table__header">Created</th>
+            <th scope="col" class="govuk-table__header">Delete</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body" id="secrets-table-body"></tbody>
+      </table>
+
+      <p class="govuk-body">Your application must have at least one client secret. If you need to, you can generate a new client secret and delete old ones.</p>
+
+      <h2 class="govuk-heading-m">Rotate your client secret regularly</h2>
+      <p class="govuk-body">Rotate your application's client secret to shorten the period an access key is active, reducing the impact to your business if it is compromised.</p>
+      <p class="govuk-body">To rotate your client secret:</p>
+      <ol class="govuk-list govuk-list--number">
+        <li>Generate a new client secret, in addition to the one used by your application</li>
+        <li>Update your application to use the new client secret</li>
+        <li>Check that your application is working with the new client secret</li>
+        <li>Delete the inactive client secret</li>
+      </ol>
+      <p class="govuk-body">You can have up to 5 client secrets at any time.</p>
+
+      <form id="generate-secret-form">
+        {{ govukButton({ text: "Generate another client secret" }) }}
+      </form>
+      <p class="govuk-body" id="secrets-cap-hint" hidden>You have reached the limit of 5 client secrets. Delete one before generating another.</p>
+
+      <p class="govuk-body"><a class="govuk-link" id="secrets-detail-link" href="../">View your application details</a></p>
+
+    </div>
+
+    <div class="govuk-error-summary" data-module="govuk-error-summary" id="secrets-error-summary" hidden tabindex="-1">
+      <div role="alert">
+        <h2 class="govuk-error-summary__title">There is a problem</h2>
+        <div class="govuk-error-summary__body">
+          <p id="secrets-error-text">Something went wrong. Please try again.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block pageScripts %}
+  <script src="/public/javascripts/applications.js"></script>
+{% endblock %}

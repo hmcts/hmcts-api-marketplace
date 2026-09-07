@@ -50,14 +50,14 @@
         </div>
       </dl>
 
-      <h2 class="govuk-heading-m">Security details</h2>
-      <dl class="govuk-summary-list" id="detail-keys-list"></dl>
-      <form id="rotate-key-form">
-        {{ govukButton({ text: "Issue a new API key", classes: "govuk-button--secondary" }) }}
-      </form>
-      <p class="govuk-body" id="new-key-notice" hidden></p>
-
+      <h2 class="govuk-heading-m">Authorisation details</h2>
+      <p class="govuk-body">To call APIs you need to use your application ID and a client secret to authorise your calls.</p>
       <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Client secrets</dt>
+          <dd class="govuk-summary-list__value" id="detail-keys-summary"></dd>
+          <dd class="govuk-summary-list__actions"><a class="govuk-link" id="detail-keys-link" href="../client-secrets/">Change<span class="govuk-visually-hidden"> client secrets</span></a></dd>
+        </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Public key URL</dt>
           <dd class="govuk-summary-list__value" id="detail-public-key-url">Not set yet</dd>
