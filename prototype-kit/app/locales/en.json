@@ -46,7 +46,7 @@
   "home": {
     "title": "Home",
     "heading": "HMCTS API Marketplace",
-    "lede": "Discover, request and integrate the APIs powering justice sector software.",
+    "lede": "Discover, request and integrate with HMCTS APIs.",
     "startButton": "Get started",
     "signInButton": "Sign in to developer account",
     "registerButton": "Create account",

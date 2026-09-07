@@ -29,8 +29,6 @@
       <li><a class="govuk-link" href="#technical-requirements">Technical requirements</a></li>
       <li><a class="govuk-link" href="#eligibility">Eligibility criteria</a></li>
       <li><a class="govuk-link" href="#specification-quality">Specification quality</a></li>
-      <li><a class="govuk-link" href="#onboarding">Onboarding process</a></li>
-      <li><a class="govuk-link" href="#responsibilities">Ongoing responsibilities</a></li>
       <li><a class="govuk-link" href="#data-governance">Data governance</a></li>
     </ol>
 
@@ -173,43 +171,7 @@
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
-    <h2 class="govuk-heading-l" id="onboarding">4. Onboarding process</h2>
-
-    <ol class="govuk-list govuk-list--number">
-      <li>Make sure your API repository is <strong>public on GitHub</strong> under the HMCTS organisation.</li>
-      <li>Add the <code>publish-api-docs.yml</code> workflow to <code>.github/workflows/</code> and raise a pull request.</li>
-      <li>Once merged, trigger the workflow manually or cut a GitHub release &mdash; the version is stamped from the release tag.</li>
-      <li>Confirm the Swagger UI documentation site is live at <code>https://hmcts.github.io/&lt;repo-name&gt;/</code>.</li>
-      <li><a class="govuk-link" href="/sign-in">Sign in</a> to your developer account, or <a class="govuk-link" href="/register">create one</a> if you do not have one yet.</li>
-      <li>Submit your API using the <a class="govuk-link" href="/publish/submit">publish an API form</a>.</li>
-      <li>The marketplace team will review your submission and confirm.</li>
-      <li>Once approved, your API appears in the catalogue and is kept in sync with your specification automatically.</li>
-    </ol>
-
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-
-    <h2 class="govuk-heading-l" id="responsibilities">5. Ongoing responsibilities</h2>
-
-    <dl class="govuk-body">
-      <dt class="govuk-!-font-weight-bold">Keeping the spec current</dt>
-      <dd class="govuk-!-margin-left-0 govuk-!-margin-bottom-4">Update your OpenAPI specification whenever you change the API. Cut a new GitHub release to publish the updated documentation.</dd>
-
-      <dt class="govuk-!-font-weight-bold">Notifying consumers of breaking changes</dt>
-      <dd class="govuk-!-margin-left-0 govuk-!-margin-bottom-4">Tell consumers about breaking changes with enough notice to act on them.</dd>
-
-      <dt class="govuk-!-font-weight-bold">Reviewing access requests promptly</dt>
-      <dd class="govuk-!-margin-left-0 govuk-!-margin-bottom-4">Respond to consumer access requests promptly. Give a clear reason if you reject one.</dd>
-
-      <dt class="govuk-!-font-weight-bold">Maintaining contact details</dt>
-      <dd class="govuk-!-margin-left-0 govuk-!-margin-bottom-4">Keep <code>info.contact.email</code> in your spec pointing at an active team inbox.</dd>
-
-      <dt class="govuk-!-font-weight-bold">Deprecation and removal</dt>
-      <dd class="govuk-!-margin-left-0 govuk-!-margin-bottom-4">If you need to remove an API, tell all consumers and the marketplace team at least 30 days in advance.</dd>
-    </dl>
-
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-
-    <h2 class="govuk-heading-l" id="data-governance">6. Data governance</h2>
+    <h2 class="govuk-heading-l" id="data-governance">4. Data governance</h2>
 
     <p class="govuk-body">
       As an API producer you are a data controller, or a joint data controller, for the data exposed
