@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Producer standards — HMCTS API Marketplace</title>
+<meta name="description" content="Standards and requirements for listing an API on the HMCTS API Marketplace.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div class="top-bar">
+  <div class="wrap">
+    <a class="crest" href="index.html">
+      <img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img">
+    </a>
+    <div class="top-bar-actions">
+      <form class="site-search" action="resources-a-z.html" method="get" role="search">
+        <label class="visually-hidden" for="site-search-input">Search</label>
+        <input type="search" id="site-search-input" name="q" placeholder="Search">
+        <button type="submit" aria-label="Search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      </form>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+    </div>
+  </div>
+</div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="site-title" href="index.html">API Marketplace</a>
+    <nav class="primary-nav" id="primary-nav" aria-label="Primary">
+      <ul>
+        <li><a href="sign-in.html" id="nav-auth-link">Sign in</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="breadcrumbs"><div class="wrap"><ol><li><a href="index.html">Home</a></li><li>Producer standards</li></ol></div></div>
+
+<main id="main-content">
+
+<section class="block" style="padding-bottom:0;">
+  <div class="wrap">
+    <h1>API Producer Standards</h1>
+    <p class="lede" style="color:var(--grey-dark);font-size:1.1rem;max-width:60ch;">Standards and requirements for listing an API on the HMCTS API Marketplace.</p>
+
+    <div class="toc">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#p1">Technical requirements</a></li>
+        <li><a href="#p2">Eligibility criteria</a></li>
+        <li><a href="#p3">Specification quality</a></li>
+        <li><a href="#p4">Onboarding process</a></li>
+        <li><a href="#p5">Ongoing responsibilities</a></li>
+        <li><a href="#p6">Data governance</a></li>
+      </ol>
+    </div>
+
+    <div class="content-layout">
+      <div class="prose">
+
+        <p>These standards are based on the HMCTS RESTful API Standards and the AMP Catalogue onboarding process. If you have questions, <a href="contact.html">contact the marketplace team</a>.</p>
+
+        <h2 id="p1">1. Technical requirements</h2>
+        <p>Your API must meet the following technical requirements before it can be listed on the marketplace.</p>
+        <h3>OpenAPI 3.x specification</h3>
+        <p>Your API must have a valid OpenAPI 3.x specification file at the following path in your repository:</p>
+        <table><tbody><tr><td><code>src/main/resources/openapi/openapi-spec.yml</code></td></tr></tbody></table>
+        <p>The specification must include:</p>
+        <ul>
+          <li><code>info.title</code> &mdash; a clear, human-readable API name</li>
+          <li><code>info.description</code> &mdash; a plain-English summary of what the API does</li>
+          <li><code>info.version</code> &mdash; the current version (stamped automatically from the GitHub release tag)</li>
+          <li>At least one path with at least one operation</li>
+        </ul>
+        <h3>Servers block</h3>
+        <p>The <code>servers</code> block must follow the standard HMCTS pattern. Do not use SwaggerHub virtual server URLs.</p>
+        <div class="panel-warning"><div><strong>Do not hand-bump the version.</strong> It is stamped automatically when you cut a GitHub release.</div></div>
+        <h3>Spectral linting</h3>
+        <p>Your specification must pass the standard Spectral OAS3 ruleset with no errors.</p>
+        <h3>GitHub Actions workflow</h3>
+        <p>Add the following file to your repository to publish documentation automatically on each release: <code>.github/workflows/publish-api-docs.yml</code>. This triggers the shared <code>amp-catalog</code> workflow pinned to <code>@v1</code>.</p>
+
+        <h2 id="p2">2. Eligibility criteria</h2>
+        <div class="panel-warning"><div><strong>Only external APIs may be listed.</strong> Internal APIs must not be exposed publicly via GitHub Pages.</div></div>
+        <table>
+          <thead><tr><th>API type</th><th>Eligible?</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>External, documentation-only</td><td><strong>Eligible</strong></td><td>Spec is world-readable via GitHub Pages</td></tr>
+            <tr><td>External, with mock execution</td><td><strong>Eligible</strong></td><td>Try-It disabled; documentation only in marketplace</td></tr>
+            <tr><td>Internal / developers only</td><td><strong>Not eligible</strong></td><td>Must wait for the APIM Developer Portal</td></tr>
+          </tbody>
+        </table>
+        <p>Your API repository must also be <strong>public on GitHub</strong>. The documentation site is served via GitHub Pages and must return HTTP 200 at <code>https://hmcts.github.io/&lt;repo-name&gt;/</code> before your listing goes live.</p>
+
+        <h2 id="p3">3. Specification quality</h2>
+        <p>Your OpenAPI specification should meet the following quality standards. These directly power the information shown on each API&rsquo;s detail page.</p>
+        <div class="def-grid">
+          <div class="def-item"><h4>Title</h4><p>Clear, human-readable name &mdash; not the repository slug</p></div>
+          <div class="def-item"><h4>Plain-English description</h4><p>A consumer-focused summary of what the API does, who it is for, and what data it returns. Shown under &ldquo;What does this API do?&rdquo;</p></div>
+          <div class="def-item"><h4>Contact email</h4><p>A real team inbox &mdash; not the marketplace team&rsquo;s address</p></div>
+          <div class="def-item"><h4>Endpoint summaries</h4><p>Every operation must have a summary and a description</p></div>
+          <div class="def-item"><h4>Schema definitions</h4><p>All request and response bodies defined as named schemas with property descriptions</p></div>
+          <div class="def-item"><h4>Security scheme</h4><p>Authentication method declared (e.g. bearerAuth) and applied to all protected operations</p></div>
+          <div class="def-item"><h4>Error responses</h4><p>400, 401, 404 and 500 responses documented for each operation</p></div>
+        </div>
+
+        <h2 id="p4">4. Onboarding process</h2>
+        <ol>
+          <li>Ensure your API repository is <strong>public</strong> on GitHub under the HMCTS organisation</li>
+          <li>Add the <code>publish-api-docs.yml</code> workflow to <code>.github/workflows/</code> and raise a PR</li>
+          <li>Once merged, trigger the workflow manually or cut a GitHub release &mdash; the version is stamped from the release tag</li>
+          <li>Confirm the Swagger UI documentation site is live at <code>https://hmcts.github.io/&lt;repo-name&gt;/</code></li>
+          <li>Register as a Producer and submit your API via the <a href="publish-api.html">Publish API</a> form in your producer dashboard</li>
+          <li>The marketplace team will review and approve your submission within 2 working days</li>
+          <li>Once approved, your API will appear in the catalogue and be automatically kept in sync with your specification</li>
+        </ol>
+        <p>Ready to publish? <a href="sign-in.html">Sign in or register</a> and go to the Publish API section of your producer dashboard.</p>
+
+        <h2 id="p5">5. Ongoing responsibilities</h2>
+        <div class="def-grid">
+          <div class="def-item"><h4>Keeping the spec current</h4><p>Update your OpenAPI specification whenever you make changes to the API. Cut a new GitHub release to publish the updated documentation.</p></div>
+          <div class="def-item"><h4>Notifying consumers of breaking changes</h4><p>Inform consumers of breaking changes with sufficient notice via your producer dashboard.</p></div>
+          <div class="def-item"><h4>Reviewing access requests promptly</h4><p>Respond to consumer access requests within 2 working days. Provide a clear reason if rejecting.</p></div>
+          <div class="def-item"><h4>Maintaining contact details</h4><p>Keep the <code>info.contact.email</code> field in your spec pointing to an active team inbox</p></div>
+          <div class="def-item"><h4>Deprecation and removal</h4><p>If you need to remove an API, notify all consumers and the marketplace team at least 30 days in advance</p></div>
+        </div>
+
+        <h2 id="p6">6. Data governance</h2>
+        <p>As an API producer you are a data controller (or joint data controller) for the data exposed through your API.</p>
+        <h3>Data sharing agreements</h3>
+        <div class="panel-warning"><div><strong>Do not approve access to personal data APIs without a signed DPA or DSA in place</strong>, regardless of the consumer&rsquo;s urgency or seniority.</div></div>
+        <h3>Data classification</h3>
+        <table>
+          <thead><tr><th>Classification</th><th>Eligibility</th></tr></thead>
+          <tbody>
+            <tr><td>Official</td><td>Eligible &mdash; standard data protection controls required</td></tr>
+            <tr><td>Official-Sensitive</td><td>Eligible with enhanced governance &mdash; formal DSA required</td></tr>
+            <tr><td>Secret / Top Secret</td><td>Not eligible for marketplace listing</td></tr>
+          </tbody>
+        </table>
+        <p>Full detail on legal framework, minimisation, audit, breaches and accountability is set out in the <a href="data-governance.html">Data Governance Standards</a>.</p>
+      </div>
+
+      <aside class="side">
+        <div class="side-card">
+          <h3>Ready to publish?</h3>
+          <p><a href="publish-api.html">Publish an API &rsaquo;</a></p>
+        </div>
+        <div class="side-card">
+          <h3>Related</h3>
+          <p><a href="onboarding-guide.html">Onboarding guide</a></p>
+          <p><a href="data-governance.html">Data governance standards</a></p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid footer-grid-2">
+      <div>
+        <h2>Legal</h2>
+        <ul>
+          <li><a href="#">Accessibility statement</a></li>
+          <li><a href="#">Cookies</a></li>
+          <li><a href="#">Privacy notice</a></li>
+          <li><a href="data-governance.html">Data governance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Get in touch</h2>
+        <ul>
+          <li><a href="contact.html">Contact the marketplace team</a></li>
+          <li><a href="request-new-api.html">Request a new API</a></li>
+          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
+          <li><a href="publish-api.html">Publish an API</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; Crown copyright &mdash; MIT Licence</span>
+      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/scripts.js"></script>
+
+</body>
+</html>

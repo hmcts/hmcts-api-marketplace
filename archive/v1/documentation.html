@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentation, guides and tutorials — HMCTS API Marketplace</title>
+<meta name="description" content="Get best practice on designing, building, managing and documenting an integration or API.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div class="top-bar">
+  <div class="wrap">
+    <a class="crest" href="index.html">
+      <img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img">
+    </a>
+    <div class="top-bar-actions">
+      <form class="site-search" action="resources-a-z.html" method="get" role="search">
+        <label class="visually-hidden" for="site-search-input">Search</label>
+        <input type="search" id="site-search-input" name="q" placeholder="Search">
+        <button type="submit" aria-label="Search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      </form>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+    </div>
+  </div>
+</div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="site-title" href="index.html">API Marketplace</a>
+    <nav class="primary-nav" id="primary-nav" aria-label="Primary">
+      <ul>
+        <li><a href="sign-in.html" id="nav-auth-link">Sign in</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="breadcrumbs"><div class="wrap"><ol><li><a href="index.html">HMCTS</a></li><li>Documentation</li></ol></div></div>
+
+<main id="main-content">
+
+<section class="block" style="padding-bottom:0;">
+  <div class="wrap">
+    <h1>Documentation, guides and tutorials</h1>
+    <p class="lede" style="color:var(--grey-dark);font-size:1.1rem;max-width:65ch;">Get best practice on designing, building, managing and documenting an integration with an HMCTS API.</p>
+
+    <div class="doc-layout">
+      <aside class="doc-stages">
+        <h2>Your integration journey</h2>
+        <ul id="doc-stage-list">
+          <li class="active" data-stage-id="landscape"><span class="stage-num">1</span>Understand the justice landscape</li>
+<li class="" data-stage-id="prepare"><span class="stage-num">2</span>Prepare your integration</li>
+<li class="" data-stage-id="build"><span class="stage-num">3</span>Build your API integration</li>
+<li class="" data-stage-id="test"><span class="stage-num">4</span>Test your integration</li>
+<li class="" data-stage-id="golive"><span class="stage-num">5</span>Go live with your integration</li>
+        </ul>
+      </aside>
+
+      <div class="doc-resources">
+        <p style="color:var(--grey-dark);margin-top:0;">Guidance and resources for every stage of your integration:</p>
+        <div class="card-grid">
+          <div class="card" style="--chip:#0096d6;">
+        <h3><a href="resources-a-z.html" style="color:var(--ink);text-decoration:none;">A to Z of developer resources</a></h3>
+        <p>Browse all developer resources in one place.</p>
+        <a class="card-link" href="resources-a-z.html">Read more &rsaquo;</a>
+      </div><div class="card" style="--chip:#724695;">
+        <h3><a href="building-software.html" style="color:var(--ink);text-decoration:none;">Building justice sector software</a></h3>
+        <p>Understand the principles of designing justice sector software for different court and tribunal settings.</p>
+        <a class="card-link" href="building-software.html">Read more &rsaquo;</a>
+      </div><div class="card" style="--chip:#f9ae00;">
+        <h3><a href="case-studies.html" style="color:var(--ink);text-decoration:none;">API platform case studies</a></h3>
+        <p>Case studies of teams who have integrated their software with our APIs.</p>
+        <a class="card-link" href="case-studies.html">Read more &rsaquo;</a>
+      </div><div class="card" style="--chip:#11a63c;">
+        <h3><a href="glossary.html" style="color:var(--ink);text-decoration:none;">Glossary of developer terms</a></h3>
+        <p>Look up terminology we use in our API services.</p>
+        <a class="card-link" href="glossary.html">Read more &rsaquo;</a>
+      </div><div class="card" style="--chip:#008c9d;">
+        <h3><a href="technology-introduction.html" style="color:var(--ink);text-decoration:none;">Introduction to justice sector technology</a></h3>
+        <p>Learn how digital technology works across HMCTS and the wider justice system.</p>
+        <a class="card-link" href="technology-introduction.html">Read more &rsaquo;</a>
+      </div><div class="card" style="--chip:#e9531d;">
+        <h3><a href="our-api-technologies.html" style="color:var(--ink);text-decoration:none;">Our API technologies</a></h3>
+        <p>See the technologies used to build HMCTS APIs.</p>
+        <a class="card-link" href="our-api-technologies.html">Read more &rsaquo;</a>
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.querySelectorAll('#doc-stage-list li').forEach(function (li) {
+  li.addEventListener('click', function () {
+    document.querySelectorAll('#doc-stage-list li').forEach(function (l) { l.classList.remove('active'); });
+    li.classList.add('active');
+  });
+});
+</script>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid footer-grid-2">
+      <div>
+        <h2>Legal</h2>
+        <ul>
+          <li><a href="#">Accessibility statement</a></li>
+          <li><a href="#">Cookies</a></li>
+          <li><a href="#">Privacy notice</a></li>
+          <li><a href="data-governance.html">Data governance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Get in touch</h2>
+        <ul>
+          <li><a href="contact.html">Contact the marketplace team</a></li>
+          <li><a href="request-new-api.html">Request a new API</a></li>
+          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
+          <li><a href="publish-api.html">Publish an API</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; Crown copyright &mdash; MIT Licence</span>
+      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/scripts.js"></script>
+
+</body>
+</html>

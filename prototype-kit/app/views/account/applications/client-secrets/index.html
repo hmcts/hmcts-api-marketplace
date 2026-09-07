@@ -5,7 +5,7 @@
 {% set breadcrumbs = [
   { text: "Home", href: "/" },
   { text: "Your account", href: "/account" },
-  { text: "My applications and teams", href: "/account/applications" }
+  { text: "Manage applications", href: "/account/applications" }
 ] %}
 
 {% from "govuk/components/button/macro.njk" import govukButton %}
@@ -39,6 +39,7 @@
           <tr class="govuk-table__row">
             <th scope="col" class="govuk-table__header">Client secret</th>
             <th scope="col" class="govuk-table__header">Created</th>
+            <th scope="col" class="govuk-table__header">Last used</th>
             <th scope="col" class="govuk-table__header">Delete</th>
           </tr>
         </thead>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in or create a developer account — HMCTS API Marketplace</title>
+<meta name="description" content="Sign in to your HMCTS API Marketplace developer account, or create a new one.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<div class="auth-logo-bar">
+  <div class="wrap">
+    <a class="crest" href="index.html"><img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img"></a>
+  </div>
+</div>
+
+<main id="main-content" class="split-auth">
+  <div class="split-auth-brand">
+    <h1>Build with confidence on justice sector data</h1>
+    <p>Your developer account gives you access to request APIs, manage listings, and take part in the community &mdash; all in one place.</p>
+
+    <svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:100%;max-width:280px;margin:1.2em 0;">
+      <circle cx="150" cy="130" r="105" fill="#D7E9D0"/>
+      <circle cx="150" cy="130" r="72" fill="#11a63c" opacity="0.15"/>
+      <g transform="translate(100,80)">
+        <rect x="10" y="6" width="70" height="88" rx="3" fill="#ffffff" stroke="#002d59" stroke-width="3"/>
+        <line x1="24" y1="30" x2="66" y2="30" stroke="#0096d6" stroke-width="4"/>
+        <line x1="24" y1="46" x2="66" y2="46" stroke="#0096d6" stroke-width="4"/>
+        <line x1="24" y1="62" x2="50" y2="62" stroke="#724695" stroke-width="4"/>
+        <circle cx="72" cy="76" r="22" fill="none" stroke="#002d59" stroke-width="4"/>
+        <line x1="88" y1="92" x2="104" y2="108" stroke="#002d59" stroke-width="5" stroke-linecap="round"/>
+      </g>
+      <g stroke="#f9ae00" stroke-width="2.5" fill="none">
+        <path d="M255 55c14 10 18 28 8 42-10 14-30 16-42 4" />
+        <path d="M255 55c-3 8 0 18 8 24" />
+      </g>
+      <g stroke="#724695" stroke-width="2.5" fill="none">
+        <path d="M45 195c-14 8-20 25-12 40 8 15 28 19 42 9" />
+        <path d="M45 195c-4 8-3 18 4 25" />
+      </g>
+    </svg>
+
+    <ul class="auth-benefits">
+      <li><span class="auth-benefit-icon" style="background:#D1E4F7;color:#0096d6;">&#10003;</span>Request access to HMCTS APIs</li>
+      <li><span class="auth-benefit-icon" style="background:#D9CFE8;color:#724695;">&#10003;</span>Publish and manage your own APIs</li>
+      <li><span class="auth-benefit-icon" style="background:#FFEBCB;color:#c78b00;">&#10003;</span>Take part in the developer community</li>
+    </ul>
+  </div>
+
+  <div class="split-auth-form">
+    <div class="split-auth-form-inner" style="--chip:#11a63c;">
+      <h1>Sign in</h1>
+      <div class="accent-bar"></div>
+
+      <div class="auth-callout">
+        <div class="auth-callout-tab">HMCTS API Marketplace account</div>
+        <div class="auth-callout-body">
+          <p>If you do not already have an account, <a href="register.html">create a developer account</a>.</p>
+        </div>
+      </div>
+
+      <form novalidate id="signin-form">
+        <div class="error-summary" id="signin-error"><h2>There is a problem</h2><p id="signin-error-text">Enter your email address and password.</p></div>
+
+        <div class="field">
+          <label for="signin-email">Email address</label>
+          <input type="email" id="signin-email" required>
+        </div>
+
+        <div class="field" style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="remember-me" style="width:auto;">
+          <label for="remember-me" style="margin:0;font-weight:400;">Remember me</label>
+        </div>
+
+        <div class="field">
+          <label for="signin-password">Password</label>
+          <input type="password" id="signin-password" required>
+        </div>
+
+        <button type="submit" class="btn btn-start" style="width:100%;justify-content:center;">Sign in</button>
+      </form>
+
+      <div class="confirmation" id="signin-confirmation">
+        <div class="banner"><p id="signin-success-text">Signed in.</p></div>
+      </div>
+
+      <p style="margin-top:1.4em;text-align:center;"><a href="#">Forgotten password?</a></p>
+    </div>
+  </div>
+</main>
+
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid footer-grid-2">
+      <div>
+        <h2>Legal</h2>
+        <ul>
+          <li><a href="#">Accessibility statement</a></li>
+          <li><a href="#">Cookies</a></li>
+          <li><a href="#">Privacy notice</a></li>
+          <li><a href="data-governance.html">Data governance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Get in touch</h2>
+        <ul>
+          <li><a href="contact.html">Contact the marketplace team</a></li>
+          <li><a href="request-new-api.html">Request a new API</a></li>
+          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
+          <li><a href="publish-api.html">Publish an API</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; Crown copyright &mdash; MIT Licence</span>
+      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/scripts.js"></script>
+
+<script>
+  // Change this to wherever the auth-server is actually running/deployed.
+  // See auth-server/README.md for local setup and deployment options.
+  const API_BASE = "https://hmcts-api-marketplace-auth.onrender.com";
+
+  const form = document.getElementById('signin-form');
+  const errorBox = document.getElementById('signin-error');
+  const errorText = document.getElementById('signin-error-text');
+  const confirmation = document.getElementById('signin-confirmation');
+  const successText = document.getElementById('signin-success-text');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    errorBox.classList.remove('show');
+
+    const email = document.getElementById('signin-email').value.trim();
+    const password = document.getElementById('signin-password').value;
+
+    if (!email || !password) {
+      errorText.textContent = 'Enter your email address and password.';
+      errorBox.classList.add('show');
+      return;
+    }
+
+    try {
+      const res = await fetch(API_BASE + '/api/login', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        errorText.textContent = data.error || 'Something went wrong. Please try again.';
+        errorBox.classList.add('show');
+        return;
+      }
+
+      successText.textContent = 'Signed in as ' + data.user.firstName + ' ' + data.user.lastName + '.';
+      form.style.display = 'none';
+      confirmation.classList.add('show');
+      window.location.href = 'account.html';
+    } catch (err) {
+      errorText.textContent =
+        'Could not reach the sign-in server at ' + API_BASE + '. Is auth-server running? See auth-server/README.md.';
+      errorBox.classList.add('show');
+    }
+  });
+</script>
+</body>
+</html>

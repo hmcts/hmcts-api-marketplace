@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create an account — HMCTS API Marketplace</title>
+<meta name="description" content="Create an HMCTS API Marketplace developer account.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<div class="auth-logo-bar">
+  <div class="wrap">
+    <a class="crest" href="index.html"><img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img"></a>
+  </div>
+</div>
+
+<main id="main-content" class="split-auth">
+  <div class="split-auth-brand">
+    <h1>Join the HMCTS developer community</h1>
+    <p>Create an account to request API access, publish your own APIs, and take part in the developer community.</p>
+
+    <svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="width:100%;max-width:280px;margin:1.2em 0;">
+      <circle cx="150" cy="130" r="105" fill="#D1E4F7"/>
+      <circle cx="150" cy="130" r="72" fill="#0096d6" opacity="0.15"/>
+      <g transform="translate(95,75)">
+        <circle cx="35" cy="30" r="18" fill="none" stroke="#002d59" stroke-width="4"/>
+        <circle cx="95" cy="30" r="18" fill="none" stroke="#724695" stroke-width="4"/>
+        <path d="M10 95c0-18 11-30 25-30s25 12 25 30" fill="none" stroke="#002d59" stroke-width="4"/>
+        <path d="M70 95c0-18 11-30 25-30s25 12 25 30" fill="none" stroke="#724695" stroke-width="4"/>
+      </g>
+      <g stroke="#f9ae00" stroke-width="2.5" fill="none">
+        <path d="M255 55c14 10 18 28 8 42-10 14-30 16-42 4" />
+        <path d="M255 55c-3 8 0 18 8 24" />
+      </g>
+      <g stroke="#11a63c" stroke-width="2.5" fill="none">
+        <path d="M45 195c-14 8-20 25-12 40 8 15 28 19 42 9" />
+        <path d="M45 195c-4 8-3 18 4 25" />
+      </g>
+    </svg>
+
+    <ul class="auth-benefits">
+      <li><span class="auth-benefit-icon" style="background:#D1E4F7;color:#0096d6;">&#10003;</span>Request access to HMCTS APIs</li>
+      <li><span class="auth-benefit-icon" style="background:#D9CFE8;color:#724695;">&#10003;</span>Publish and manage your own APIs</li>
+      <li><span class="auth-benefit-icon" style="background:#FFEBCB;color:#c78b00;">&#10003;</span>Take part in the developer community</li>
+    </ul>
+  </div>
+
+  <div class="split-auth-form">
+    <div class="split-auth-form-inner" style="--chip:#0096d6;">
+      <p><a href="sign-in.html">&lsaquo; Back to sign in or create a developer account</a></p>
+
+      <h1>Create an account</h1>
+      <div class="accent-bar"></div>
+      <p style="color:var(--grey-dark);font-size:0.98rem;">You need to provide your details to create an account. For more information on why we collect your information, see our <a href="#">privacy policy</a>.</p>
+
+      <form novalidate id="register-form">
+        <div class="error-summary" id="register-error"><h2>There is a problem</h2><p id="register-error-text">Please fill in all required fields.</p></div>
+
+        <div class="field">
+          <label for="reg-first">First name</label>
+          <input type="text" id="reg-first" required>
+        </div>
+
+        <div class="field">
+          <label for="reg-last">Last name</label>
+          <input type="text" id="reg-last" required>
+        </div>
+
+        <div class="field">
+          <label for="reg-email">Email address</label>
+          <input type="email" id="reg-email" required>
+        </div>
+
+        <div class="field">
+          <label for="reg-org">Organisation or team</label>
+          <span class="hint">For example: HMCTS DTS, Ministry of Justice Digital</span>
+          <input type="text" id="reg-org" required>
+        </div>
+
+        <fieldset>
+          <legend>I am registering as&hellip;</legend>
+          <div class="role-pick">
+            <label><input type="radio" name="role" value="consumer" required><span><svg class="role-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg>Consumer<br><small style="font-weight:400;color:var(--grey-dark);">Find and use existing APIs</small></span></label>
+            <label><input type="radio" name="role" value="producer"><span><svg class="role-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="1"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Producer<br><small style="font-weight:400;color:var(--grey-dark);">List and manage my APIs</small></span></label>
+          </div>
+        </fieldset>
+
+        <h2 style="font-size:1.3rem;margin-top:1.6em;margin-bottom:0.6em;">Create your password</h2>
+
+        <div class="field">
+          <label for="reg-password">Password</label>
+          <span class="hint">Your password must be at least 12 characters long.</span>
+          <input type="password" id="reg-password" required minlength="12">
+        </div>
+
+        <div class="field">
+          <label for="reg-password-confirm">Confirm your password</label>
+          <input type="password" id="reg-password-confirm" required minlength="12">
+        </div>
+
+        <button type="submit" class="btn btn-start" style="width:100%;justify-content:center;">Create</button>
+      </form>
+
+      <div class="confirmation" id="register-confirmation">
+        <div class="banner">
+          <h2>Account created</h2>
+          <p id="register-success-text">Your account has been created.</p>
+          <a class="btn btn-primary" href="index.html">Return to homepage</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid footer-grid-2">
+      <div>
+        <h2>Legal</h2>
+        <ul>
+          <li><a href="#">Accessibility statement</a></li>
+          <li><a href="#">Cookies</a></li>
+          <li><a href="#">Privacy notice</a></li>
+          <li><a href="data-governance.html">Data governance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Get in touch</h2>
+        <ul>
+          <li><a href="contact.html">Contact the marketplace team</a></li>
+          <li><a href="request-new-api.html">Request a new API</a></li>
+          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
+          <li><a href="publish-api.html">Publish an API</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; Crown copyright &mdash; MIT Licence</span>
+      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/scripts.js"></script>
+
+<script>
+  // Change this to wherever the auth-server is actually running/deployed.
+  // See auth-server/README.md for local setup and deployment options.
+  const API_BASE = "https://hmcts-api-marketplace-auth.onrender.com";
+
+  const form = document.getElementById('register-form');
+  const errorBox = document.getElementById('register-error');
+  const errorText = document.getElementById('register-error-text');
+  const confirmation = document.getElementById('register-confirmation');
+  const successText = document.getElementById('register-success-text');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    errorBox.classList.remove('show');
+
+    const firstName = document.getElementById('reg-first').value.trim();
+    const lastName = document.getElementById('reg-last').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const organisation = document.getElementById('reg-org').value.trim();
+    const roleInput = document.querySelector('input[name="role"]:checked');
+    const password = document.getElementById('reg-password').value;
+    const passwordConfirm = document.getElementById('reg-password-confirm').value;
+
+    if (!firstName || !lastName || !email || !roleInput || !password) {
+      errorText.textContent = 'Please fill in all required fields.';
+      errorBox.classList.add('show');
+      return;
+    }
+    if (password.length < 12) {
+      errorText.textContent = 'Your password must be at least 12 characters long.';
+      errorBox.classList.add('show');
+      return;
+    }
+    if (password !== passwordConfirm) {
+      errorText.textContent = 'Your passwords do not match.';
+      errorBox.classList.add('show');
+      return;
+    }
+
+    try {
+      const res = await fetch(API_BASE + '/api/register', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName, lastName, email, organisation,
+          role: roleInput.value, password,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        errorText.textContent = data.error || 'Something went wrong. Please try again.';
+        errorBox.classList.add('show');
+        return;
+      }
+
+      successText.textContent = 'Welcome, ' + data.user.firstName + ' — your account has been created.';
+      form.style.display = 'none';
+      confirmation.classList.add('show');
+      window.location.href = 'account.html';
+    } catch (err) {
+      errorText.textContent =
+        'Could not reach the registration server at ' + API_BASE + '. Is auth-server running? See auth-server/README.md.';
+      errorBox.classList.add('show');
+    }
+  });
+</script>
+</body>
+</html>

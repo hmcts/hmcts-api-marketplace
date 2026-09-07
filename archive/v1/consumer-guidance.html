@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Consumer guidance — HMCTS API Marketplace</title>
+<meta name="description" content="How to find, request and use HMCTS APIs responsibly.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div class="top-bar">
+  <div class="wrap">
+    <a class="crest" href="index.html">
+      <img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img">
+    </a>
+    <div class="top-bar-actions">
+      <form class="site-search" action="resources-a-z.html" method="get" role="search">
+        <label class="visually-hidden" for="site-search-input">Search</label>
+        <input type="search" id="site-search-input" name="q" placeholder="Search">
+        <button type="submit" aria-label="Search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      </form>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+    </div>
+  </div>
+</div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="site-title" href="index.html">API Marketplace</a>
+    <nav class="primary-nav" id="primary-nav" aria-label="Primary">
+      <ul>
+        <li><a href="sign-in.html" id="nav-auth-link">Sign in</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="breadcrumbs"><div class="wrap"><ol><li><a href="index.html">Home</a></li><li>Consumer guidance</li></ol></div></div>
+
+<main id="main-content">
+
+<section class="block" style="padding-bottom:0;">
+  <div class="wrap">
+    <h1>Consumer guidance</h1>
+    <p class="lede" style="color:var(--grey-dark);font-size:1.1rem;max-width:60ch;">How to find, request and use HMCTS APIs responsibly.</p>
+
+    <div class="toc">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#g1">Before you request access</a></li>
+        <li><a href="#g2">Making an access request</a></li>
+        <li><a href="#g3">Using the API responsibly</a></li>
+        <li><a href="#g4">Error handling and resilience</a></li>
+        <li><a href="#g5">Keeping access current</a></li>
+        <li><a href="#g6">Getting help</a></li>
+        <li><a href="#g7">Data governance</a></li>
+      </ol>
+    </div>
+
+    <div class="content-layout">
+      <div class="prose">
+
+        <h2 id="g1">Before you request access</h2>
+        <h3>Understand what you need</h3>
+        <ul>
+          <li>Read the API&rsquo;s plain-English description and understand what data it returns and what it does not return</li>
+          <li>Check the classification &mdash; <strong>Official-Sensitive</strong> APIs require additional justification and may have longer approval times</li>
+          <li>Confirm your service or use case is within the intended scope of the API. Do not request access speculatively.</li>
+        </ul>
+        <h3>Check your organisation is eligible</h3>
+        <ul>
+          <li>You must be part of HMCTS Digital and Technology Solutions, a justice sector partner, or an approved third party</li>
+          <li>You need a valid work email address to register</li>
+          <li>Your organisation must have a data sharing agreement in place where required &mdash; check with the API owner</li>
+        </ul>
+        <p>Not sure if your use case is appropriate? <a href="sign-in.html">Sign in</a> and raise a question via your consumer dashboard, or <a href="contact.html">contact the marketplace team</a>.</p>
+
+        <h2 id="g2">Making an access request</h2>
+        <h3>What you&rsquo;ll need to provide</h3>
+        <div class="def-grid">
+          <div class="def-item"><h4>Use case description</h4><p>What you are building and why you need this API</p></div>
+          <div class="def-item"><h4>Environment</h4><p>Whether you need sandbox, production, or both</p></div>
+          <div class="def-item"><h4>Expected call volume</h4><p>Low, medium or high &mdash; this helps the producer plan capacity</p></div>
+          <div class="def-item"><h4>Authentication readiness</h4><p>Confirmation that your system can implement OAuth 2.0 with JWT bearer tokens</p></div>
+        </div>
+        <h3>What happens next</h3>
+        <ol>
+          <li>The API owner reviews your request within 2 working days</li>
+          <li>You&rsquo;ll be notified in your dashboard if approved or rejected</li>
+          <li>If rejected, a reason will be given and you may resubmit with additional information</li>
+          <li>Once approved, your credentials will be issued via a secure channel</li>
+        </ol>
+        <div class="panel-warning"><div><strong>Do not attempt to access an API before your request has been approved.</strong> Unauthorised access attempts are logged and may affect future requests.</div></div>
+
+        <h2 id="g3">Using the API responsibly</h2>
+        <h3>Rate limits and fair use</h3>
+        <ul>
+          <li>Do not exceed the rate limits defined in the API specification</li>
+          <li>Cache responses where appropriate &mdash; do not poll repeatedly for data that does not change frequently</li>
+          <li>Use the sandbox environment for development and testing. Never test against production.</li>
+        </ul>
+        <h3>Authentication</h3>
+        <ul>
+          <li>All APIs use OAuth 2.0 with JWT bearer tokens</li>
+          <li>Tokens expire &mdash; implement token refresh correctly and do not hard-code credentials</li>
+          <li>Do not share credentials between services or teams. Each consuming service should have its own client credentials.</li>
+        </ul>
+        <h3>Data handling</h3>
+        <ul>
+          <li>Data returned by HMCTS APIs is subject to GDPR and the Data Protection Act 2018</li>
+          <li>Official-Sensitive data must be handled in accordance with the Government Security Classifications policy</li>
+          <li>Do not store API responses longer than necessary for your use case</li>
+          <li>Do not expose raw API responses to end users without appropriate data processing</li>
+        </ul>
+
+        <h2 id="g4">Error handling and resilience</h2>
+        <table>
+          <thead><tr><th>HTTP status</th><th>Meaning</th><th>What to do</th></tr></thead>
+          <tbody>
+            <tr><td><code>400</code></td><td>Bad request</td><td>Check your request parameters against the API spec</td></tr>
+            <tr><td><code>401</code></td><td>Unauthorised</td><td>Refresh your token. Do not loop on auth failures.</td></tr>
+            <tr><td><code>403</code></td><td>Forbidden</td><td>Your credentials do not have access to this resource</td></tr>
+            <tr><td><code>404</code></td><td>Not found</td><td>Handle gracefully &mdash; the resource may legitimately not exist</td></tr>
+            <tr><td><code>429</code></td><td>Too many requests</td><td>Back off and retry after the period in the Retry-After header</td></tr>
+            <tr><td><code>5xx</code></td><td>Server error</td><td>Implement exponential backoff. Use circuit breakers in your service.</td></tr>
+          </tbody>
+        </table>
+        <p>Do not treat the API as guaranteed to be available. Implement circuit breakers and fallbacks in your service architecture.</p>
+
+        <h2 id="g5">Keeping access current</h2>
+        <ul>
+          <li>If your use case changes significantly, notify the API owner and resubmit your access request with updated details</li>
+          <li>If your service is decommissioned, revoke your credentials and notify the marketplace team</li>
+          <li>Access may be reviewed periodically &mdash; you may be asked to re-confirm your use case</li>
+          <li>Keep your contact details up to date in your dashboard so the API owner can reach you if there are breaking changes</li>
+        </ul>
+
+        <h2 id="g6">Getting help</h2>
+        <div class="def-grid">
+          <div class="def-item"><h4>API-specific questions</h4><p>Use the API detail page to find the owning team&rsquo;s contact details</p></div>
+          <div class="def-item"><h4>Access request support</h4><p>Raise a support request via your consumer dashboard</p></div>
+          <div class="def-item"><h4>Urgent production issues</h4><p>Contact the HMCTS DTS service desk</p></div>
+          <div class="def-item"><h4>Marketplace feedback</h4><p><a href="contact.html">Contact the marketplace team</a></p></div>
+        </div>
+
+        <h2 id="g7">Data governance</h2>
+        <p>When accessing HMCTS APIs you are interacting with data that may be subject to legal and regulatory obligations. The following standards apply to all consumers.</p>
+        <h3>Legal framework</h3>
+        <ul>
+          <li><strong>UK GDPR and the Data Protection Act 2018</strong> &mdash; any personal data returned by HMCTS APIs must be processed lawfully, with a documented legal basis</li>
+          <li><strong>Government Security Classifications (GSC) policy</strong> &mdash; Official-Sensitive data requires enhanced security controls in your systems</li>
+          <li><strong>Computer Misuse Act 1990</strong> &mdash; credentials must not be shared or misused; unauthorised access is a criminal offence</li>
+        </ul>
+        <div class="panel-warning"><div><strong>You must not access any API containing personal data without a signed DPA or DSA in place.</strong></div></div>
+        <p>For the full set of obligations, read the <a href="data-governance.html">Data Governance Standards</a>.</p>
+      </div>
+
+      <aside class="side">
+        <div class="side-card">
+          <h3>Ready to find an API?</h3>
+          <p><a href="api-catalogue.html">Browse the API Catalogue &rsaquo;</a></p>
+        </div>
+        <div class="side-card">
+          <h3>Related</h3>
+          <p><a href="producer-standards.html">Producer standards</a></p>
+          <p><a href="data-governance.html">Data governance standards</a></p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid footer-grid-2">
+      <div>
+        <h2>Legal</h2>
+        <ul>
+          <li><a href="#">Accessibility statement</a></li>
+          <li><a href="#">Cookies</a></li>
+          <li><a href="#">Privacy notice</a></li>
+          <li><a href="data-governance.html">Data governance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Get in touch</h2>
+        <ul>
+          <li><a href="contact.html">Contact the marketplace team</a></li>
+          <li><a href="request-new-api.html">Request a new API</a></li>
+          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
+          <li><a href="publish-api.html">Publish an API</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; Crown copyright &mdash; MIT Licence</span>
+      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/scripts.js"></script>
+
+</body>
+</html>

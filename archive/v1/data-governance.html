@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data governance — HMCTS API Marketplace</title>
+<meta name="description" content="Legal and regulatory obligations for all participants in the HMCTS API Marketplace.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div class="top-bar">
+  <div class="wrap">
+    <a class="crest" href="index.html">
+      <img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img">
+    </a>
+    <div class="top-bar-actions">
+      <form class="site-search" action="resources-a-z.html" method="get" role="search">
+        <label class="visually-hidden" for="site-search-input">Search</label>
+        <input type="search" id="site-search-input" name="q" placeholder="Search">
+        <button type="submit" aria-label="Search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      </form>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+    </div>
+  </div>
+</div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="site-title" href="index.html">API Marketplace</a>
+    <nav class="primary-nav" id="primary-nav" aria-label="Primary">
+      <ul>
+        <li><a href="sign-in.html" id="nav-auth-link">Sign in</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="breadcrumbs"><div class="wrap"><ol><li><a href="index.html">Home</a></li><li>Data governance</li></ol></div></div>
+
+<main id="main-content">
+
+<section class="block" style="padding-bottom:0;">
+  <div class="wrap">
+    <h1>Data Governance Standards</h1>
+    <p class="lede" style="color:var(--grey-dark);font-size:1.1rem;max-width:60ch;">Legal and regulatory obligations for all participants in the HMCTS API Marketplace.</p>
+
+    <div class="toc">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#d1">Legal framework</a></li>
+        <li><a href="#d2">Data classification</a></li>
+        <li><a href="#d3">Data sharing agreements</a></li>
+        <li><a href="#d4">Minimisation and retention</a></li>
+        <li><a href="#d5">Access control</a></li>
+        <li><a href="#d6">Audit and monitoring</a></li>
+        <li><a href="#d7">Data breaches</a></li>
+        <li><a href="#d8">Cross-border transfers</a></li>
+        <li><a href="#d9">Accountability</a></li>
+        <li><a href="#d10">Decommissioning</a></li>
+      </ol>
+    </div>
+
+    <div class="content-layout">
+      <div class="prose">
+
+        <p>These standards apply to all consumers and producers. Based on UK GDPR, DPA 2018 and HMG Security Classification policy. Role-specific obligations are noted throughout.</p>
+
+        <h2 id="d1">1. Legal framework</h2>
+        <p>All participants must comply with:</p>
+        <div class="def-grid">
+          <div class="def-item"><h4>UK GDPR and Data Protection Act 2018</h4><p>Personal data must be processed lawfully with a documented legal basis. Producers must record this in the API spec. Consumers must not use data beyond the stated purpose.</p></div>
+          <div class="def-item"><h4>Government Security Classifications policy</h4><p>Official-Sensitive data requires enhanced controls. All APIs must declare their classification in the marketplace.</p></div>
+          <div class="def-item"><h4>Computer Misuse Act 1990</h4><p>Unauthorised access is a criminal offence. Credentials must not be shared or misused.</p></div>
+          <div class="def-item"><h4>Freedom of Information Act 2000</h4><p>Some API-accessible data may be subject to FOI requests. All participants should be aware of their obligations.</p></div>
+          <div class="def-item"><h4>Public Records Act 1958</h4><p>Court records may carry public record obligations. Producers must check these before exposing court data through an API.</p></div>
+        </div>
+
+        <h2 id="d2">2. Data classification</h2>
+        <p>Every API must declare a classification. Consumers must not downgrade data once received.</p>
+        <table>
+          <thead><tr><th>Classification</th><th>Eligible?</th><th>Producer obligations</th><th>Consumer obligations</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Official</strong></td><td><strong>Yes</strong></td><td>Standard data protection controls. Declare in OpenAPI spec.</td><td>Handle per your organisation&rsquo;s information security policy.</td></tr>
+            <tr><td><strong>Official-Sensitive</strong></td><td><strong>With conditions</strong></td><td>Formal DSA required before any access granted. Verify enhanced controls at consumer.</td><td>Formal DSA required. Enhanced access controls and audit logging. Do not downgrade.</td></tr>
+            <tr><td><strong>Secret / Top Secret</strong></td><td><strong>No</strong></td><td>Not eligible for listing on the marketplace.</td><td>&mdash;</td></tr>
+          </tbody>
+        </table>
+
+        <h2 id="d3">3. Data sharing agreements</h2>
+        <div class="panel-warning"><div><strong>No personal data API may be accessed without a signed DPA or DSA in place.</strong></div></div>
+        <h3>Producers must:</h3>
+        <ul>
+          <li>Confirm a DPA or DSA is in place before approving access to any personal data API</li>
+          <li>Record the legal basis for the data sharing arrangement</li>
+          <li>Notify their DPO of any new data sharing arrangements</li>
+        </ul>
+        <h3>Consumers must:</h3>
+        <ul>
+          <li>Ensure their legal team has reviewed the arrangement before submitting a request</li>
+          <li>Not use data beyond the stated purposes</li>
+          <li>Report any change in use case to the API owner before proceeding</li>
+        </ul>
+
+        <h2 id="d4">4. Data minimisation and retention</h2>
+        <h3>Producers must:</h3>
+        <ul>
+          <li>Expose only the minimum data fields necessary</li>
+          <li>Review exposed fields when a consumer&rsquo;s access is revoked</li>
+          <li>Not expose internal identifiers or debug data in responses</li>
+        </ul>
+        <h3>Consumers must:</h3>
+        <ul>
+          <li>Only request access to fields actually needed</li>
+          <li>Not cache responses beyond the time needed</li>
+          <li>Define a retention period and delete data when no longer required</li>
+        </ul>
+
+        <h2 id="d5">5. Access control and authentication</h2>
+        <p>OAuth 2.0 with JWT bearer tokens is mandatory for all marketplace APIs.</p>
+        <h3>All participants:</h3>
+        <ul>
+          <li>Scope tokens to minimum permissions required</li>
+          <li>Never share credentials between services, teams or individuals</li>
+          <li>Report and revoke compromised credentials immediately</li>
+        </ul>
+        <h3>Consumers additionally:</h3>
+        <ul>
+          <li>Use separate credentials per consuming service</li>
+          <li>Never hard-code tokens in source code</li>
+          <li>Implement token rotation and expiry handling</li>
+        </ul>
+        <h3>Producers additionally:</h3>
+        <ul>
+          <li>Verify consumer identity before approving access</li>
+          <li>Be able to revoke access immediately</li>
+          <li>Maintain an audit log of access grants</li>
+        </ul>
+
+        <h2 id="d6">6. Audit and monitoring</h2>
+        <h3>Producers must:</h3>
+        <ul>
+          <li>Log all API calls: timestamp, consumer ID, endpoint and response code</li>
+          <li>Retain logs for a minimum of <strong>12 months</strong></li>
+          <li>Make logs available to the marketplace or HMCTS security team on request</li>
+        </ul>
+        <h3>Consumers must not:</h3>
+        <ul>
+          <li>Attempt to circumvent rate limiting, access controls or monitoring</li>
+          <li>Use the API to enumerate or harvest data beyond the stated use case</li>
+        </ul>
+
+        <h2 id="d7">7. Data breaches and incident management</h2>
+        <div class="panel-warning"><div><strong>Any suspected breach must be reported to the HMCTS DPO within 72 hours</strong> (UK GDPR Article 33).</div></div>
+        <h3>All participants:</h3>
+        <ul>
+          <li>Do not conceal or delay breach notification</li>
+          <li>Preserve logs and evidence for investigation</li>
+        </ul>
+        <h3>Producers additionally:</h3>
+        <ul>
+          <li>Maintain an incident response plan covering API-related breaches</li>
+          <li>Notify affected consumers as part of incident response</li>
+        </ul>
+        <h3>Consumers additionally:</h3>
+        <ul><li>Have a process to notify end users if personal data is compromised</li></ul>
+        <p>To report a breach contact the <a href="contact.html">HMCTS marketplace team</a> immediately.</p>
+
+        <h2 id="d8">8. Cross-border data transfers</h2>
+        <ul>
+          <li>API responses must not be routed through or stored outside the UK or EEA without prior written DPO approval</li>
+          <li>Cloud infrastructure processing API responses must be documented in your ROPA</li>
+          <li>Transfers to third countries must comply with UK GDPR Chapter V</li>
+        </ul>
+
+        <h2 id="d9">9. Accountability and governance roles</h2>
+        <div class="role-grid">
+          <div class="role-item"><h4>Data Controller</h4><p>HMCTS &mdash; responsible for lawfulness of processing across the marketplace</p></div>
+          <div class="role-item"><h4>Data Processor</h4><p>Consumer organisations processing personal data on behalf of HMCTS</p></div>
+          <div class="role-item"><h4>API Owner (Producer)</h4><p>Accountable for accuracy, security and lawfulness of data exposed through their API</p></div>
+          <div class="role-item"><h4>Marketplace team</h4><p>Responsible for onboarding governance, standards enforcement and access audit</p></div>
+          <div class="role-item"><h4>DPO</h4><p>Must be consulted on new data sharing arrangements. Must be notified of breaches within 72 hours.</p></div>
+        </div>
+
+        <h2 id="d10">10. Decommissioning and offboarding</h2>
+        <h3>Consumers must:</h3>
+        <ul>
+          <li>Revoke credentials and notify the API owner when decommissioning</li>
+          <li>Delete all API-derived data or return to the data controller</li>
+          <li>Provide a data deletion certificate on request</li>
+        </ul>
+        <h3>Producers must:</h3>
+        <ul>
+          <li>Give consumers at least <strong>30 days&rsquo; notice</strong> before retiring an API</li>
+          <li>Ensure all consumers have migrated before retirement</li>
+          <li>Explicitly revoke all active credentials at retirement</li>
+        </ul>
+        <p>Questions? <a href="contact.html">Contact the marketplace team</a> or consult your DPO.</p>
+      </div>
+
+      <aside class="side">
+        <div class="side-card">
+          <h3>Role-specific guidance</h3>
+          <p><a href="consumer-guidance.html">Consumer guidance</a></p>
+          <p><a href="producer-standards.html">Producer standards</a></p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid footer-grid-2">
+      <div>
+        <h2>Legal</h2>
+        <ul>
+          <li><a href="#">Accessibility statement</a></li>
+          <li><a href="#">Cookies</a></li>
+          <li><a href="#">Privacy notice</a></li>
+          <li><a href="data-governance.html">Data governance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Get in touch</h2>
+        <ul>
+          <li><a href="contact.html">Contact the marketplace team</a></li>
+          <li><a href="request-new-api.html">Request a new API</a></li>
+          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
+          <li><a href="publish-api.html">Publish an API</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; Crown copyright &mdash; MIT Licence</span>
+      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/scripts.js"></script>
+
+</body>
+</html>

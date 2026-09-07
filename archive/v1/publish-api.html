@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Publish an API — HMCTS API Marketplace</title>
+<meta name="description" content="Submit your API for listing on the HMCTS API Marketplace.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div class="top-bar">
+  <div class="wrap">
+    <a class="crest" href="index.html">
+      <img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img">
+    </a>
+    <div class="top-bar-actions">
+      <form class="site-search" action="resources-a-z.html" method="get" role="search">
+        <label class="visually-hidden" for="site-search-input">Search</label>
+        <input type="search" id="site-search-input" name="q" placeholder="Search">
+        <button type="submit" aria-label="Search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      </form>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+    </div>
+  </div>
+</div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="site-title" href="index.html">API Marketplace</a>
+    <nav class="primary-nav" id="primary-nav" aria-label="Primary">
+      <ul>
+        <li><a href="sign-in.html" id="nav-auth-link">Sign in</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="breadcrumbs"><div class="wrap"><ol><li><a href="index.html">Home</a></li><li><a href="api-catalogue.html">API Catalogue</a></li><li>Publish an API</li></ol></div></div>
+
+<main id="main-content">
+
+<section class="block">
+  <div class="wrap">
+    <h1>Publish an API</h1>
+    <p class="lede" style="color:var(--grey-dark);font-size:1.1rem;max-width:60ch;">Submit your API for listing on the HMCTS API Marketplace. The team will review within 2 working days.</p>
+    <p>Before submitting, check you meet the <a href="producer-standards.html">API Producer Standards</a>.</p>
+
+    <form data-mock-submit="publish-confirmation" novalidate>
+
+      <div class="error-summary">
+        <h2>There is a problem</h2>
+        <p>Please fill in all required fields and confirm the declaration before submitting.</p>
+      </div>
+
+      <div class="form-section">
+        <h2>Your details</h2>
+        <div class="field"><label for="full-name">Full name</label><input type="text" id="full-name" required></div>
+        <div class="field"><label for="org">Organisation</label><input type="text" id="org" required></div>
+        <div class="field"><label for="email">Work email address</label><input type="email" id="email" required></div>
+        <div class="field">
+          <label for="job-title">Job title</label>
+          <span class="hint">For example: API Lead, Technical Architect, Engineering Manager</span>
+          <input type="text" id="job-title" required>
+        </div>
+        <div class="field">
+          <label for="phone">Phone number (optional)</label>
+          <span class="hint">In case we need to contact you during the review process</span>
+          <input type="tel" id="phone">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>API details</h2>
+        <div class="field">
+          <label for="api-name">API display name</label>
+          <span class="hint">The human-readable name shown to consumers, for example: Crime Prosecution Case Details API</span>
+          <input type="text" id="api-name" required>
+        </div>
+        <div class="field">
+          <label for="repo-name">GitHub repository name</label>
+          <span class="hint">The repository name under the HMCTS organisation, for example: <code>api-cp-crime-prosecution-case-details</code></span>
+          <input type="text" id="repo-name" required>
+        </div>
+        <div class="field">
+          <label>Spec URL</label>
+          <span class="hint"><code>https://raw.githubusercontent.com/hmcts/&lt;repo-name&gt;/main/src/main/resources/openapi/openapi-spec.yml</code></span>
+        </div>
+        <div class="field">
+          <label for="version">Current version</label>
+          <span class="hint">The version in your <code>info.version</code> field, for example: <code>1.0.0</code></span>
+          <input type="text" id="version" required>
+        </div>
+        <div class="field">
+          <label for="domain">Domain</label>
+          <select id="domain" required>
+            <option value="">Select&hellip;</option>
+            <option>Case Administration</option>
+            <option>Hearing Results</option>
+            <option>Scheduling and Listing</option>
+            <option>Reference Data</option>
+            <option>General</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="classification">Data classification</label>
+          <select id="classification" required>
+            <option value="">Select&hellip;</option>
+            <option>Official</option>
+            <option>Official-Sensitive</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="plain-desc">Plain-English description</label>
+          <span class="hint">A consumer-focused summary. This appears under &ldquo;What does this API do?&rdquo; in the marketplace.</span>
+          <textarea id="plain-desc" required></textarea>
+        </div>
+      </div>
+
+      <div class="form-section declaration">
+        <h2>Declaration</h2>
+        <label><input type="checkbox" required> The API meets the <a href="producer-standards.html">API Producer Standards</a></label>
+        <label><input type="checkbox" required> The OpenAPI spec in the GitHub repository is up to date and accurate</label>
+        <label><input type="checkbox" required> No internal-only or SECRET data is exposed through this API</label>
+        <label><input type="checkbox" required> I have read and accept the <a href="data-governance.html">Data Governance Standards</a></label>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit for review</button>
+      <a href="api-catalogue.html" class="btn btn-secondary" style="margin-left:10px;">Cancel and return to catalogue</a>
+    </form>
+
+    <div class="confirmation" id="publish-confirmation">
+      <div class="banner">
+        <h1>Submission received</h1>
+        <p>The marketplace team will review and respond within 2 working days.</p>
+        <p>Questions? <a href="contact.html">Contact the marketplace team</a>.</p>
+        <a class="btn btn-primary" href="api-catalogue.html">Return to API Catalogue</a>
+      </div>
+    </div>
+
+    <aside class="side-card" style="margin-top:2em;max-width:520px;">
+      <h3>Before you submit</h3>
+      <p>Read the <a href="producer-standards.html">Producer Standards</a></p>
+      <p>Confirm your spec is published on GitHub Pages</p>
+      <p>Check Spectral linting passes</p>
+      <p>Ensure your spec has a plain-English description</p>
+    </aside>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid footer-grid-2">
+      <div>
+        <h2>Legal</h2>
+        <ul>
+          <li><a href="#">Accessibility statement</a></li>
+          <li><a href="#">Cookies</a></li>
+          <li><a href="#">Privacy notice</a></li>
+          <li><a href="data-governance.html">Data governance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Get in touch</h2>
+        <ul>
+          <li><a href="contact.html">Contact the marketplace team</a></li>
+          <li><a href="request-new-api.html">Request a new API</a></li>
+          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
+          <li><a href="publish-api.html">Publish an API</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; Crown copyright &mdash; MIT Licence</span>
+      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/scripts.js"></script>
+
+</body>
+</html>

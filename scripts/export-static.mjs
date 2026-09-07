@@ -1,5 +1,5 @@
 // Renders every route in scripts/routes.manifest.json from a running
-// Prototype Kit into docs/v2/ as a self-contained static site.
+// Prototype Kit into docs/ as a self-contained static site.
 //
 // Two design decisions worth knowing:
 //
@@ -23,7 +23,7 @@ import { dirname, join } from 'node:path'
 import { loadRoutes, outputRelFor, linkRelFor } from './routes.mjs'
 
 const BASE = process.env.EXPORT_BASE_URL ?? 'http://localhost:3100'
-const OUT = process.env.EXPORT_OUT ?? 'docs/v2'
+const OUT = process.env.EXPORT_OUT ?? 'docs'
 
 // Roots the Kit serves assets from.
 const ASSET_ROOTS = ['/plugin-assets/', '/public/']

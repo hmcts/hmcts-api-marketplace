@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API detail — HMCTS API Marketplace</title>
+<meta name="description" content="View technical documentation and details for an HMCTS API.">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div class="top-bar">
+  <div class="wrap">
+    <a class="crest" href="index.html">
+      <img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img">
+    </a>
+    <div class="top-bar-actions">
+      <form class="site-search" action="resources-a-z.html" method="get" role="search">
+        <label class="visually-hidden" for="site-search-input">Search</label>
+        <input type="search" id="site-search-input" name="q" placeholder="Search">
+        <button type="submit" aria-label="Search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+      </form>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+    </div>
+  </div>
+</div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="site-title" href="index.html">API Marketplace</a>
+    <nav class="primary-nav" id="primary-nav" aria-label="Primary">
+      <ul>
+        <li><a href="sign-in.html" id="nav-auth-link">Sign in</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="breadcrumbs"><div class="wrap"><ol><li><a href="index.html">Home</a></li><li><a href="api-catalogue.html">API Catalogue</a></li><li>API detail</li></ol></div></div>
+
+<main id="main-content">
+
+<section class="block" style="padding-bottom:0;">
+  <div class="wrap">
+    <p id="loading-msg">Loading API details&hellip;</p>
+
+    <div id="detail-root" style="display:none;">
+      <h1 id="api-name">API name</h1>
+      <div class="tags" style="margin-bottom:1em;">
+        <span class="tag" id="api-domain-tag">Domain</span>
+        <span class="tag" id="api-classification-tag">Classification</span>
+        <span class="tag live" id="api-status-tag">Status</span>
+      </div>
+      <p class="lede" id="api-summary" style="color:var(--grey-dark);font-size:1.1rem;max-width:70ch;"></p>
+
+      <div class="detail-tabs" data-tabs role="tablist">
+        <button class="active" data-target="tab-overview" role="tab" aria-selected="true">Overview</button>
+        <button data-target="tab-endpoints" role="tab" aria-selected="false">Endpoints</button>
+        <button data-target="tab-datamodel" role="tab" aria-selected="false">Data model</button>
+        <button data-target="tab-changelog" role="tab" aria-selected="false">Changelog</button>
+        <button data-target="tab-tryit" role="tab" aria-selected="false">Try it out</button>
+      </div>
+
+      <div class="content-layout" style="margin-top:0;">
+        <div>
+          <div id="tab-overview" class="tab-panel active">
+            <h2 style="margin-top:1.2em;">What does this API do?</h2>
+            <p id="api-what-it-does"></p>
+            <div class="panel-info">
+              <strong>Read the full guidance</strong><br>
+              Before requesting access, check the <a href="consumer-guidance.html">Consumer Guidance</a> for how to use this API responsibly.
+            </div>
+          </div>
+
+          <div id="tab-endpoints" class="tab-panel">
+            <h2 style="margin-top:1.2em;">Endpoints at a glance</h2>
+            <div id="endpoint-list"></div>
+          </div>
+
+          <div id="tab-datamodel" class="tab-panel">
+            <h2 style="margin-top:1.2em;">Data model</h2>
+            <p>Requests and responses are defined as named schemas in the OpenAPI specification:</p>
+            <ul id="schema-list"></ul>
+          </div>
+
+          <div id="tab-changelog" class="tab-panel">
+            <h2 style="margin-top:1.2em;">Changelog</h2>
+            <ol class="steps" id="changelog-list" style="counter-reset:none;"></ol>
+          </div>
+
+          <div id="tab-tryit" class="tab-panel">
+            <h2 style="margin-top:1.2em;">Try it out &mdash; mock server</h2>
+            <div class="panel-warning"><div><strong>Sandbox only.</strong> Try-It calls are sent to a mock server and never touch production data.</div></div>
+            <div class="mock-console">
+              <div class="line">$ curl -H "Authorization: Bearer &lt;token&gt;" \</div>
+              <div class="line" id="tryit-url">&nbsp;&nbsp;https://sandbox.api.hmcts.net/...</div>
+              <div class="line">&nbsp;</div>
+              <div class="line">200 OK</div>
+              <div class="line">{ "status": "ok", "environment": "sandbox" }</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="side">
+          <a class="btn btn-start" id="request-api-btn" href="request-api.html" style="width:100%;justify-content:center;margin-bottom:1.4em;">Request to use this API</a>
+
+          <div class="side-card">
+            <h3>API information</h3>
+            <div class="api-info-grid">
+              <div class="row"><b>Owning team</b><span id="api-team"></span></div>
+              <div class="row"><b>Repository</b><span id="api-repo"></span></div>
+              <div class="row"><b>Current version</b><span id="api-version"></span></div>
+            </div>
+          </div>
+          <div class="side-card">
+            <h3>Authentication</h3>
+            <p>OAuth 2.0 with JWT bearer tokens</p>
+          </div>
+          <div class="side-card">
+            <h3>Response codes</h3>
+            <p>400, 401, 404 and 500 documented per operation</p>
+          </div>
+          <div class="side-card">
+            <h3>Links</h3>
+            <p><a href="consumer-guidance.html">Consumer guidance &rsaquo;</a></p>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <div id="not-found" style="display:none;">
+      <h1>API not found</h1>
+      <p>We couldn&rsquo;t find that API in the catalogue.</p>
+      <a class="btn btn-primary" href="api-catalogue.html">Back to the API Catalogue</a>
+    </div>
+  </div>
+</section>
+
+<script src="assets/api-data.js"></script>
+<script>
+(function () {
+  function methodClass(m) { return 'method ' + m.toLowerCase(); }
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get('api');
+  var data = id && window.APIS ? window.APIS[id] : null;
+
+  document.getElementById('loading-msg').style.display = 'none';
+
+  if (!data) {
+    document.getElementById('not-found').style.display = 'block';
+    return;
+  }
+
+  document.getElementById('detail-root').style.display = 'block';
+  document.title = data.name + ' — HMCTS API Marketplace';
+  document.getElementById('api-name').textContent = data.name;
+  document.getElementById('api-domain-tag').textContent = data.domain;
+  document.getElementById('api-classification-tag').textContent = data.classification;
+  if (data.classificationId === 'sensitive') document.getElementById('api-classification-tag').classList.add('sensitive');
+  document.getElementById('api-status-tag').textContent = data.status;
+  document.getElementById('api-summary').textContent = data.summary;
+  document.getElementById('api-what-it-does').textContent = data.whatItDoes;
+  document.getElementById('api-team').textContent = data.team;
+  document.getElementById('api-repo').textContent = data.repo;
+  document.getElementById('api-version').textContent = data.version;
+  document.getElementById('tryit-url').textContent = '  https://sandbox.api.hmcts.net/' + id + '/' + data.version;
+  document.getElementById('request-api-btn').setAttribute('href', 'request-api.html?api=' + encodeURIComponent(data.name));
+
+  var endpointList = document.getElementById('endpoint-list');
+  data.endpoints.forEach(function (ep) {
+    var row = document.createElement('div');
+    row.className = 'endpoint-row';
+    row.innerHTML = '<span class="' + methodClass(ep.method) + '">' + ep.method + '</span><code>' + ep.path + '</code><span class="desc">' + ep.desc + '</span>';
+    endpointList.appendChild(row);
+  });
+
+  var schemaList = document.getElementById('schema-list');
+  data.schemas.forEach(function (s) {
+    var li = document.createElement('li');
+    li.textContent = s;
+    schemaList.appendChild(li);
+  });
+
+  var changelogList = document.getElementById('changelog-list');
+  data.changelog.forEach(function (c) {
+    var li = document.createElement('li');
+    li.style.paddingLeft = '0';
+    li.innerHTML = '<h3>v' + c.version + '</h3><p>' + c.note + '</p>';
+    li.style.borderBottom = '1px solid var(--border-light)';
+    li.style.padding = '16px 0';
+    changelogList.appendChild(li);
+  });
+})();
+</script>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid footer-grid-2">
+      <div>
+        <h2>Legal</h2>
+        <ul>
+          <li><a href="#">Accessibility statement</a></li>
+          <li><a href="#">Cookies</a></li>
+          <li><a href="#">Privacy notice</a></li>
+          <li><a href="data-governance.html">Data governance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Get in touch</h2>
+        <ul>
+          <li><a href="contact.html">Contact the marketplace team</a></li>
+          <li><a href="request-new-api.html">Request a new API</a></li>
+          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
+          <li><a href="publish-api.html">Publish an API</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; Crown copyright &mdash; MIT Licence</span>
+      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
+    </div>
+  </div>
+</footer>
+<script src="assets/scripts.js"></script>
+
+</body>
+</html>

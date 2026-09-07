@@ -1,162 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
+<title>This page is not available - HMCTS API Marketplace - GOV.UK</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Request a new API — HMCTS API Marketplace</title>
-<meta name="description" content="Tell us what data or capability you're looking for.">
-<link rel="stylesheet" href="assets/styles.css">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="api-catalogue/request-new-api/">
+<meta http-equiv="refresh" content="0; url=api-catalogue/request-new-api/">
+<link rel="stylesheet" href="public/stylesheets/application.css">
 </head>
-<body>
-<a class="skip-link" href="#main-content">Skip to main content</a>
-<div class="top-bar">
-  <div class="wrap">
-    <a class="crest" href="index.html">
-      <img src="assets/hmcts-logo-black.png" alt="HM Courts &amp; Tribunals Service" class="logo-img">
-    </a>
-    <div class="top-bar-actions">
-      <form class="site-search" action="resources-a-z.html" method="get" role="search">
-        <label class="visually-hidden" for="site-search-input">Search</label>
-        <input type="search" id="site-search-input" name="q" placeholder="Search">
-        <button type="submit" aria-label="Search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
-      </form>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
-    </div>
-  </div>
-</div>
-<header class="site-header">
-  <div class="wrap">
-    <a class="site-title" href="index.html">API Marketplace</a>
-    <nav class="primary-nav" id="primary-nav" aria-label="Primary">
-      <ul>
-        <li><a href="sign-in.html" id="nav-auth-link">Sign in</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
-
-<div class="breadcrumbs"><div class="wrap"><ol><li><a href="index.html">Home</a></li><li><a href="api-catalogue.html">API Catalogue</a></li><li>Request a new API</li></ol></div></div>
-
-<main id="main-content">
-
-<section class="block">
-  <div class="wrap">
-    <h1>Request a new API</h1>
-    <p class="lede" style="color:var(--grey-dark);font-size:1.1rem;max-width:60ch;">Can&rsquo;t find the API you need? Tell us what data or capability you&rsquo;re looking for.</p>
-
-    <form data-mock-submit="new-api-confirmation" novalidate>
-
-      <div class="error-summary">
-        <h2>There is a problem</h2>
-        <p>Please fill in all required fields and confirm the declaration before submitting.</p>
-      </div>
-
-      <div class="form-section">
-        <h2>Your details</h2>
-        <div class="field"><label for="full-name">Full name</label><input type="text" id="full-name" required></div>
-        <div class="field"><label for="org">Organisation</label><input type="text" id="org" required></div>
-        <div class="field"><label for="email">Work email address</label><input type="email" id="email" required></div>
-        <div class="field">
-          <label for="job-title">Job title</label>
-          <span class="hint">For example: Product Manager, Business Analyst</span>
-          <input type="text" id="job-title" required>
-        </div>
-        <div class="field">
-          <label for="phone">Phone number (optional)</label>
-          <span class="hint">In case we need to follow up on your request</span>
-          <input type="tel" id="phone">
-        </div>
-      </div>
-
-      <div class="form-section">
-        <h2>API details</h2>
-        <div class="field">
-          <label for="need">What data or capability do you need?</label>
-          <span class="hint">Describe the data you need, what it would be used for, and the problem it would solve</span>
-          <textarea id="need" required></textarea>
-        </div>
-        <div class="field">
-          <label for="domain">Which justice domain does this relate to?</label>
-          <select id="domain" required>
-            <option value="">Select&hellip;</option>
-            <option>Case Administration</option>
-            <option>Hearing Results</option>
-            <option>Scheduling and Listing</option>
-            <option>Reference Data</option>
-            <option>Financial</option>
-            <option>Not sure</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="urgency">How urgent is this?</label>
-          <select id="urgency" required>
-            <option value="">Select&hellip;</option>
-            <option>Critical &mdash; blocking a live service</option>
-            <option>High &mdash; needed within 3 months</option>
-            <option>Medium &mdash; needed within 6 months</option>
-            <option>Low &mdash; future planning</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="existing">Is there an existing system that holds this data?</label>
-          <span class="hint">If you know of an HMCTS system with this data, tell us here</span>
-          <textarea id="existing"></textarea>
-        </div>
-      </div>
-
-      <div class="form-section declaration">
-        <h2>Declaration</h2>
-        <label><input type="checkbox" required> I confirm there is no existing HMCTS API that meets this need, to the best of my knowledge</label>
-        <label><input type="checkbox" required> I understand this is a request for discovery and does not guarantee an API will be built</label>
-        <label><input type="checkbox" required> I have read and accept the <a href="data-governance.html">Data Governance Standards</a></label>
-      </div>
-
-      <button type="submit" class="btn btn-primary">Submit request</button>
-      <a href="api-catalogue.html" class="btn btn-secondary" style="margin-left:10px;">Cancel and return to catalogue</a>
-    </form>
-
-    <div class="confirmation" id="new-api-confirmation">
-      <div class="banner">
-        <h1>Request received</h1>
-        <p>We will review and be in touch within 5 working days.</p>
-        <p>Questions? <a href="contact.html">Contact the marketplace team</a>.</p>
-        <a class="btn btn-primary" href="api-catalogue.html">Return to API Catalogue</a>
-      </div>
-    </div>
-  </div>
-</section>
-
+<body class="govuk-template__body">
+<div class="govuk-width-container">
+<main class="govuk-main-wrapper" id="main-content">
+<h1 class="govuk-heading-l">This page is not available</h1>
+<p class="govuk-body">This page no longer exists in its old form.</p>
+<p class="govuk-body">The request-a-new-API journey has been rebuilt as a GOV.UK-styled form.</p>
+<p class="govuk-body"><a class="govuk-link" href="api-catalogue/request-new-api/">Continue to /api-catalogue/request-new-api</a></p>
 </main>
-
-<footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-grid footer-grid-2">
-      <div>
-        <h2>Legal</h2>
-        <ul>
-          <li><a href="#">Accessibility statement</a></li>
-          <li><a href="#">Cookies</a></li>
-          <li><a href="#">Privacy notice</a></li>
-          <li><a href="data-governance.html">Data governance</a></li>
-        </ul>
-      </div>
-      <div>
-        <h2>Get in touch</h2>
-        <ul>
-          <li><a href="contact.html">Contact the marketplace team</a></li>
-          <li><a href="request-new-api.html">Request a new API</a></li>
-          <li><a href="onboarding-guide.html">Onboarding guide</a></li>
-          <li><a href="publish-api.html">Publish an API</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>&copy; Crown copyright &mdash; MIT Licence</span>
-      <span>Built by <a href="https://www.gov.uk/hmcts">HMCTS Digital and Technology Solutions</a></span>
-    </div>
-  </div>
-</footer>
-<script src="assets/scripts.js"></script>
-
+</div>
 </body>
 </html>

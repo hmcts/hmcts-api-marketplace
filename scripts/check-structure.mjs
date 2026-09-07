@@ -8,7 +8,7 @@ import { readdir, readFile } from 'node:fs/promises'
 import { join, relative, sep } from 'node:path'
 import { loadManifest } from './routes.mjs'
 
-const OUT = process.env.EXPORT_OUT ?? 'docs/v2'
+const OUT = process.env.EXPORT_OUT ?? 'docs'
 const problems = []
 
 // Redirect stubs are generated, deliberately minimal pages. The page-furniture

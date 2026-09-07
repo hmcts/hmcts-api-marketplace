@@ -1,6 +1,6 @@
 {% extends "layouts/main.html" %}
 
-{% set pageName = "My applications and teams" %}
+{% set pageName = "Manage applications" %}
 {% set section = "account" %}
 {% set breadcrumbs = [
   { text: "Home", href: "/" },
@@ -8,49 +8,16 @@
 ] %}
 
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/tabs/macro.njk" import govukTabs %}
 
 {% block content %}
 
-<h1 class="govuk-heading-xl">My applications and teams</h1>
+<h1 class="govuk-heading-xl">Manage applications</h1>
 
-{{ govukTabs({
-  items: [
-    {
-      label: "My applications",
-      id: "tab-apps",
-      panel: {
-        html: '
-          <h2 class="govuk-heading-l">My applications</h2>
-          <p class="govuk-body">Register your applications in our test and production environments.</p>
-          <a class="govuk-button" data-module="govuk-button" href="/account/applications/new/" role="button" draggable="false">Add new application</a>
-          <p class="govuk-body" id="apps-loading">Loading your applications&hellip;</p>
-          <table class="govuk-table" id="apps-table" hidden>
-            <thead class="govuk-table__head">
-              <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Name</th>
-                <th scope="col" class="govuk-table__header">Environment</th>
-                <th scope="col" class="govuk-table__header">Owner</th>
-              </tr>
-            </thead>
-            <tbody class="govuk-table__body" id="apps-table-body"></tbody>
-          </table>
-          <p class="govuk-body" id="apps-empty-hint" hidden>You have no applications yet.</p>
-        '
-      }
-    },
-    {
-      label: "My teams",
-      id: "tab-teams",
-      panel: {
-        html: '
-          <h2 class="govuk-heading-l">My teams</h2>
-          <p class="govuk-body">Teams are not part of this service yet. Every application is owned by you directly.</p>
-        '
-      }
-    }
-  ]
-}) }}
+<p class="govuk-body">Register your applications in our test and production environments.</p>
+<a class="govuk-button" data-module="govuk-button" href="/account/applications/new/" role="button" draggable="false">Add new application</a>
+<p class="govuk-body" id="apps-loading">Loading your applications&hellip;</p>
+<div id="apps-groups"></div>
+<p class="govuk-body" id="apps-empty-hint" hidden>You have no applications yet.</p>
 
 {% endblock %}
 
