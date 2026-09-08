@@ -46,6 +46,7 @@ stateDiagram-v2
         LoginGatePublish: Log in / Register
         Draft: Draft
         ProducerNotified: Producer notified (it's live)
+        OngoingMaintenance: Ongoing API documentation & maintenance
     }
 
     state "Marketplace Team (Publish API)" as Publish_MT {
@@ -106,6 +107,7 @@ stateDiagram-v2
     InReviewPublish --> Listed: meets publish standards
     Listed --> ProducerNotified: System notifies Producer
     ProducerNotified --> [*]
+    Listed --> OngoingMaintenance: continues in a separate flow
     Listed --> ConsumerNotifiedListed: System notifies Consumer, if API was requested
     ConsumerNotifiedListed --> [*]
 
