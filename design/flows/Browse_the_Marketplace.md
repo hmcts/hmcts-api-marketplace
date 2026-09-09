@@ -11,26 +11,34 @@ stateDiagram-v2
         BrowseGuidance: Browse Guidance
         AccessDocs: Access Documentation
         HelpSupport: Help & Support
+        PublishAPI: Publish API
+        TryItNow: Try it now (interactive console to try API out)
+        APIProducerStandards: API producer standards
 
         MarketplaceHome --> BrowseCatalogue
         MarketplaceHome --> BrowseGuidance
         MarketplaceHome --> AccessDocs
         MarketplaceHome --> HelpSupport
+        MarketplaceHome --> PublishAPI
 
         BrowseGuidance --> [*]
         AccessDocs --> [*]
         HelpSupport --> [*]
+
+        BrowseCatalogue --> TryItNow
+        PublishAPI --> APIProducerStandards
     }
 
     RequestNewAPI: Request new API
     RequestAPIAccess: Request API access
-    PublishAPI: Publish API
+    APIForPublication: API for publication
 
     BrowseCatalogue --> RequestNewAPI: continues at login gate, see Request_new_API.md
-    BrowseCatalogue --> RequestAPIAccess: continues at login gate, see Request_API_access.md
-    BrowseCatalogue --> PublishAPI: continues at login gate, see Publish_API.md
+    HelpSupport --> RequestNewAPI: continues at login gate, see Request_new_API.md
+    TryItNow --> RequestAPIAccess: wants full access
+    APIProducerStandards --> APIForPublication
 
     RequestNewAPI --> [*]
-    RequestAPIAccess --> [*]
-    PublishAPI --> [*]
+    RequestAPIAccess --> [*]: continues at login gate, see Request_API_access.md
+    APIForPublication --> [*]: continues at login gate, see Publish_API.md
 ```

@@ -12,15 +12,22 @@ stateDiagram-v2
         BrowseGuidance: Browse Guidance
         AccessDocs: Access Documentation
         HelpSupport: Help & Support
+        PublishAPIEntry: Publish API
+        TryItNow: Try it now (interactive console to try API out)
+        APIProducerStandards: API producer standards
 
         MarketplaceHome --> BrowseCatalogue
         MarketplaceHome --> BrowseGuidance
         MarketplaceHome --> AccessDocs
         MarketplaceHome --> HelpSupport
+        MarketplaceHome --> PublishAPIEntry
 
         BrowseGuidance --> [*]
         AccessDocs --> [*]
         HelpSupport --> [*]
+
+        BrowseCatalogue --> TryItNow
+        PublishAPIEntry --> APIProducerStandards
     }
 
     %% ===== Request new API =====
@@ -66,9 +73,8 @@ stateDiagram-v2
         LoginGateAccess: Log in / Register
         SubmittedAccess: Submitted
         MoreInfoAccess1: More Info Needed
+        ProductionGate: Production held until Approved
         CreateApplication: Create application for environment access
-        MoreInfoAccess2: More Info Needed
-        DeclinedEnvApp: Declined
         TestingInEnvironment: Testing in environment
     }
 
@@ -78,12 +84,8 @@ stateDiagram-v2
         DeclinedInitial: Declined
     }
 
-    state "Marketplace Team & Producer (Request API access)" as ReqAccess_MTP {
-        ReviewingApplication: Reviewing application
-        EnvironmentAccessIssued: Environment access issued
-    }
-
     state "System (Request API access)" as ReqAccess_Sys {
+        EnvironmentAccessIssued: Environment access issued
         Active: Active
     }
 
@@ -120,12 +122,11 @@ stateDiagram-v2
     InReviewAccess --> DeclinedInitial: declined
     DeclinedInitial --> [*]
     ApprovedAccess --> CreateApplication: notifies Consumer, approved
-    CreateApplication --> ReviewingApplication: submits application
-    ReviewingApplication --> MoreInfoAccess2: needs clarification
-    MoreInfoAccess2 --> ReviewingApplication: responds
-    ReviewingApplication --> DeclinedEnvApp: not eligible (Marketplace Team notifies Consumer)
-    DeclinedEnvApp --> [*]
-    ReviewingApplication --> EnvironmentAccessIssued: approved
+
+    SubmittedAccess --> ProductionGate: requests lower env access, while review in progress
+    ProductionGate --> CreateApplication: non-production passes straight through; production held until Approved
+
+    CreateApplication --> EnvironmentAccessIssued: submits application
     EnvironmentAccessIssued --> TestingInEnvironment: environment ready, Consumer tests
     TestingInEnvironment --> CreateApplication: requests next environment in sequence
     TestingInEnvironment --> Active: final environment confirmed
@@ -133,8 +134,9 @@ stateDiagram-v2
 
     %% ----- Links between the four flows -----
     BrowseCatalogue --> LoginGateNew: continues at login gate
-    BrowseCatalogue --> LoginGatePublish: continues at login gate
-    BrowseCatalogue --> LoginGateAccess: continues at login gate
+    HelpSupport --> LoginGateNew: continues at login gate
+    APIProducerStandards --> LoginGatePublish: continues at login gate
+    TryItNow --> LoginGateAccess: wants full access
     ApprovedToBuild --> Draft: continues as Draft
     Listed --> SubmittedAccess: now discoverable, Consumer requests access
 ```
