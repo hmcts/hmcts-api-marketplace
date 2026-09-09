@@ -9,9 +9,8 @@ stateDiagram-v2
         LoginGateAccess: Log in / Register
         SubmittedAccess: Submitted
         MoreInfoAccess1: More Info Needed
+        ProductionGate: Production held until Approved
         CreateApplication: Create application for environment access
-        MoreInfoAccess2: More Info Needed
-        DeclinedEnvApp: Declined
         TestingInEnvironment: Testing in environment
     }
 
@@ -21,12 +20,8 @@ stateDiagram-v2
         DeclinedInitial: Declined
     }
 
-    state "Marketplace Team & Producer" as ReqAccess_MTP {
-        ReviewingApplication: Reviewing application
-        EnvironmentAccessIssued: Environment access issued
-    }
-
     state "System" as ReqAccess_Sys {
+        EnvironmentAccessIssued: Environment access issued
         Active: Active
     }
 
@@ -38,12 +33,11 @@ stateDiagram-v2
     InReviewAccess --> DeclinedInitial: declined
     DeclinedInitial --> [*]
     ApprovedAccess --> CreateApplication: notifies Consumer, approved
-    CreateApplication --> ReviewingApplication: submits application
-    ReviewingApplication --> MoreInfoAccess2: needs clarification
-    MoreInfoAccess2 --> ReviewingApplication: responds
-    ReviewingApplication --> DeclinedEnvApp: not eligible (Marketplace Team notifies Consumer)
-    DeclinedEnvApp --> [*]
-    ReviewingApplication --> EnvironmentAccessIssued: approved
+
+    SubmittedAccess --> ProductionGate: requests lower env access, while review in progress
+    ProductionGate --> CreateApplication: non-production passes straight through; production held until Approved
+
+    CreateApplication --> EnvironmentAccessIssued: submits application
     EnvironmentAccessIssued --> TestingInEnvironment: environment ready, Consumer tests
     TestingInEnvironment --> CreateApplication: requests next environment in sequence
     TestingInEnvironment --> Active: final environment confirmed
