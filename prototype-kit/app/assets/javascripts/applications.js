@@ -274,7 +274,11 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('detail-name-value').textContent = app.name
       document.getElementById('detail-created').textContent = formatDate(app.createdAt)
       document.getElementById('detail-id').textContent = app.id
-      document.getElementById('detail-client-id').textContent = app.id
+      // The real Entra OAuth client ID for sandbox applications with a
+      // genuine app registration; app.clientId falls back to app.id itself
+      // when there isn't one (every other environment, and sandbox before
+      // Entra was wired up), so this is never blank.
+      document.getElementById('detail-client-id').textContent = app.clientId
       document.getElementById('detail-environment').textContent = ENVIRONMENT_LABELS[app.environment] || app.environment
 
       // Matches HMRC's own "Enter application description" link shown in
