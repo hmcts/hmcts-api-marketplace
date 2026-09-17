@@ -15,6 +15,7 @@ a page on the service.
 | [`specs/2026-08-17-govuk-conformant-site-design.md`](specs/2026-08-17-govuk-conformant-site-design.md) | Design for the GOV.UK-conformant rebuild: architecture, information architecture, page and journey inventory, component mapping, verification gates, sequencing. |
 | [`slice-review/2026-08-17-phase-1-slice-review.md`](slice-review/2026-08-17-phase-1-slice-review.md) | **The Phase 1 approval gate.** What was built, the verbatim gate and mutation-test output, the journey driven in a browser, which audit findings are closed, and what building it proved the plan had wrong. |
 | [`plans/2026-08-17-phase-1-vertical-slice.md`](plans/2026-08-17-phase-1-vertical-slice.md) | Task-by-task implementation plan for Phase 1 — Kit scaffold, mutation-tested export and gates, the three legal pages, and the five-page vertical slice that the approval gate is decided from. Dependency versions in it were verified against the real packages. |
+| [`specs/2026-09-11-consumer-producer-detailed-design.md`](specs/2026-09-11-consumer-producer-detailed-design.md) | Detailed design against the product owner's consumer/producer MoSCoW requirements — maps each requirement to whichever of the three real systems owns it (this prototype, `hmcts-api-marketplace-auth`, or the hosted `apim-marketplace-web`), what's already built, and what's still blocked on an external data or workflow dependency. |
 
 ## Architecture decision records
 

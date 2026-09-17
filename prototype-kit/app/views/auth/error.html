@@ -1,0 +1,27 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName = "There is a problem" %}
+{% set section = "account" %}
+{% set breadcrumbs = [
+  { text: "Home", href: "/" }
+] %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-xl">There is a problem</h1>
+
+    <p class="govuk-body">{{ message }}</p>
+
+    {% if detail %}
+      <pre class="app-key-display">{{ detail }}</pre>
+    {% endif %}
+
+    <p class="govuk-body"><a class="govuk-link" href="/auth/entra">Start again</a></p>
+
+  </div>
+</div>
+
+{% endblock %}

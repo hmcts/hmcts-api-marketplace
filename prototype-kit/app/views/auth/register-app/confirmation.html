@@ -1,0 +1,72 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName = "Application created" %}
+{% set section = "account" %}
+{% set breadcrumbs = [
+  { text: "Home", href: "/" },
+  { text: "Signed in", href: "/auth/signed-in?oid=" + oid }
+] %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {{ govukPanel({
+      titleText: "Application created",
+      html: "Application name<br><strong>" + appName + "</strong>"
+    }) }}
+
+    {{ govukWarningText({
+      text: "Copy your Client ID and Secret now. You will not be able to see the secret again.",
+      iconFallbackText: "Warning"
+    }) }}
+
+    <p class="govuk-body">Client ID</p>
+    <pre class="app-key-display">{{ clientId }}</pre>
+
+    <p class="govuk-body">Client Secret</p>
+    <pre class="app-key-display">{{ clientSecret }}</pre>
+
+    {{ govukInsetText({
+      html: "This is a real application registration, created just now via Microsoft Graph in <code>hmctsextsbox</code> &mdash; not a mocked value. Created via a throwaway onboarding identity (<code>amp-client-onboarding-prototype</code>), not the governed <code>amp-client-onboarding</code> service principal."
+    }) }}
+
+    {% if subscriptions and subscriptions.length %}
+      <h2 class="govuk-heading-l">Subscription Keys</h2>
+      <p class="govuk-body">One per API &mdash; the Client ID and Secret above are shared across all of them.</p>
+
+      {% for sub in subscriptions %}
+        <h3 class="govuk-heading-m">{{ sub.apiName }}</h3>
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Publisher ID</dt>
+            <dd class="govuk-summary-list__value">{{ sub.publisherId }}</dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Subscription Key</dt>
+            <dd class="govuk-summary-list__value"><pre class="app-key-display">{{ sub.subscriptionKey }}</pre></dd>
+          </div>
+        </dl>
+        {% if sub.isMock %}
+          {{ govukInsetText({
+            html: "Mock value &mdash; no real ARM credential for sps-api-mgmt-sbox is configured yet in this prototype (creating one needs Application Administrator rights in HMCTS's corporate Azure tenant). The Publisher ID above is real; this key is not."
+          }) }}
+        {% else %}
+          {{ govukInsetText({
+            html: "Real Subscription Key, created just now via Microsoft Azure Resource Manager against the actual <code>sps-api-mgmt-sbox</code> instance."
+          }) }}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    <p class="govuk-body"><a class="govuk-link" href="/sign-in">Back to the real sign-in page</a></p>
+
+  </div>
+</div>
+
+{% endblock %}
