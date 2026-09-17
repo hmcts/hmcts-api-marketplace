@@ -28,24 +28,6 @@
     <h1 class="govuk-heading-xl">Sign in</h1>
 
     <p class="govuk-body">
-      Sign in or create an account using Microsoft Entra External ID &mdash; the same identity service that will issue your application's Client ID and Secret.
-    </p>
-
-    {{ govukButton({
-      text: "Sign in with Entra External ID",
-      href: "/auth/entra",
-      attributes: { id: "entra-signin" }
-    }) }}
-
-    <p class="govuk-body govuk-!-font-size-16" style="color:#505a5f">
-      Prototype: this redirects to the real hmctsextsbox tenant. No account is created until you complete sign-up there yourself.
-    </p>
-
-    <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--l">
-
-    <h2 class="govuk-heading-m">Or sign in with email and password</h2>
-
-    <p class="govuk-body">
       If you do not already have an account, <a class="govuk-link" id="register-link" href="/register">create a developer account</a>.
     </p>
 
@@ -72,7 +54,7 @@
         }) }}
       </div>
 
-      {{ govukButton({ text: "Sign in", classes: "govuk-button--secondary", attributes: { id: "signin-submit" } }) }}
+      {{ govukButton({ text: "Sign in", attributes: { id: "signin-submit" } }) }}
 
     </form>
 
