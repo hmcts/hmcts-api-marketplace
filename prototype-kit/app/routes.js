@@ -480,6 +480,10 @@ router.post('/auth/register-app/select-apis', (req, res) => {
   const { oid, environment, owner, 'app-name': appName } = req.body
   let selected = req.body.apis || []
   if (!Array.isArray(selected)) selected = [selected]
+  // The Prototype Kit's own client-side auto-store-data.js appends a hidden
+  // apis=_unchecked field to every form submit containing checkboxes, so it
+  // can tell the server a checkbox was unticked - filter it back out here.
+  selected = selected.filter((id) => id !== '_unchecked')
   if (!selected.length) {
     return res.status(400).render('auth/register-app/select-apis', {
       oid, environment, owner, appName, apiItems: apiCheckboxItems(selected),
@@ -495,6 +499,7 @@ router.post('/auth/register-app/check-answers', async (req, res) => {
   const { oid, environment, owner, 'app-name': appName } = req.body
   let selectedApis = req.body.apis || []
   if (!Array.isArray(selectedApis)) selectedApis = [selectedApis]
+  selectedApis = selectedApis.filter((id) => id !== '_unchecked')
   if (!ONBOARDING_CLIENT_ID) {
     return res.status(500).render('auth/error', { message: 'Client-onboarding prototype is not configured - see prototype-kit/.env (ONBOARDING_CLIENT_ID etc.)' })
   }
