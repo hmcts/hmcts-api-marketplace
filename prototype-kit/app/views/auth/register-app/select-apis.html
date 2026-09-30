@@ -1,0 +1,52 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName = "Select APIs" %}
+{% set section = "account" %}
+{% set breadcrumbs = [
+  { text: "Home", href: "/" },
+  { text: "Signed in", href: "/auth/signed-in?oid=" + oid }
+] %}
+
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {% if error %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [{ text: error, href: "#apis" }]
+      }) }}
+    {% endif %}
+
+    <h1 class="govuk-heading-xl">Which APIs does this application need?</h1>
+    <p class="govuk-body">Your application gets one Client ID and Secret regardless of how many APIs you select — but each API you choose gets its own separate Subscription Key, issued once it&rsquo;s created.</p>
+
+    <form method="post" action="select-apis">
+      <input type="hidden" name="oid" value="{{ oid }}">
+      <input type="hidden" name="environment" value="{{ environment }}">
+      <input type="hidden" name="owner" value="{{ owner }}">
+      <input type="hidden" name="app-name" value="{{ appName }}">
+
+      {{ govukCheckboxes({
+        idPrefix: "apis",
+        name: "apis",
+        fieldset: {
+          legend: { classes: "govuk-fieldset__legend--m", text: "Select one or more APIs" }
+        },
+        items: apiItems
+      }) }}
+
+      {{ govukButton({ text: "Continue" }) }}
+      <p class="govuk-body"><a class="govuk-link" href="/auth/register-app?oid={{ oid }}">Cancel</a></p>
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

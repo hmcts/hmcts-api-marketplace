@@ -1,0 +1,75 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName = "Check your answers before creating your application" %}
+{% set section = "account" %}
+{% set breadcrumbs = [
+  { text: "Home", href: "/" },
+  { text: "Signed in", href: "/auth/signed-in?oid=" + oid }
+] %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <a class="govuk-back-link" href="/auth/register-app/details?oid={{ oid }}">Go back</a>
+
+    {% if error %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [{ text: error, href: "#create-app-submit" }]
+      }) }}
+    {% endif %}
+
+    <h1 class="govuk-heading-l">Check your answers before creating your application</h1>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Environment</dt>
+        <dd class="govuk-summary-list__value">{{ environment }}</dd>
+        <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/auth/register-app/details?oid={{ oid }}">Change</a></dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Owner</dt>
+        <dd class="govuk-summary-list__value">{{ owner }}</dd>
+        <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/auth/register-app/details?oid={{ oid }}">Change</a></dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Application name</dt>
+        <dd class="govuk-summary-list__value">{{ appName }}</dd>
+        <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/auth/register-app/details?oid={{ oid }}">Change</a></dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">APIs</dt>
+        <dd class="govuk-summary-list__value">
+          <ul class="govuk-list">
+            {% for api in selectedApiDetails %}
+              <li>{{ api.name }}</li>
+            {% endfor %}
+          </ul>
+        </dd>
+        <dd class="govuk-summary-list__actions"><a class="govuk-link" href="/auth/register-app/details?oid={{ oid }}">Change</a></dd>
+      </div>
+    </dl>
+
+    <p class="govuk-body">One Client ID and Secret will be created for this application, plus a separate Subscription Key for each API selected above.</p>
+
+    <form method="post" action="check-answers">
+      <input type="hidden" name="oid" value="{{ oid }}">
+      <input type="hidden" name="environment" value="{{ environment }}">
+      <input type="hidden" name="owner" value="{{ owner }}">
+      <input type="hidden" name="app-name" value="{{ appName }}">
+      {% for apiId in selectedApis %}
+        <input type="hidden" name="apis" value="{{ apiId }}">
+      {% endfor %}
+      {{ govukButton({ text: "Create application", attributes: { id: "create-app-submit" } }) }}
+      <p class="govuk-body"><a class="govuk-link" href="/auth/register-app?oid={{ oid }}">Cancel</a></p>
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

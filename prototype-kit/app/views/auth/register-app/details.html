@@ -1,0 +1,74 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName = "New application details" %}
+{% set section = "account" %}
+{% set breadcrumbs = [
+  { text: "Home", href: "/" },
+  { text: "Signed in", href: "/auth/signed-in?oid=" + oid }
+] %}
+
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {% if error %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [{ text: error, href: "#app-name" }]
+      }) }}
+    {% endif %}
+
+    <h1 class="govuk-heading-xl">Application details</h1>
+
+    <form method="post" action="details">
+      <input type="hidden" name="oid" value="{{ oid }}">
+
+      {{ govukRadios({
+        name: "environment",
+        fieldset: {
+          legend: { classes: "govuk-fieldset__legend--m", text: "Select your environment" }
+        },
+        hint: { text: "You must have a separate application for each environment." },
+        items: [
+          { value: "sandbox", text: "Sandbox", checked: true },
+          { value: "development", text: "Development" },
+          { value: "integration-test", text: "Integration test" },
+          { value: "production", text: "Production" }
+        ]
+      }) }}
+
+      {{ govukRadios({
+        name: "owner",
+        fieldset: {
+          legend: { classes: "govuk-fieldset__legend--m", text: "Select application owner" }
+        },
+        hint: { text: "Teams are not part of this service yet - every application is owned by you directly." },
+        items: [
+          { value: "Me", text: "Me", checked: true }
+        ]
+      }) }}
+
+      {{ govukInput({
+        label: { text: "What is your application name?", classes: "govuk-label--m" },
+        hint: { text: "You can register the same name once per environment - for example the same application as both Sandbox and Production." },
+        id: "app-name",
+        name: "app-name",
+        value: appName,
+        autocomplete: "off"
+      }) }}
+
+      {{ govukButton({ text: "Continue" }) }}
+      <p class="govuk-body"><a class="govuk-link" href="/auth/register-app?oid={{ oid }}">Cancel</a></p>
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

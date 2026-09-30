@@ -1,0 +1,39 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName = "Add new application" %}
+{% set section = "account" %}
+{% set breadcrumbs = [
+  { text: "Home", href: "/" },
+  { text: "Signed in", href: "/auth/signed-in?oid=" + oid }
+] %}
+
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-xl">Add new application</h1>
+
+    <p class="govuk-body">To use APIs for accessing secure data:</p>
+    <ol class="govuk-list govuk-list--number">
+      <li>create an application</li>
+      <li>choose which APIs you want to use</li>
+      <li>get credentials to use our APIs</li>
+      <li>test your software integrates with our APIs</li>
+    </ol>
+
+    {{ govukWarningText({
+      text: "You must comply with our terms of use.",
+      iconFallbackText: "Warning"
+    }) }}
+
+    <p class="govuk-body">You do not need an application to use APIs with only open access endpoints.</p>
+
+    <a class="govuk-button" data-module="govuk-button" href="/auth/register-app/details?oid={{ oid }}" role="button" draggable="false">Continue</a>
+
+  </div>
+</div>
+
+{% endblock %}

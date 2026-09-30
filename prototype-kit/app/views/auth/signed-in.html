@@ -1,0 +1,96 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName = "Signed in" %}
+{% set section = "account" %}
+{% set breadcrumbs = [
+  { text: "Home", href: "/" }
+] %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    {{ govukPanel({
+      titleText: "Signed in",
+      html: "via Microsoft Entra External ID"
+    }) }}
+
+    <p class="govuk-body">Identity claims, straight from the ID token:</p>
+
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Entra object ID (oid)</dt>
+        <dd class="govuk-summary-list__value">{{ oid }}</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Name</dt>
+        <dd class="govuk-summary-list__value">{{ name or "(not returned)" }}</dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Email address</dt>
+        <dd class="govuk-summary-list__value">{{ email or "(not returned)" }}</dd>
+      </div>
+    </dl>
+
+    <p class="govuk-body">This profile is now saved in Postgres, keyed by your oid &mdash; refresh this page or come back later and it's still there. Entra itself never held any of this; it only knows who you are, not organisation, role or which applications belong to you.</p>
+
+    <h2 class="govuk-heading-l">Your applications</h2>
+
+    {% if applications and applications.length %}
+      {% for app in applications %}
+        <h3 class="govuk-heading-m">{{ app.name }} <span class="govuk-caption-m">{{ app.environment }}</span></h3>
+        <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-3">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Client ID</dt>
+            <dd class="govuk-summary-list__value">{{ app.client_id }}</dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Created</dt>
+            <dd class="govuk-summary-list__value">{{ app.created_at }}</dd>
+          </div>
+        </dl>
+
+        {% if app.subscriptions and app.subscriptions.length %}
+          <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--s">API subscriptions ({{ app.subscriptions.length }})</caption>
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">API</th>
+                <th scope="col" class="govuk-table__header">Publisher ID</th>
+                <th scope="col" class="govuk-table__header">Subscription Key</th>
+              </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+              {% for sub in app.subscriptions %}
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">{{ sub.api_name }}</td>
+                <td class="govuk-table__cell">{{ sub.publisher_id }}</td>
+                <td class="govuk-table__cell">{{ sub.subscription_key }}{% if sub.is_mock %} <strong class="govuk-tag govuk-tag--grey">mock</strong>{% endif %}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="govuk-body">No API subscriptions yet for this application.</p>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <p class="govuk-body">You have no applications yet.</p>
+    {% endif %}
+
+    {{ govukButton({
+      text: "Register an application",
+      href: "/auth/register-app?oid=" + oid,
+      classes: "govuk-button--secondary"
+    }) }}
+
+    <p class="govuk-body"><a class="govuk-link" href="/auth/entra">Sign in again</a> &middot; <a class="govuk-link" href="/sign-in">Back to the real sign-in page</a></p>
+
+  </div>
+</div>
+
+{% endblock %}
