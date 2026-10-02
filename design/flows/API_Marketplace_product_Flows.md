@@ -13,7 +13,6 @@ stateDiagram-v2
         AccessDocs: Access Documentation
         HelpSupport: Help & Support
         PublishAPIEntry: Publish API
-        TryItNow: Try it now (interactive console to try API out)
         APIProducerStandards: API producer standards
 
         MarketplaceHome --> BrowseCatalogue
@@ -26,7 +25,6 @@ stateDiagram-v2
         AccessDocs --> [*]
         HelpSupport --> [*]
 
-        BrowseCatalogue --> TryItNow
         PublishAPIEntry --> APIProducerStandards
     }
 
@@ -71,22 +69,34 @@ stateDiagram-v2
     %% ===== Request API access =====
     state "Consumer (Request API access)" as ReqAccess_Consumer {
         LoginGateAccess: Log in / Register
-        SubmittedAccess: Submitted
-        MoreInfoAccess1: More Info Needed
-        ProductionGate: Production held until Approved
-        CreateApplication: Create application for environment access
-        TestingInEnvironment: Testing in environment
+        CreateApplication: Create Application (for the Try it now environment)
+        TestTryItNow: Test via Try it now
+        RequestProd: Requests Prod access
+        ProvidesInfoConsumer: Provides further information (about the data, to help DAP's review)
+        NotifyDecisionConsumer: Notify of decision
     }
 
-    state "DAP & Producer (Request API access)" as ReqAccess_DAP {
-        InReviewAccess: In Review
-        ApprovedAccess: Approved
-        DeclinedInitial: Declined
+    state "DAP (Request API access)" as ReqAccess_DAP {
+        NotifiedDAP: Notified
+        InReviewAccess: In Review (checks terms & conditions, reviews who + why)
+        ApprovedDeclinedAccess: Approved / Declined
+        NotifyDecisionDAP: Notify of decision
+    }
+
+    state "Producer (Request API access)" as ReqAccess_Producer {
+        NotifiedProducer: Notified
+        ProvidesInfoProducer: Provides further information (about the data, to help DAP's review)
     }
 
     state "System (Request API access)" as ReqAccess_Sys {
-        EnvironmentAccessIssued: Environment access issued
-        Active: Active
+        IssueTryItNowCreds: Issue Try it now credentials (automatic, no review needed)
+        NotifyProdRequest: Notify of Prod request
+    }
+
+    state "API Marketplace Team (Request API access)" as ReqAccess_Team {
+        NotifiedTeam: Notified
+        NotifyDecisionTeam: Notify of decision
+        IssueProdCreds: If approved, issue Prod credentials / keys
     }
 
     %% ----- Request new API transitions -----
@@ -114,29 +124,36 @@ stateDiagram-v2
     ConsumerNotifiedListed --> [*]
 
     %% ----- Request API access transitions -----
-    LoginGateAccess --> SubmittedAccess
-    SubmittedAccess --> InReviewAccess: DAP & Producer review
-    InReviewAccess --> MoreInfoAccess1: needs clarification
-    MoreInfoAccess1 --> InReviewAccess: responds
-    InReviewAccess --> ApprovedAccess: approved
-    InReviewAccess --> DeclinedInitial: declined
-    DeclinedInitial --> [*]
-    ApprovedAccess --> CreateApplication: notifies Consumer, approved
+    LoginGateAccess --> CreateApplication
+    CreateApplication --> IssueTryItNowCreds: creates application
+    IssueTryItNowCreds --> TestTryItNow: credentials ready
+    TestTryItNow --> RequestProd
+    RequestProd --> NotifyProdRequest: same application
 
-    SubmittedAccess --> ProductionGate: requests lower env access, while review in progress
-    ProductionGate --> CreateApplication: non-production passes straight through; production held until Approved
+    NotifyProdRequest --> NotifiedDAP
+    NotifyProdRequest --> NotifiedProducer
+    NotifyProdRequest --> NotifiedTeam
 
-    CreateApplication --> EnvironmentAccessIssued: submits application
-    EnvironmentAccessIssued --> TestingInEnvironment: environment ready, Consumer tests
-    TestingInEnvironment --> CreateApplication: requests next environment in sequence
-    TestingInEnvironment --> Active: final environment confirmed
-    Active --> [*]
+    NotifiedDAP --> InReviewAccess
+    InReviewAccess --> ProvidesInfoConsumer: more info needed (Consumer)
+    ProvidesInfoConsumer --> InReviewAccess: responds
+    InReviewAccess --> ProvidesInfoProducer: more info needed (Producer)
+    ProvidesInfoProducer --> InReviewAccess: responds
+    InReviewAccess --> ApprovedDeclinedAccess
+
+    ApprovedDeclinedAccess --> NotifyDecisionDAP
+    NotifyDecisionDAP --> NotifyDecisionConsumer
+    NotifyDecisionDAP --> NotifyDecisionTeam
+
+    NotifyDecisionConsumer --> [*]
+    NotifyDecisionTeam --> IssueProdCreds: if approved
+    IssueProdCreds --> [*]
 
     %% ----- Links between the four flows -----
     BrowseCatalogue --> LoginGateNew: continues at login gate
     HelpSupport --> LoginGateNew: continues at login gate
     APIProducerStandards --> LoginGatePublish: continues at login gate
-    TryItNow --> LoginGateAccess: wants full access
+    BrowseCatalogue --> LoginGateAccess: continues at login gate, Try it now is the first step
     ApprovedToBuild --> Draft: continues as Draft
-    Listed --> SubmittedAccess: now discoverable, Consumer requests access
+    Listed --> LoginGateAccess: now discoverable, Consumer requests access
 ```
