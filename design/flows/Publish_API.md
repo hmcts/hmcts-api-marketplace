@@ -24,7 +24,7 @@ stateDiagram-v2
         ConsumerNotifiedListed: Consumer notified (new API is listed)
     }
 
-    RequestAPIAccessSubmitted: Request API access (Submitted)
+    RequestAPIAccessEntry: Request API access (Create Application)
 
     LoginGatePublish --> Draft
     Draft --> InReviewPublish: submits for review
@@ -36,6 +36,6 @@ stateDiagram-v2
     Listed --> ConsumerNotifiedListed: System notifies Consumer, if API was requested
     ConsumerNotifiedListed --> [*]
 
-    Listed --> RequestAPIAccessSubmitted: now discoverable, Consumer requests access, see Request_API_access.md
-    RequestAPIAccessSubmitted --> [*]
+    Listed --> RequestAPIAccessEntry: now discoverable, Consumer requests access, see Request_API_access.md
+    RequestAPIAccessEntry --> [*]
 ```

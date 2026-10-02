@@ -7,39 +7,58 @@ stateDiagram-v2
     state "Consumer" as ReqAccess_Consumer {
         [*] --> LoginGateAccess
         LoginGateAccess: Log in / Register
-        SubmittedAccess: Submitted
-        MoreInfoAccess1: More Info Needed
-        ProductionGate: Production held until Approved
-        CreateApplication: Create application for environment access
-        TestingInEnvironment: Testing in environment
+        CreateApplication: Create Application (for the Try it now environment)
+        TestTryItNow: Test via Try it now
+        RequestProd: Requests Prod access
+        ProvidesInfoConsumer: Provides further information (about the data, to help DAP's review)
+        NotifyDecisionConsumer: Notify of decision
     }
 
-    state "DAP & Producer" as ReqAccess_DAP {
-        InReviewAccess: In Review
-        ApprovedAccess: Approved
-        DeclinedInitial: Declined
+    state "DAP" as ReqAccess_DAP {
+        NotifiedDAP: Notified
+        InReviewAccess: In Review (checks terms & conditions, reviews who + why)
+        ApprovedDeclinedAccess: Approved / Declined
+        NotifyDecisionDAP: Notify of decision
+    }
+
+    state "Producer" as ReqAccess_Producer {
+        NotifiedProducer: Notified
+        ProvidesInfoProducer: Provides further information (about the data, to help DAP's review)
     }
 
     state "System" as ReqAccess_Sys {
-        EnvironmentAccessIssued: Environment access issued
-        Active: Active
+        IssueTryItNowCreds: Issue Try it now credentials (automatic, no review needed)
+        NotifyProdRequest: Notify of Prod request
     }
 
-    LoginGateAccess --> SubmittedAccess
-    SubmittedAccess --> InReviewAccess: DAP & Producer review
-    InReviewAccess --> MoreInfoAccess1: needs clarification
-    MoreInfoAccess1 --> InReviewAccess: responds
-    InReviewAccess --> ApprovedAccess: approved
-    InReviewAccess --> DeclinedInitial: declined
-    DeclinedInitial --> [*]
-    ApprovedAccess --> CreateApplication: notifies Consumer, approved
+    state "API Marketplace Team" as ReqAccess_Team {
+        NotifiedTeam: Notified
+        NotifyDecisionTeam: Notify of decision
+        IssueProdCreds: If approved, issue Prod credentials / keys
+    }
 
-    SubmittedAccess --> ProductionGate: requests lower env access, while review in progress
-    ProductionGate --> CreateApplication: non-production passes straight through; production held until Approved
+    LoginGateAccess --> CreateApplication
+    CreateApplication --> IssueTryItNowCreds: creates application
+    IssueTryItNowCreds --> TestTryItNow: credentials ready
+    TestTryItNow --> RequestProd
+    RequestProd --> NotifyProdRequest: same application
 
-    CreateApplication --> EnvironmentAccessIssued: submits application
-    EnvironmentAccessIssued --> TestingInEnvironment: environment ready, Consumer tests
-    TestingInEnvironment --> CreateApplication: requests next environment in sequence
-    TestingInEnvironment --> Active: final environment confirmed
-    Active --> [*]
+    NotifyProdRequest --> NotifiedDAP
+    NotifyProdRequest --> NotifiedProducer
+    NotifyProdRequest --> NotifiedTeam
+
+    NotifiedDAP --> InReviewAccess
+    InReviewAccess --> ProvidesInfoConsumer: more info needed (Consumer)
+    ProvidesInfoConsumer --> InReviewAccess: responds
+    InReviewAccess --> ProvidesInfoProducer: more info needed (Producer)
+    ProvidesInfoProducer --> InReviewAccess: responds
+    InReviewAccess --> ApprovedDeclinedAccess
+
+    ApprovedDeclinedAccess --> NotifyDecisionDAP
+    NotifyDecisionDAP --> NotifyDecisionConsumer
+    NotifyDecisionDAP --> NotifyDecisionTeam
+
+    NotifyDecisionConsumer --> [*]
+    NotifyDecisionTeam --> IssueProdCreds: if approved
+    IssueProdCreds --> [*]
 ```
