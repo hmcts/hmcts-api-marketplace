@@ -41,56 +41,40 @@ Marketplace team members responsible for governance and standards. Review API su
 
 ---
 
-## Prototypes
+## The site
 
-Two prototypes have been built, both hosted on GitHub Pages.
-
-### MVP Prototype (no-auth, current)
 **URL:** https://hmcts.github.io/hmcts-api-marketplace/
-**File:** `docs/index.html` (295 KB)
 
-A no-authentication single-page prototype focused on the consumer journey and service discovery. Built to be shown to stakeholders without requiring login.
+The site is authored in the [GOV.UK Prototype Kit](https://prototype-kit.service.gov.uk) under
+`prototype-kit/` and exported as static HTML into `docs/`, which GitHub Pages serves. It uses real
+GOV.UK Frontend, is bilingual (English and Welsh), and covers 46 routes.
 
 | Feature | Status |
 |---|---|
-| API Marketplace homepage with 4 navigation cards | ✅ Built |
-| API Catalogue with search, domain/status/classification filters, A-Z nav | ✅ Built |
-| API detail pages — live spec fetch, 5 tabs, sidebar with version/status/response codes | ✅ Built |
-| Request API access form with declarations and email submission | ✅ Built |
-| Notify of new API form | ✅ Built |
-| Publish an API form with GitHub spec URL preview | ✅ Built |
-| Onboarding guide (consumer + producer step-by-step) | ✅ Built |
-| Consumer guidance page | ✅ Built |
-| Producer standards page | ✅ Built |
-| Data governance page | ✅ Built |
-| GOV.UK Frontend 5.4.0 styling and GDS Transport font | ✅ Built |
-| Consistent footer (Support + Policies) across all pages | ✅ Built |
-| 9 live HMCTS APIs in catalogue (fetching specs from GitHub) | ✅ Built |
+| Homepage, get-started and guidance pages | ✅ Built |
+| API catalogue reading live from `amp-catalog`, with per-API detail pages | ✅ Built |
+| Request API access journey | ✅ Built |
+| Request a new API journey | ✅ Built |
+| Publish an API journey | ✅ Built |
+| Sign in, register and account pages | ✅ Built |
+| My applications, API keys and team members | ✅ Built |
+| Accessibility statement, cookies and privacy pages | ✅ Built |
+| Welsh translation of navigation and page furniture | ✅ Built |
+| Welsh translation of page copy | ⚪ Awaiting the HMCTS Welsh Language Unit |
 
-### Full Prototype (auth + dashboards)
-**URL:** https://hmcts.github.io/hmcts-api-marketplace/
-**File:** `docs/index.html` and `prototype/api-catalogue-v7.html`
+Quality is enforced by seven gates on every pull request — manifest reconciliation, translations, page
+structure, markup validity, link integrity, accessibility (axe, WCAG 2.1 AA) and reflow to 320px —
+each proven by a mutation test that breaks the thing it checks and asserts the gate fails.
 
-A fully featured prototype with authentication, role-based dashboards and the complete publication and approval workflow.
+### Superseded generations
 
-| Feature | Status |
-|---|---|
-| Browse and search 9 live HMCTS APIs | ✅ Built |
-| Domain, status and classification filters, A-Z navigation | ✅ Built |
-| Full API detail pages (5 tabs: Overview, Endpoints, Data model, Changelog, Try it out) | ✅ Built |
-| Live spec fetch from GitHub with embedded YAML fallback | ✅ Built |
-| GOV.UK Frontend 5.4.0 with GDS Transport font | ✅ Built |
-| Consumer registration and sign in | ✅ Built |
-| Consumer access request (4-step task list) | ✅ Built |
-| Producer publish API (3-step task list, 3 spec sources) | ✅ Built |
-| Publication review and approval (reviewer role) | ✅ Built |
-| Consumer dashboard (requests, tracking) | ✅ Built |
-| Producer dashboard (submissions, incoming requests) | ✅ Built |
-| Reviewer dashboard (review queue, history) | ✅ Built |
-| Suggest a new API flow | ✅ Built |
-| Draft save and restore | ✅ Built |
-| Approved APIs appear live in catalogue immediately | ✅ Built |
-| Data governance standards page | ✅ Built |
+Two earlier generations are kept for reference in `archive/`, outside the publishing root. Their
+content is immutable: a CI step compares file hashes and fails any pull request that changes them.
+
+| | Location | What it was |
+|---|---|---|
+| **v1** | `archive/v1` | 28 hand-written pages with a bespoke 37 KB stylesheet and no GOV.UK Frontend. Was the live site until September 2026. |
+| **v0** | `archive/v0` | A single-file vanilla-JS prototype with three role dashboards. Root-level copies survive as `index.html` and `prototype/`. |
 
 ---
 
@@ -99,30 +83,38 @@ A fully featured prototype with authentication, role-based dashboards and the co
 ```
 hmcts-api-marketplace/
 │
-├── README.md
-├── prototype/
-│   └── api-catalogue-v7.html          # Full prototype (auth + dashboards)
+├── prototype-kit/                  # where pages are authored (edit here)
+│   └── app/
+│       ├── views/                  # Nunjucks pages, GOV.UK macros
+│       ├── routes.js               # routes, locales, template-wide values
+│       ├── locales/{en,cy}.json    # English and Welsh strings
+│       └── assets/javascripts/
 │
-├── docs/
-│   ├── index.html                     # Full prototype (GitHub Pages root)
-│   ├── prototype-mvp/
-│   │   └── index.html                 # MVP prototype (no-auth)
-│   ├── product-vision.md
-│   ├── capabilities.md                # 14 capability definitions
-│   ├── roadmap.md                     # MVP and Phase 2 phasing
-│   ├── requirements/                  # CAP-01 to CAP-14 requirement files
-│   ├── user-journeys/                 # Consumer, producer, reviewer journeys
-│   └── gap-analysis/                  # Capability and requirements status
+├── docs/                           # GENERATED static export - never hand-edit
+│                                   # this is the GitHub Pages publishing root
 │
-└── prototype-mvp/
-    └── index.html                     # MVP prototype (mirror)
+├── scripts/                        # export and the seven conformance gates
+│   ├── export-static.mjs
+│   ├── routes.manifest.json        # every route, declared explicitly
+│   ├── redirects.json              # old URLs -> new locations
+│   ├── check-*.mjs                 # the gates
+│   └── verify-gates.mjs            # mutation tests proving the gates bite
+│
+├── design/                         # audit, specs, ADRs, flow diagrams
+│   ├── adr/                        # 0001-0005
+│   ├── audit/
+│   └── specs/
+│
+└── archive/                        # superseded generations, immutable
+    ├── v0/                         # original prototype + capability specs
+    └── v1/                         # bespoke 28-page site
 ```
 
 ---
 
 ## Capabilities
 
-14 capabilities define the full platform scope. See [`docs/capabilities.md`](docs/v0/capabilities.md) for full detail.
+14 capabilities define the full platform scope. See [`archive/v0/capabilities.md`](archive/v0/capabilities.md) for full detail.
 
 | ID | Capability | Priority | Phase | v7 Status | MVP Status |
 |---|---|---|---|---|---|
@@ -145,12 +137,16 @@ hmcts-api-marketplace/
 
 ## Technology
 
-- Single HTML file — no framework, no build pipeline
-- [GOV.UK Frontend 5.4.0](https://frontend.design-system.service.gov.uk) via CDN
-- GDS Transport font via jsDelivr CDN
-- Live API spec fetching from GitHub (`raw.githubusercontent.com`)
-- MVP: email-based form submission via `mailto:` (no backend required)
-- Full prototype: localStorage for data persistence
+- [GOV.UK Prototype Kit](https://prototype-kit.service.gov.uk) with
+  [GOV.UK Frontend 6.x](https://frontend.design-system.service.gov.uk), authored in Nunjucks
+- Static export to `docs/`, served by GitHub Pages — no server at runtime
+- Node 20–24 (`.nvmrc` pins 24, which CI uses)
+- Bilingual by design: one set of templates, strings in `app/locales/{en,cy}.json`
+- Live catalogue and OpenAPI specs fetched from `hmcts.github.io/amp-catalog` and
+  `raw.githubusercontent.com`
+- Multi-step journeys carry answers in `sessionStorage`; the static export has no server sessions
+- Sign-in, account and the request forms call an auth API on `onrender.com` — an unsanctioned host,
+  recorded as an explicit exception in [ADR 0003](design/adr/0003-authentication-and-identity.md)
 
 ---
 
