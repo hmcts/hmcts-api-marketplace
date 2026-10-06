@@ -26,6 +26,7 @@ a page on the service.
 | [0003](adr/0003-authentication-and-identity.md) | Accepted | No authentication backend — the unsanctioned `onrender.com` dependency is removed and the flows are faked client-side until a sanctioned identity solution exists |
 | [0004](adr/0004-hosting-until-the-service-gov-uk-move.md) | Accepted for beta | Stay on GitHub Pages for now; move for the gov.uk destination, because Pages cannot set security response headers |
 | [0005](adr/0005-in-repo-api-catalogue.md) | Accepted | Bring the API catalogue listing and detail pages back in-repo, reading live from amp-catalog rather than a checked-in dataset |
+| [0006](adr/0006-developer-accounts-and-email-verification.md) | Proposed | Developer accounts live in `service-api-marketplace` (own credential store), verified and reset by email through GOV.UK Notify, with `web-api-marketplace` as a backend-for-frontend |
 
 ## Conventions
 
