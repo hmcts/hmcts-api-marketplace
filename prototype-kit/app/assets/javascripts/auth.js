@@ -12,7 +12,20 @@
 (function () {
   'use strict'
 
-  var API_BASE = 'https://hmcts-api-marketplace-auth-vu5d.onrender.com'
+  var DEFAULT_API_BASE = 'https://hmcts-api-marketplace-auth-vu5d.onrender.com'
+
+  // For running the prototype against a backend on this machine (the stack in service-api-marketplace's
+  // demo/ folder): set it once in the browser console,
+  //   localStorage.setItem('hmctsMarketplaceApiBase', 'http://localhost:8080')
+  // and clear it with localStorage.removeItem('hmctsMarketplaceApiBase'). Only localhost is honoured, so
+  // nothing a page or a link stores here can send a sign-in to another host.
+  var API_BASE = (function () {
+    try {
+      var local = window.localStorage.getItem('hmctsMarketplaceApiBase')
+      if (local && /^http:\/\/(localhost|127\.0\.0\.1):\d{2,5}$/.test(local)) return local
+    } catch (e) { /* private browsing, etc. */ }
+    return DEFAULT_API_BASE
+  })()
   var TOKEN_KEY = 'hmctsMarketplaceToken'
 
   // The site is served from a subdirectory on GitHub Pages
