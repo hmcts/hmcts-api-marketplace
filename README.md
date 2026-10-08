@@ -94,6 +94,14 @@ A fully featured prototype with authentication, role-based dashboards and the co
 
 ---
 
+## Running Locally
+
+1. [`INSTALLATION.md`](INSTALLATION.md): what to install, and how to set the prototype up.
+2. [`ENTRA-PREREQUISITES.md`](ENTRA-PREREQUISITES.md): configuring Entra External ID so the local app can register and sign in users (only needed for the Entra flow).
+3. [`RUNNING-LOCALLY.md`](RUNNING-LOCALLY.md): running the prototype, exporting, the checks and troubleshooting.
+
+---
+
 ## Repository Structure
 
 ```
