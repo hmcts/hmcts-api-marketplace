@@ -173,6 +173,21 @@ const { Pool } = require('pg')
 // keyed by oid, exactly as the design doc describes.
 const db = process.env.DATABASE_URL ? new Pool({ connectionString: process.env.DATABASE_URL }) : null
 
+// A pool emits 'error' when an idle connection drops (Postgres restarted, say). Unhandled, that event
+// takes the whole Kit down, so log it instead: the next query gets a fresh connection or fails on its own.
+if (db) db.on('error', (err) => console.error('Postgres pool error:', err.message || err.code))
+
+// Express 4 does not catch a rejected promise in an async route: an unreachable database (DATABASE_URL
+// set, Postgres not running) used to crash the Kit, so the browser just saw "localhost refused to
+// connect" on the way back from Entra. Show the prototype's error page instead.
+function renderDbError (res, err) {
+  console.error('Database call failed:', err)
+  res.status(503).render('auth/error', {
+    message: 'Could not reach the prototype database. Check that Postgres is running and that DATABASE_URL in prototype-kit/.env is correct, or remove DATABASE_URL to run without one.',
+    detail: err.message || err.code || String(err)
+  })
+}
+
 async function upsertProfile (oid, name, email) {
   if (!db) return
   await db.query(
@@ -298,7 +313,11 @@ router.get('/auth/callback', async (req, res) => {
   // This is the write the earlier sequence diagram showed as broken (✕) -
   // the piece Entra itself has no concept of. Keyed by oid, same as the
   // design doc: no password or credential in this row, just profile data.
-  await upsertProfile(payload.oid, payload.name, email)
+  try {
+    await upsertProfile(payload.oid, payload.name, email)
+  } catch (err) {
+    return renderDbError(res, err)
+  }
 
   const params = new URLSearchParams({ oid: payload.oid })
   if (payload.name) params.set('name', payload.name)
@@ -331,8 +350,13 @@ router.get('/auth/signed-out', (req, res) => {
 
 router.get('/auth/signed-in', async (req, res) => {
   if (!req.query.oid) return res.redirect('/auth/entra')
-  const applications = await getApplicationsFor(req.query.oid)
-  const subscriptions = await getApiSubscriptionsFor(applications.map((a) => a.id))
+  let applications, subscriptions
+  try {
+    applications = await getApplicationsFor(req.query.oid)
+    subscriptions = await getApiSubscriptionsFor(applications.map((a) => a.id))
+  } catch (err) {
+    return renderDbError(res, err)
+  }
   const applicationsWithSubs = applications.map((app) => ({
     ...app,
     subscriptions: subscriptions.filter((s) => s.application_id === app.id)
