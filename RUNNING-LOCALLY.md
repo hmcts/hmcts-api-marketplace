@@ -110,4 +110,5 @@ re-export. Don't change `archive/` either: CI fails any PR that alters its conte
 | CI says `docs/` differs from a fresh export | Run `npm run export` with the Kit running and commit the result. |
 | Sign-in is slow the first time | The `onrender.com` backend is starting up. Wait, or use a local backend (see above). |
 | `/auth/entra` says "Entra prototype is not configured" | Create `prototype-kit/.env` and restart the Kit. See step 4 of [`INSTALLATION.md`](INSTALLATION.md). |
-| "localhost refused to connect" after signing in at Entra | The Kit crashed or isn't running. If its terminal shows `ECONNREFUSED ... 5432`, `DATABASE_URL` is set but Postgres isn't running. See step 4.2 of [`INSTALLATION.md`](INSTALLATION.md). |
+| "localhost refused to connect" after signing in at Entra | The Kit isn't running. Start it again with `npm run kit`. |
+| "Could not reach the prototype database" | `DATABASE_URL` is set but Postgres isn't running. See step 4.2 of [`INSTALLATION.md`](INSTALLATION.md). |

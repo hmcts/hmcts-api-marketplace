@@ -177,6 +177,46 @@ const db = process.env.DATABASE_URL ? new Pool({ connectionString: process.env.D
 // takes the whole Kit down, so log it instead: the next query gets a fresh connection or fails on its own.
 if (db) db.on('error', (err) => console.error('Postgres pool error:', err.message || err.code))
 
+// Create the database named in DATABASE_URL if it doesn't exist yet, then apply db/schema.sql, so a
+// new machine only needs Postgres running - no createdb/psql step. Both are safe to repeat: the
+// schema only creates tables that aren't there. Postgres itself can't be started from here, so if
+// it's down this logs one warning and the Kit carries on; each request then fails on its own and
+// shows the error page.
+async function prepareDatabase () {
+  const target = new URL(process.env.DATABASE_URL)
+  const name = decodeURIComponent(target.pathname.slice(1))
+  // CREATE DATABASE has to be run from a connection to some other database on the same server.
+  const server = new URL(target)
+  server.pathname = '/postgres'
+  const { Client } = require('pg')
+  const client = new Client({ connectionString: server.toString() })
+  await client.connect()
+  try {
+    const { rowCount } = await client.query('select 1 from pg_database where datname = $1', [name])
+    if (!rowCount) {
+      await client.query(`create database ${client.escapeIdentifier(name)}`)
+      console.log(`Created database "${name}"`)
+    }
+  } finally {
+    await client.end()
+  }
+  await db.query(fs.readFileSync(path.join(__dirname, '..', 'db', 'schema.sql'), 'utf8'))
+}
+
+const dbReady = db
+  ? prepareDatabase().catch((err) => {
+    console.error(`Could not prepare the database in DATABASE_URL (${err.message || err.code}). ` +
+      'Is Postgres running? The Entra prototype will show an error page until it is.')
+  })
+  : Promise.resolve()
+
+// Every query waits for prepareDatabase, so a request that arrives while the Kit is still starting
+// doesn't hit a table that hasn't been created yet.
+async function query (text, params) {
+  await dbReady
+  return db.query(text, params)
+}
+
 // Express 4 does not catch a rejected promise in an async route: an unreachable database (DATABASE_URL
 // set, Postgres not running) used to crash the Kit, so the browser just saw "localhost refused to
 // connect" on the way back from Entra. Show the prototype's error page instead.
@@ -190,7 +230,7 @@ function renderDbError (res, err) {
 
 async function upsertProfile (oid, name, email) {
   if (!db) return
-  await db.query(
+  await query(
     `insert into profiles (oid, name, email) values ($1, $2, $3)
      on conflict (oid) do update set name = excluded.name, email = excluded.email`,
     [oid, name || '(not returned)', email || '(not returned)']
@@ -199,7 +239,7 @@ async function upsertProfile (oid, name, email) {
 
 async function insertApplication (oid, name, environment, clientId) {
   if (!db) return null
-  const { rows } = await db.query(
+  const { rows } = await query(
     'insert into applications (name, environment, owner_oid, client_id) values ($1, $2, $3, $4) returning id',
     [name, environment, oid, clientId]
   )
@@ -208,7 +248,7 @@ async function insertApplication (oid, name, environment, clientId) {
 
 async function getApplicationsFor (oid) {
   if (!db) return []
-  const { rows } = await db.query(
+  const { rows } = await query(
     'select id, name, environment, client_id, created_at from applications where owner_oid = $1 order by created_at desc',
     [oid]
   )
@@ -225,7 +265,7 @@ async function getApplicationsFor (oid) {
 // API in the same environment - only subscription_key is unique per pair.
 async function insertApiSubscription (applicationId, apiName, publisherId, subscriptionKey, isMock) {
   if (!db) return
-  await db.query(
+  await query(
     'insert into api_subscriptions (application_id, api_name, publisher_id, subscription_key, is_mock) values ($1, $2, $3, $4, $5)',
     [applicationId, apiName, publisherId, subscriptionKey, isMock]
   )
@@ -233,7 +273,7 @@ async function insertApiSubscription (applicationId, apiName, publisherId, subsc
 
 async function getApiSubscriptionsFor (applicationIds) {
   if (!db || !applicationIds.length) return []
-  const { rows } = await db.query(
+  const { rows } = await query(
     'select application_id, api_name, publisher_id, subscription_key, is_mock from api_subscriptions where application_id = any($1) order by created_at',
     [applicationIds]
   )
