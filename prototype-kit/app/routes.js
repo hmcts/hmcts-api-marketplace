@@ -306,6 +306,29 @@ router.get('/auth/callback', async (req, res) => {
   res.redirect(`/auth/signed-in?${params.toString()}`)
 })
 
+// Sign out. The prototype keeps no session of its own (who you are only travels in the signed-in
+// page's ?oid=), so signing out means ending the browser's session with Entra - otherwise
+// /auth/entra signs you straight back in without asking.
+//
+// Entra's logout endpoint sits beside the authorize one, so it is derived rather than configured.
+// Entra only sends the browser back to post_logout_redirect_uri if that address is registered as a
+// redirect URI on the app registration; if it isn't, the user is left on Entra's own "signed out"
+// page, which is still signed out, just without the way back.
+router.get('/auth/sign-out', (req, res) => {
+  if (!ENTRA_CLIENT_ID) {
+    return res.status(500).send('Entra prototype is not configured - see prototype-kit/.env (ENTRA_CLIENT_ID etc.)')
+  }
+  const url = new URL(ENTRA_AUTHORIZE_ENDPOINT.replace(/\/authorize$/, '/logout'))
+  url.searchParams.set('client_id', ENTRA_CLIENT_ID)
+  url.searchParams.set('post_logout_redirect_uri', new URL('/auth/signed-out', ENTRA_REDIRECT_URI).toString())
+  res.clearCookie('entra_state')
+  res.redirect(url.toString())
+})
+
+router.get('/auth/signed-out', (req, res) => {
+  res.render('auth/signed-out')
+})
+
 router.get('/auth/signed-in', async (req, res) => {
   if (!req.query.oid) return res.redirect('/auth/entra')
   const applications = await getApplicationsFor(req.query.oid)
