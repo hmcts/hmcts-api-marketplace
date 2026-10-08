@@ -355,6 +355,12 @@ document.addEventListener('DOMContentLoaded', function () {
       var apisBody = document.getElementById('apis-table-body')
       var apisHint = document.getElementById('apis-empty-hint')
       var connected = app.connectedApis || []
+      // The APIM Subscription Key issued for each connected API, when the backend issues real ones;
+      // otherwise there are none and the cell says so rather than showing an empty box.
+      var subscriptionKeys = {}
+      ;(data.apiSubscriptions || []).forEach(function (subscription) {
+        subscriptionKeys[subscription.apiId] = subscription.subscriptionKey
+      })
       apisBody.innerHTML = ''
       if (!connected.length) {
         apisHint.hidden = false
@@ -363,8 +369,12 @@ document.addEventListener('DOMContentLoaded', function () {
         connected.forEach(function (api) {
           var tr = document.createElement('tr')
           tr.className = 'govuk-table__row'
+          var key = subscriptionKeys[api.id]
           tr.innerHTML =
             '<td class="govuk-table__cell">' + escapeHtml(api.name) + '</td>' +
+            '<td class="govuk-table__cell">' + (key
+              ? '<code class="app-subscription-key">' + escapeHtml(key) + '</code>'
+              : 'None issued') + '</td>' +
             '<td class="govuk-table__cell"><a class="govuk-link" href="#" data-remove-api="' + escapeHtml(api.id) + '">Remove</a></td>'
           apisBody.appendChild(tr)
         })

@@ -162,3 +162,11 @@ dl.govuk-body {
   white-space: pre-wrap;
   word-break: break-all;
 }
+
+// A Subscription Key in a table cell (account/applications/detail). Smaller than the one-time key
+// above, with no box of its own, and breakable - a raw key is one long unbroken token and a table cell
+// is narrow, so without this it overlaps the next column on a phone.
+.app-subscription-key {
+  @include govuk-font($size: 16);
+  word-break: break-all;
+}
