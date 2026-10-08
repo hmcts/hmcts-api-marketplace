@@ -94,6 +94,12 @@ A fully featured prototype with authentication, role-based dashboards and the co
 
 ---
 
+## Running Locally
+
+See [`RUNNING-LOCALLY.md`](RUNNING-LOCALLY.md) for what to install, how to run the prototype and gates, and optional configuration.
+
+---
+
 ## Repository Structure
 
 ```
