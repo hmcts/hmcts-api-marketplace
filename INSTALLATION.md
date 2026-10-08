@@ -85,7 +85,8 @@ ONBOARDING_CLIENT_ID=
 ONBOARDING_CLIENT_SECRET=
 
 # Optional: local Postgres (step 4.2). Without it, nothing is saved.
-# DATABASE_URL=postgres://localhost:5432/api_marketplace
+# Only uncomment this once Postgres is running - see the warning in 4.2.
+# DATABASE_URL=postgresql://localhost:5432/amp_marketplace_prototype
 
 # Optional: real APIM subscription keys. Without these, keys starting "mock_" are issued.
 # APIM_CLIENT_ID=
@@ -95,6 +96,9 @@ ONBOARDING_CLIENT_SECRET=
 Put one `KEY=value` on each line, with no spaces around `=` and no quotes. Make sure the file is named
 exactly `.env`; some editors quietly save it as `.env.txt`.
 
+If a colleague gave you their `.env`, check `DATABASE_URL` before using it. Theirs will have their
+username in it (`postgresql://<their-name>@localhost/...`) and points at a database only they have.
+
 You don't run anything to load this file. The Prototype Kit reads `.env` from its own folder each time
 it starts (it uses `dotenv`), so the only step is to restart the Kit after editing it.
 
@@ -103,25 +107,76 @@ it starts (it uses `dotenv`), so the only step is to restart the Kit after editi
 Skip this unless you want profiles, applications and subscription keys from the Entra flow to be
 saved and listed.
 
-```bash
-brew install postgresql@16 && brew services start postgresql@16
-createdb api_marketplace
-psql api_marketplace -f prototype-kit/db/schema.sql
-```
+> **Warning:** if `DATABASE_URL` is set but Postgres isn't running, the Kit **crashes** as soon as
+> Entra sends you back to `/auth/callback`. Your browser then shows *"localhost refused to connect"*,
+> and the Kit's terminal shows `ECONNREFUSED ... 5432`. Either do this step, or leave
+> `DATABASE_URL` commented out.
 
-Then uncomment `DATABASE_URL` in `prototype-kit/.env`. Re-running `schema.sql` is safe; it only
-creates tables that don't exist yet.
+1. **Install and start PostgreSQL.** Homebrew installs it "keg-only", so its commands aren't on your
+   `PATH`. The commands below use their full path.
+
+   ```bash
+   brew install postgresql@16
+   PG="$(brew --prefix postgresql@16)/bin"
+   brew services start postgresql@16
+   "$PG/pg_isready" -h localhost      # should say "accepting connections"
+   ```
+
+   If `pg_isready` says *"no response"*, Homebrew may have skipped creating the data folder. Its log,
+   `$(brew --prefix)/var/log/postgresql@16.log`, then says *"could not access directory"*. Create it,
+   then restart:
+
+   ```bash
+   "$PG/initdb" --locale=C -E UTF-8 -D "$(brew --prefix)/var/postgresql@16"
+   brew services restart postgresql@16
+   "$PG/pg_isready" -h localhost
+   ```
+
+2. **Create the database and its tables**, from the repo root:
+
+   ```bash
+   "$PG/createdb" -h localhost amp_marketplace_prototype
+   "$PG/psql" -h localhost amp_marketplace_prototype -f prototype-kit/db/schema.sql
+   ```
+
+   Re-running `schema.sql` is safe; it only creates tables that don't exist yet.
+
+3. **Point the Kit at it.** In `prototype-kit/.env`:
+
+   ```dotenv
+   DATABASE_URL=postgresql://localhost:5432/amp_marketplace_prototype
+   ```
+
+   Leave the username out. Homebrew's Postgres makes your Mac username the database owner, and that's
+   the user it connects as by default.
+
+4. **Check it**, from the `prototype-kit/` folder. This connects the same way the Kit does:
+
+   ```bash
+   node -e "new (require('pg').Pool)({connectionString:'postgresql://localhost:5432/amp_marketplace_prototype'}).query('select count(*) from profiles').then(r=>{console.log('OK, profiles:',r.rows[0].count);process.exit(0)}).catch(e=>{console.error('FAILED:',e.message);process.exit(1)})"
+   ```
+
+Postgres keeps running in the background, including after a restart, because `brew services`
+manages it. To stop it: `brew services stop postgresql@16`.
 
 ### 4.3 Check Entra works
 
-1. Start the Kit again with `npm run kit`.
+1. Start the Kit again with `npm run kit`, and **leave it running**. When you've signed in, Entra
+   sends your browser back to `http://localhost:3100/auth/callback`, so the Kit has to be there to
+   answer.
 2. Go to <http://localhost:3100/auth/entra>. You should land on the Entra sign-in page.
 3. Choose to create an account, complete sign-up, and you'll come back to the prototype signed in.
 4. Choose to register an application. You should be shown a new client ID and secret.
 
-If step 2 shows *"Entra prototype is not configured"*, the Kit didn't pick up `ENTRA_CLIENT_ID`.
-Check the file is at `prototype-kit/.env` and restart the Kit. For Entra error codes, see the table at
-the end of [`ENTRA-PREREQUISITES.md`](ENTRA-PREREQUISITES.md#when-something-goes-wrong).
+If it goes wrong:
+
+| What you see | Cause and fix |
+|---|---|
+| *"Entra prototype is not configured"* | The Kit didn't pick up `ENTRA_CLIENT_ID`. Check the file is at `prototype-kit/.env`, then restart the Kit. |
+| *"localhost refused to connect"* after signing in at Entra | The Kit isn't running. Look at its terminal. If it shows `ECONNREFUSED ... 5432`, it crashed because `DATABASE_URL` is set and Postgres isn't running: see the warning in 4.2. Otherwise, start it again. Your Entra sign-in itself worked. |
+| The Kit's terminal says *"For missing modules try running `npm install`"* | Ignore this line. Nodemon prints it after any crash; read the error above it instead. |
+| *"State mismatch"* | You started from an old tab, or from `127.0.0.1` instead of `localhost`. Start again at `http://localhost:3100/auth/entra`. |
+| An error code starting `AADSTS` | Entra configuration. See the table at the end of [`ENTRA-PREREQUISITES.md`](ENTRA-PREREQUISITES.md#when-something-goes-wrong). |
 
 ## Next
 
