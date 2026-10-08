@@ -124,7 +124,9 @@ const pageFailures = []
 for (const { path, name } of routes) {
   let res
   try {
-    res = await fetch(new URL(path, BASE))
+    // Tells the Kit this render is for the static site, so it leaves out anything that needs its
+    // server to work (see entraSignIn in prototype-kit/app/routes.js).
+    res = await fetch(new URL(path, BASE), { headers: { 'X-Static-Export': '1' } })
   } catch (err) {
     pageFailures.push(`${path} (${name}) -> ${err.message}`)
     continue

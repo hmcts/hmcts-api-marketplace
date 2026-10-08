@@ -127,6 +127,15 @@ function viewFor (urlPath) {
   return null
 }
 
+// The Entra sign-in button on /sign-in links to /auth/entra, which only exists while this server runs
+// and only works with prototype-kit/.env configured. So it is shown on a configured local Kit and never
+// in the static export (export-static.mjs sends X-Static-Export), where it would be a link to nowhere.
+// Keying on the header rather than the .env alone keeps the export identical whoever runs it.
+router.use((req, res, next) => {
+  res.locals.entraSignIn = Boolean(process.env.ENTRA_CLIENT_ID) && !req.get('X-Static-Export')
+  next()
+})
+
 // English pages: just the locale locals.
 router.use((req, res, next) => {
   if (req.path === WELSH_PREFIX || req.path.startsWith(`${WELSH_PREFIX}/`)) return next()
