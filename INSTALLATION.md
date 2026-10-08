@@ -167,6 +167,8 @@ manages it. To stop it: `brew services stop postgresql@16`.
 2. Go to <http://localhost:3100/auth/entra>. You should land on the Entra sign-in page.
 3. Choose to create an account, complete sign-up, and you'll come back to the prototype signed in.
 4. Choose to register an application. You should be shown a new client ID and secret.
+5. Select **Sign out**. Entra ends your session and sends you back to a "You have signed out" page.
+   The next sign-in will ask for your details again.
 
 If it goes wrong:
 
