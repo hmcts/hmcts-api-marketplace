@@ -238,6 +238,11 @@ router.get('/auth/entra', (req, res) => {
   url.searchParams.set('response_mode', 'query')
   url.searchParams.set('scope', 'openid profile email')
   url.searchParams.set('state', state)
+  // Local demo only: /auth/entra?prompt=login makes Microsoft show its form even when this browser already has a
+  // session (the usual reason sign-in "just works" and there is no way to create a new account). Allow-listed.
+  if (['login', 'select_account', 'create'].includes(req.query.prompt)) {
+    url.searchParams.set('prompt', req.query.prompt)
+  }
   res.redirect(url.toString())
 })
 
@@ -414,7 +419,7 @@ const APIM_RESOURCE_GROUP = process.env.APIM_RESOURCE_GROUP || 'rg-sps-platform-
 const APIM_SERVICE_NAME = process.env.APIM_SERVICE_NAME || 'sps-api-mgmt-sbox'
 
 async function getApimToken () {
-  const res = await fetch(`https://login.microsoftonline.com/${APIM_TENANT_ID}/oauth2/v2.0/token`, {
+  const res = await fetch(process.env.APIM_TOKEN_URL || `https://login.microsoftonline.com/${APIM_TENANT_ID}/oauth2/v2.0/token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
