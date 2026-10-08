@@ -1,0 +1,23 @@
+{% extends "layouts/main.html" %}
+
+{% set pageName = "You have signed out" %}
+{% set section = "account" %}
+{% set breadcrumbs = [
+  { text: "Home", href: "/" }
+] %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-xl">You have signed out</h1>
+
+    <p class="govuk-body">You have signed out of Microsoft Entra External ID. Signing in again will ask for your details.</p>
+
+    <p class="govuk-body"><a class="govuk-link" href="/auth/entra">Sign in again</a> &middot; <a class="govuk-link" href="/sign-in">Back to the real sign-in page</a></p>
+
+  </div>
+</div>
+
+{% endblock %}

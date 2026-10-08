@@ -8,7 +8,8 @@ This page covers that one-off set-up. When it's done, carry on with step 4 of
 [`INSTALLATION.md`](INSTALLATION.md).
 
 > **Already set up?** The team's sandbox tenant, `hmctsextsbox.onmicrosoft.com`, may already have
-> both app registrations below, with `http://localhost:3100/auth/callback` as a redirect URI. If so,
+> both app registrations below, with `http://localhost:3100/auth/callback` and
+> `http://localhost:3100/auth/signed-out` as redirect URIs. If so,
 > you don't need to change anything in Entra. Ask the team for the values listed under
 > [What to collect](#what-to-collect) and go to step 4 of [`INSTALLATION.md`](INSTALLATION.md).
 
@@ -53,6 +54,11 @@ endpoint URLs.
    `prototype-kit/app/routes.js`. Entra accepts plain `http` only for `localhost`.
 5. Select **Register**. On the **Overview** page, copy the **Application (client) ID** into
    `ENTRA_CLIENT_ID`.
+6. Go to **Authentication**, and under the **Web** platform select **Add URI**. Add
+   `http://localhost:3100/auth/signed-out`, then **Save**.
+
+   This is where Entra sends you back after **Sign out**. Without it, signing out still works, but
+   you're left on Entra's own "signed out" page instead of returning to the prototype.
 
 ### 1.2 Create a client secret
 
@@ -161,4 +167,5 @@ ignores. See [`INSTALLATION.md`](INSTALLATION.md).
 | Sign-in works but there's no "create one" link | The sign-in app isn't linked to the user flow (step 2.6). |
 | Email shows as `(not returned)` | The optional `email` claim is missing (step 1.4). |
 | Registering an application fails with `Authorization_RequestDenied` | `Application.ReadWrite.OwnedBy` hasn't had admin consent (step 3.3). It can also take a few minutes to take effect. |
-| Entra signs you straight in without showing a form | Your browser already has an Entra session. Use a private window, or sign out of the tenant first. |
+| Entra signs you straight in without showing a form | Your browser already has an Entra session. Use **Sign out** on the signed-in page, or a private window. |
+| After **Sign out** you stay on Entra's "signed out" page | `http://localhost:3100/auth/signed-out` isn't a registered redirect URI (step 1.1, item 6). You are signed out either way. |
