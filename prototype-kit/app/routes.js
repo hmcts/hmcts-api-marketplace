@@ -288,6 +288,7 @@ const ENTRA_TOKEN_ENDPOINT = process.env.ENTRA_TOKEN_ENDPOINT
 
 router.get('/auth/entra', (req, res) => {
   if (!ENTRA_CLIENT_ID) {
+    console.error('[COLINDEBUG] /auth/entra refused: ENTRA_CLIENT_ID is unset - see prototype-kit/.env')
     return res.status(500).send('Entra prototype is not configured - see prototype-kit/.env (ENTRA_CLIENT_ID etc.)')
   }
   // CSRF protection for the redirect round-trip: a value only this server
@@ -307,16 +308,27 @@ router.get('/auth/entra', (req, res) => {
   if (['login', 'select_account', 'create'].includes(req.query.prompt)) {
     url.searchParams.set('prompt', req.query.prompt)
   }
+
+  console.log('[COLINDEBUG] -> authorize  client_id=%s  redirect_uri=%s  prompt=%s  state=%s..',
+    ENTRA_CLIENT_ID, ENTRA_REDIRECT_URI, url.searchParams.get('prompt') || 'none', state.slice(0, 8))
+
   res.redirect(url.toString())
 })
 
 router.get('/auth/callback', async (req, res) => {
   const { code, state, error, error_description: errorDescription } = req.query
 
+  console.log('[COLINDEBUG] <- callback  code=%s  state=%s  error=%s',
+    code ? 'yes' : 'MISSING', state ? `${state.slice(0, 8)}..` : 'MISSING', error || 'none')
+
   if (error) {
+    console.error('[COLINDEBUG] callback: Entra returned %s - %s', error, errorDescription || '(no description)')
     return res.status(400).render('auth/error', { message: `Entra returned an error: ${error}`, detail: errorDescription })
   }
   if (!state || state !== req.cookies.entra_state) {
+    console.error('[COLINDEBUG] callback: state mismatch - query=%s cookie=%s',
+      state ? `${state.slice(0, 8)}..` : 'MISSING',
+      req.cookies.entra_state ? `${req.cookies.entra_state.slice(0, 8)}..` : 'MISSING')
     return res.status(400).render('auth/error', { message: 'State mismatch - possible CSRF, or an expired/replayed link.' })
   }
   res.clearCookie('entra_state')
@@ -337,7 +349,10 @@ router.get('/auth/callback', async (req, res) => {
     })
     tokenBody = await tokenRes.json()
     if (!tokenRes.ok) throw new Error(JSON.stringify(tokenBody))
+    console.log('[COLINDEBUG] token exchange ok  status=%d  id_token=%s  expires_in=%s',
+      tokenRes.status, tokenBody.id_token ? 'yes' : 'MISSING', tokenBody.expires_in)
   } catch (err) {
+    console.error('[COLINDEBUG] token exchange failed: %s', err.message)
     return res.status(502).render('auth/error', { message: 'Token exchange with Entra failed.', detail: err.message })
   }
 
@@ -350,11 +365,16 @@ router.get('/auth/callback', async (req, res) => {
 
   const email = payload.email || (payload.emails && payload.emails[0])
 
+  console.log('[COLINDEBUG] claims  oid=%s  name=%s  email=%s  iss=%s',
+    payload.oid, payload.name || '(not returned)', email || '(not returned)', payload.iss)
+
   // This is the write the earlier sequence diagram showed as broken (✕) -
   // the piece Entra itself has no concept of. Keyed by oid, same as the
   // design doc: no password or credential in this row, just profile data.
   try {
     await upsertProfile(payload.oid, payload.name, email)
+    console.log('[COLINDEBUG] profile %s  oid=%s',
+      db ? 'upserted into Postgres' : 'skipped - no DATABASE_URL set', payload.oid)
   } catch (err) {
     return renderDbError(res, err)
   }
@@ -648,7 +668,7 @@ router.post('/auth/register-app/check-answers', async (req, res) => {
       subscriptions
     })
   } catch (err) {
-    console.error('register-app failed:', err.message)
+    console.error('COLINDEBUG register-app failed:', err.message)
     res.status(502).render('auth/register-app/check-answers', {
       oid, environment, owner, appName, selectedApis, selectedApiDetails: apiDetails(selectedApis),
       error: 'Something went wrong creating the application. Please try again.'
