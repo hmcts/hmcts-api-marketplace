@@ -127,6 +127,22 @@ function viewFor (urlPath) {
   return null
 }
 
+// One line per request reaching these routes, with the status it ended in. Registered before every
+// other router.use so nothing handled below escapes it. The Kit serves /public and /plugin-assets
+// ahead of this router, so asset requests don't drown out the pages.
+router.use((req, res, next) => {
+  // The Kit's live-reload polls /browser-sync every few seconds and 404s each time, which buries
+  // the real requests.
+  if (req.path.startsWith('/browser-sync/')) return next()
+
+  const startedAt = Date.now()
+  res.on('finish', () => {
+    console.log('[COLINDEBUG] %s %s -> %d (%dms)',
+      req.method, req.originalUrl, res.statusCode, Date.now() - startedAt)
+  })
+  next()
+})
+
 // The Entra sign-in button on /sign-in links to /auth/entra, which only exists while this server runs
 // and only works with prototype-kit/.env configured. So it is shown on a configured local Kit and never
 // in the static export (export-static.mjs sends X-Static-Export), where it would be a link to nowhere.
